@@ -1,0 +1,13 @@
+{
+    "name": "pantheon-systems/wp-decoupled-preview",
+    "description": "Preview WordPress post or pages on Pantheon Front-End sites like NextJS, GatsbyJS etc.",
+    "type": "wordpress-muplugin",
+    "license": "GPLv2",
+    "authors": [
+      {
+        "name": "abhisekmazumdar",
+        "email": "abhisek.mazumdar@pantheon.io"
+      }
+    ],
+    "require": {}
+  }
