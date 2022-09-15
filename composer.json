@@ -1,7 +1,7 @@
 {
     "name": "pantheon-systems/wp-decoupled-preview",
-    "description": "Preview WordPress post or pages on Pantheon Front-End sites like NextJS, GatsbyJS etc.",
-    "type": "wordpress-muplugin",
+    "description": "Preview WordPress content on Front-end sites including Next.js",
+    "type": "wordpress-plugin",
     "license": "GPLv2",
     "authors": [
       {

@@ -1,3 +1,3 @@
-# Pantheon Decoupled Preview
+# Decoupled Preview
 
-WordPress Decoupled preview plugin preview WordPress post or pages on Pantheon Front-End sites like NextJS, GatsbyJs etc.
+WordPress Decoupled preview plugin preview WordPress content on Front-end sites including Next.js
