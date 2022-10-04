@@ -59,3 +59,27 @@ add_action(
 	10,
 	2
 );
+
+
+add_action( 'admin_bar_menu', 'add_admin_decoupled_preview_link', 100 );
+add_action( 'wp_enqueue_scripts', 'enqueue_style' );
+add_action( 'admin_enqueue_scripts', 'enqueue_style' );
+
+function add_admin_decoupled_preview_link( $admin_bar ) {
+    global $pagenow;
+    if (( $pagenow == 'post.php' ) || (get_post_type() == 'post') || (get_post_type() == 'page')) {
+        $admin_bar->add_menu([
+            'id'    => 'decoupled-preview',
+            'title' => 'Decoupled Preview',
+            'href'  => '#',
+            'meta'  => [
+                'title' => __('Decoupled Preview'),
+                'target' => '_blank',
+            ],
+        ]);
+    }
+}
+
+function enqueue_style() {
+    wp_enqueue_style( 'add-icon', plugins_url( '/css/add-icon.css', __FILE__ ) );
+}
