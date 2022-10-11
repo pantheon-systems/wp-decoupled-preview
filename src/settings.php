@@ -18,7 +18,13 @@ if (!class_exists('Decoupled_Preview_Settings')) {
                     'preview_sites'
             );
 
-	        add_settings_field('plugin_text_label', 'Label', [&$this, 'setting_label_fn'], 'preview_sites', 'wp-decoupled-preview-section');
+	        add_settings_field(
+                    'plugin_text_label',
+                    'Label',
+                    [&$this, 'setting_label_fn'],
+                    'preview_sites',
+                    'wp-decoupled-preview-section'
+            );
 	        add_settings_field('plugin_text_url', 'URL', [&$this, 'setting_url_fn'], 'preview_sites', 'wp-decoupled-preview-section');
 	        add_settings_field('plugin_text_secret', 'Secret', [&$this, 'setting_secret_fn'], 'preview_sites', 'wp-decoupled-preview-section');
 	        add_settings_field('plugin_drop_down', 'Preview Type', [&$this, 'setting_preview_type_fn'], 'preview_sites', 'wp-decoupled-preview-section');
@@ -27,17 +33,29 @@ if (!class_exists('Decoupled_Preview_Settings')) {
         }
 
 		public function add_preview() {
-			add_options_page( 'Preview Site', 'Create Preview Site', 'manage_options', 'add_preview_site', [&$this, 'wp_decoupled_preview_create_html'] );
+			add_submenu_page('',
+                __('Preview Site', 'wp-decoupled-preview'),
+                __( 'Settings', 'wp-graphql' ),
+                'manage_options', 'add_preview_site',
+                [ $this, 'wp_decoupled_preview_create_html' ]
+            );
 		}
 	    public function list_preview() {
-		    add_options_page( 'List Decoupled Preview', 'Decoupled Preview', 'manage_options', 'preview_sites', [&$this, 'wp_decoupled_preview_list_html'] );
+		    add_options_page(
+                    'Preview Site configuration',
+                    'Preview Site',
+                    'manage_options',
+                    'preview_sites',
+                    [&$this, 'wp_decoupled_preview_list_html']
+            );
 	    }
 
 	    public function wp_decoupled_preview_create_html() {
 		    if ( !current_user_can( 'manage_options' ) )  {
 			    wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 		    }
-            if ($this->getEditId()) {
+		    $editId = $this->getEditId();
+            if (isset($editId)) {
 	            $action = 'options.php?edit=' . $this->getEditId();
             }
             else {
@@ -63,19 +81,23 @@ if (!class_exists('Decoupled_Preview_Settings')) {
                 wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
             }
 	        $options = get_option( 'preview_sites' );
-	        if (!empty($options)) {
+	        if (isset($options['preview'][0]['label'])) {
 		        ?>
-                <h2>Preview Site Configuration</h2>
-                <table class="wp-list-table widefat fixed striped table-view-list">
-                <thead>
-                <tr>
-                    <td>Label</td>
-                    <td>Status</td>
-                    <td>Preview Type</td>
-                    <td>Content Type</td>
-                    <td>Operations</td>
-                </tr>
-                </thead>
+                <div style="display: flex; padding: 1rem 1rem 1rem 0">
+                    <span style="font-weight: bold; font-size: 1.5rem">Preview Site Configuration</span>
+                    <a href="options-general.php?page=add_preview_site" class="button-primary" style="margin-left: auto">+ ADD PREVIEW SITE</a>
+                </div>
+                <div style="padding-right: 1rem ">
+                    <table class="wp-list-table widefat fixed striped table-view-list">
+                        <thead>
+                        <tr>
+                            <td>Label</td>
+                            <td>Status</td>
+                            <td>Preview Type</td>
+                            <td>Content Type</td>
+                            <td>Operations</td>
+                        </tr>
+                        </thead>
 		        <?php
                 $options = array_shift($options);
                 ?>
@@ -86,7 +108,7 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 			        $listing_data['url'] = $option['url'];
 			        $listing_data['preview_type'] = $option['preview_type'];
 			        $listing_data['content_type'] = empty($option['content_type']) ? 'ALL' : $option['content_type'];
-			        $listing_data['edit'] = "<a href='/wp/wp-admin/options-general.php?page=add_preview_site&edit={$id}'>Edit</a";
+			        $listing_data['edit'] = "<a href='/wp/wp-admin/options-general.php?page=add_preview_site&edit={$id}'>Edit</a>";
 			        ?>
 
                     <tr>
@@ -101,39 +123,42 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 			        <?php
 		        }
                 ?>
-                </tbody>
-                </table>
+                    </tbody>
+                    </table>
+                </div>
                 <?php
 	        }
 	        else {
-		        echo 'NO PREVIEW SITE CONFIGURATION FOUND';
+		        ?>
+                    <div style="text-align: center">
+                        <h3>NO PREVIEW SITE CONFIGURATION FOUND</h3>
+                        <a href="options-general.php?page=add_preview_site" class="button-primary">+ ADD PREVIEW SITE</a>
+                    </div>
+                <?php
 	        }
         }
 
 	    public function sanitize_callback_preview($input) {
+
 		    $options = get_option( 'preview_sites' );
             $editId = $this->getEditId();
-		    if (!$options) {
-			    $data[0] = [
-				    'label' => $input['label'],
-				    'url' => $input['url'],
-				    'secret_string' => $input['secret_string'],
-				    'preview_type' => $input['preview_type'],
-				    'content_type' => $input['content_type'],
-			    ];
-			    return ['preview' => $data];
-		    }
-            if ($editId) {
+
+            if ($options && $input && !isset($options['preview'][0]['label'])) {
+	            return ['preview' => [0 => $input]];
+            }
+            else if ($options && isset($editId)) {
 	            $options['preview'][$editId] = $input;
 	            return $options;
             }
-		    $last_key = array_key_last( $options['preview'] );
-		    $options['preview'][++$last_key] = $input;
-		    return $options;
+		    else {
+			    $last_key = array_key_last( $options['preview'] );
+			    $options['preview'][++$last_key] = $input;
+			    return $options;
+            }
 	    }
 
 		public function settings_section_wp_decoupled_preview() {
-			echo 'These settings do things for the WP Plugin Template.';
+			echo 'Create or Edit Decoupled Preview for the Front-End Site';
 		}
 
         public function getEditId() {
@@ -146,7 +171,7 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 	    public function setting_label_fn() {
 		    $options = get_option( 'preview_sites' );
             $editId = $this->getEditId();
-		    $value = $editId ? $options['preview'][$editId]['label'] : '';
+		    $value = isset($editId) ? $options['preview'][$editId]['label'] : '';
 		    echo "<input id='plugin_text_lable' name='preview_sites[label]' size='60' type='text'  value='{$value}' required />";
 		    echo "<br>[Required] Label for the preview site.";
 	    }
@@ -154,15 +179,15 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 	    public function setting_url_fn() {
 		    $options = get_option('preview_sites');
 		    $editId = $this->getEditId();
-		    $value = $editId ? $options['preview'][$editId]['url'] : '';
-		    echo "<input id='plugin_text_url' name='preview_sites[url]' size='60' type='text' value='{$value}' required />";
+		    $value = isset($editId) ? $options['preview'][$editId]['url'] : '';
+		    echo "<input id='plugin_text_url' name='preview_sites[url]' size='60' type='url' value='{$value}' required />";
 		    echo "<br>[Required] URL for the preview site.";
 	    }
 
 	    public function setting_secret_fn() {
 		    $options = get_option('preview_sites');
 		    $editId = $this->getEditId();
-		    $value = $editId ? $options['preview'][$editId]['secret_string'] : '';
+		    $value = isset($editId) ? $options['preview'][$editId]['secret_string'] : '';
 		    echo "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' value='{$value}' required />";
 		    echo "<br>[Required] Shared secret for the preview site.";
 	    }
