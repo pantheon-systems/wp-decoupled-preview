@@ -86,7 +86,7 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 			        $listing_data['url'] = $option['url'];
 			        $listing_data['preview_type'] = $option['preview_type'];
 			        $listing_data['content_type'] = empty($option['content_type']) ? 'ALL' : $option['content_type'];
-			        $listing_data['edit'] = "<a href='/wp/wp-admin/options-general.php?page=add_preview_sites&edit={$id}'>Edit</a";
+			        $listing_data['edit'] = "<a href='/wp/wp-admin/options-general.php?page=add_preview_site&edit={$id}'>Edit</a";
 			        ?>
 
                     <tr>
