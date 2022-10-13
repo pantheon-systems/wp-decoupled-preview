@@ -66,18 +66,36 @@ add_action( 'wp_enqueue_scripts', 'enqueue_style' );
 add_action( 'admin_enqueue_scripts', 'enqueue_style' );
 
 function add_admin_decoupled_preview_link( $admin_bar ) {
+
     global $pagenow;
-    if (( $pagenow == 'post.php' ) || (get_post_type() == 'post') || (get_post_type() == 'page')) {
-        $admin_bar->add_menu([
-            'id'    => 'decoupled-preview',
-            'title' => 'Decoupled Preview',
-            'href'  => '#',
-            'meta'  => [
-                'title' => __('Decoupled Preview'),
-                'target' => '_blank',
-            ],
-        ]);
-    }
+	$post_type = get_post_type();
+	if ( $pagenow != 'edit.php' && $pagenow === 'post.php' ) {
+		$previewHelper = new Decoupled_Preview_Settings;
+		$enable_sites = $previewHelper->getPreviewEnableSites( get_post_type() );
+		if ( $enable_sites && ( ( $post_type === 'post' ) || ( $post_type === 'page') ) ) {
+			$admin_bar->add_menu([
+				'id'    => 'decoupled-preview',
+				'title' => 'Decoupled Preview',
+				'href' => false,
+			]);
+
+			foreach ($enable_sites as $id => $site) {
+				if ( strtolower( $site['content_type'] ) === $post_type ) {
+					$admin_bar->add_menu([
+						'id'    => 'preview-site-' . $id,
+						'parent' => 'decoupled-preview',
+						'title' => $site['label'],
+						'href'  => '#',
+						'meta'  => [
+							'title' => __($site['label']),
+							'target' => '_blank',
+						],
+					]);
+				}
+			}
+		}
+	}
+
 }
 
 function enqueue_style() {
