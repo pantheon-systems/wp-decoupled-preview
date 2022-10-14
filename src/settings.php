@@ -42,7 +42,7 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 		}
 	    public function list_preview() {
 		    add_options_page(
-                    'Preview Site configuration',
+                    'Preview Sites configuration',
                     'Preview Sites',
                     'manage_options',
                     'preview_sites',
@@ -67,8 +67,9 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 			    <form action="<?php echo $action ?>" method="post">
 				    <?php settings_fields('wp-decoupled-preview'); ?>
 				    <?php do_settings_sections('preview_sites'); ?>
-				    <p class="submit">
+				    <p>
 					    <input name="Submit" type="submit" class="button-primary" value="<?php esc_attr_e('Save Changes'); ?>" />
+                        <span style="padding-left: 6.5rem"><a href="options-general.php?page=preview_sites" class="button">View all Preview Sites Config</a></span>
 				    </p>
 			    </form>
 		    </div>
@@ -83,7 +84,7 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 	        if (isset($options['preview'][0]['label'])) {
 		        ?>
                 <div style="display: flex; padding: 1rem 1rem 1rem 0">
-                    <span style="font-weight: bold; font-size: 1.5rem">Preview Site Configuration</span>
+                    <span style="font-weight: bold; font-size: 1.5rem">Previews Site Configuration</span>
                     <a href="options-general.php?page=add_preview_site" class="button-primary" style="margin-left: auto">+ ADD PREVIEW SITE</a>
                 </div>
                 <div style="padding-right: 1rem ">
