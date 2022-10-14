@@ -148,6 +148,10 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 		    $options = get_option( 'preview_sites' );
             $editId = $this->getEditId();
 
+            if ( empty( $input['secret_string'] ) ) {
+	            $input['secret_string'] = $options['preview'][$editId]['secret_string'];
+            }
+
             if ($options && $input && !isset($options['preview'][0]['label'])) {
 	            return [ 'preview' => [0 => $input] ];
             }
@@ -190,8 +194,8 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 	    }
 
 	    public function setting_secret_fn() {
-		    echo "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' required />";
-		    echo "<br>[Required] Shared secret for the preview site.";
+		    echo "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' />";
+		    echo "<br>Shared secret for the preview site.";
 	    }
 
 	    public function setting_preview_type_fn() {
@@ -232,7 +236,7 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 	     * @return array
          *   Return a list of sites | Only a specific site.
 	     */
-	    protected function getPreviewSite($id): array {
+	    protected function getPreviewSite($id) {
 		    $preview_sites = get_option( 'preview_sites' );
 		    if ( $preview_sites && isset( $preview_sites['preview'][0]['label'] ) ) {
 			    $preview_sites && $preview_sites = array_shift($preview_sites);;
@@ -243,6 +247,7 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 				    return $preview_sites;
 			    }
 		    }
+            return NULL;
 	    }
 
     }
