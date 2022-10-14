@@ -26,3 +26,10 @@ function wp_decoupled_preview_delete_default_options() {
 require_once dirname( __FILE__ ) . '/src/settings.php';
 
 new Decoupled_Preview_Settings();
+
+add_action('updated_option', function( $option_name, $option_value ) {
+	if ( $option_name === 'preview_sites' ) {
+		echo '<script type="text/javascript">window.location = "options-general.php?page=preview_sites"</script>';
+		exit;
+	}
+}, 10, 2);
