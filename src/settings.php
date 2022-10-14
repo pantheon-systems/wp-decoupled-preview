@@ -189,10 +189,7 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 	    }
 
 	    public function setting_secret_fn() {
-		    $editId = $this->getEditId();
-		    $site = $this->getPreviewSite( $editId );
-		    $value = isset( $editId ) ? $site['secret_string'] : '';
-		    echo "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' value='{$value}' required />";
+		    echo "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' required />";
 		    echo "<br>[Required] Shared secret for the preview site.";
 	    }
 
