@@ -34,7 +34,7 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 
 		public function add_preview() {
 			add_submenu_page('',
-                __('Preview Site', 'wp-decoupled-preview'),
+                __('Preview Sites', 'wp-decoupled-preview'),
                 __( 'Settings', 'wp-graphql' ),
                 'manage_options', 'add_preview_site',
                 [ $this, 'wp_decoupled_preview_create_html' ]
@@ -43,7 +43,7 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 	    public function list_preview() {
 		    add_options_page(
                     'Preview Site configuration',
-                    'Preview Site',
+                    'Preview Sites',
                     'manage_options',
                     'preview_sites',
                     [&$this, 'wp_decoupled_preview_list_html']
@@ -64,7 +64,6 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 
 		    ?>
 		    <div class="wrap">
-			    <h2>Create Preview Site Configuration</h2>
 			    <form action="<?php echo $action ?>" method="post">
 				    <?php settings_fields('wp-decoupled-preview'); ?>
 				    <?php do_settings_sections('preview_sites'); ?>
@@ -107,7 +106,12 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 			        $listing_data['label'] = $option['label'];
 			        $listing_data['url'] = $option['url'];
 			        $listing_data['preview_type'] = $option['preview_type'];
-			        $listing_data['content_type'] = empty($option['content_type']) ? 'ALL' : $option['content_type'];
+                    if ( isset($option['content_type'] ) ) {
+	                    $listing_data['content_type'] = implode( ', ', $option['content_type'] );
+                    }
+                    else {
+	                    $listing_data['content_type'] = 'Post, Page';
+                    }
 			        $listing_data['edit'] = "<a href='/wp/wp-admin/options-general.php?page=add_preview_site&edit={$id}'>Edit</a>";
 			        ?>
 
@@ -144,7 +148,7 @@ if (!class_exists('Decoupled_Preview_Settings')) {
             $editId = $this->getEditId();
 
             if ($options && $input && !isset($options['preview'][0]['label'])) {
-	            return ['preview' => [0 => $input]];
+	            return [ 'preview' => [0 => $input] ];
             }
             else if ($options && isset($editId)) {
 	            $options['preview'][$editId] = $input;
@@ -169,37 +173,36 @@ if (!class_exists('Decoupled_Preview_Settings')) {
         }
 
 	    public function setting_label_fn() {
-		    $options = get_option( 'preview_sites' );
             $editId = $this->getEditId();
-		    $value = isset($editId) ? $options['preview'][$editId]['label'] : '';
+		    $site = $this->getPreviewSite( $editId );
+		    $value = isset($editId) ? $site['label'] : '';
 		    echo "<input id='plugin_text_lable' name='preview_sites[label]' size='60' type='text'  value='{$value}' required />";
 		    echo "<br>[Required] Label for the preview site.";
 	    }
 
 	    public function setting_url_fn() {
-		    $options = get_option('preview_sites');
 		    $editId = $this->getEditId();
-		    $value = isset($editId) ? $options['preview'][$editId]['url'] : '';
+		    $site = $this->getPreviewSite( $editId );
+		    $value = isset($editId) ? $site['url'] : '';
 		    echo "<input id='plugin_text_url' name='preview_sites[url]' size='60' type='url' value='{$value}' required />";
 		    echo "<br>[Required] URL for the preview site.";
 	    }
 
 	    public function setting_secret_fn() {
-		    $options = get_option('preview_sites');
 		    $editId = $this->getEditId();
-		    $value = isset($editId) ? $options['preview'][$editId]['secret_string'] : '';
+		    $site = $this->getPreviewSite( $editId );
+		    $value = isset( $editId ) ? $site['secret_string'] : '';
 		    echo "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' value='{$value}' required />";
 		    echo "<br>[Required] Shared secret for the preview site.";
 	    }
 
 	    public function setting_preview_type_fn() {
-		    $options = get_option('preview_sites');
 		    $editId = $this->getEditId();
-		    $options && $options = array_shift($options);
-		    $items = ["Next.js"];
+		    $site = $this->getPreviewSite( $editId );
+		    $items = [ "Next.js" ];
 		    echo "<select id='preview_type' name='preview_sites[preview_type]'>";
 		    foreach($items as $item) {
-			    $selected = ($options[$editId]['preview_type']==$item) ? 'selected="selected"' : '';
+			    $selected = ($site['preview_type']==$item) ? 'selected="selected"' : '';
 			    echo "<option value='$item' $selected>$item</option>";
 		    }
 		    echo "</select>";
@@ -207,15 +210,41 @@ if (!class_exists('Decoupled_Preview_Settings')) {
 	    }
 
 	    public function setting_content_type_fn() {
-		    $options = get_option('preview_sites');
 		    $editId = $this->getEditId();
-		    $options && $options = array_shift($options);
-		    $items = ["Post", "Page"];
-		    foreach($items as $item) {
-			    $checked = ($options[$editId]['content_type']==$item) ? ' checked="checked" ' : '';
-			    echo "<label><input ".$checked." value='$item' name='preview_sites[content_type]' type='checkbox' /> $item</label><br />";
+		    $items = ['Post', 'Page'];
+            $site = $this->getPreviewSite($editId);
+		    foreach( $items as $item ) {
+                if ( isset($editId) && isset($site['content_type']) ) {
+	                $checked = ( in_array( $item, $site['content_type'] ) ) ? ' checked="checked" ' : '';
+	                echo "<label> <input ".$checked." value='$item' name='preview_sites[content_type][]' type='checkbox' /> $item </label><br />";
+                }
+                else {
+	                echo "<label> <input value='$item' name='preview_sites[content_type][]' type='checkbox' /> $item </label><br />";
+                }
 		    }
 		    echo "If no content types are specified, the preview site should display for all content types.";
+	    }
+
+	    /**
+	     * Get the List of the configured sites or specific site.
+	     *
+	     * @param $id
+         *   (Optional)id for the preview config.
+	     *
+	     * @return array
+         *   Return a list of sites | Only a specific site.
+	     */
+	    protected function getPreviewSite($id): array {
+		    $preview_sites = get_option( 'preview_sites' );
+		    if ( $preview_sites && isset( $preview_sites['preview'][0]['label'] ) ) {
+			    $preview_sites && $preview_sites = array_shift($preview_sites);;
+			    if ( isset( $id ) ) {
+				    return $preview_sites[$id];
+			    }
+			    else {
+				    return $preview_sites;
+			    }
+		    }
 	    }
 
     }
