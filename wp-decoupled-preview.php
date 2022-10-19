@@ -51,7 +51,7 @@ new Decoupled_Preview_Settings();
 add_action(
 	'updated_option',
 	function( $option_name, $option_value ) {
-		if ( $option_name === 'preview_sites' ) {
+		if ( 'preview_sites' === $option_name ) {
 			echo '<script type="text/javascript">window.location = "options-general.php?page=preview_sites"</script>';
 			exit;
 		}
@@ -65,32 +65,43 @@ add_action( 'admin_bar_menu', 'add_admin_decoupled_preview_link', 100 );
 add_action( 'wp_enqueue_scripts', 'enqueue_style' );
 add_action( 'admin_enqueue_scripts', 'enqueue_style' );
 
+/**
+ * Add Preview button in admin bar menu for post & pages.
+ *
+ * @param stdClass $admin_bar Admin bar menu.
+ *
+ * @return void
+ */
 function add_admin_decoupled_preview_link( $admin_bar ) {
 
-    global $pagenow;
-	$post_type = get_post_type();
-	if ( $pagenow != 'edit.php' && $pagenow === 'post.php' ) {
-		$previewHelper = new Decoupled_Preview_Settings;
-		$enable_sites = $previewHelper->getPreviewEnableSites( get_post_type() );
-		if ( $enable_sites && ( ( $post_type === 'post' ) || ( $post_type === 'page') ) ) {
-			$admin_bar->add_menu([
-				'id'    => 'decoupled-preview',
-				'title' => 'Decoupled Preview',
-				'href' => false,
-			]);
-
-			foreach ($enable_sites as $id => $site) {
-				if ( strtolower( $site['content_type'] ) === $post_type ) {
-					$admin_bar->add_menu([
-						'id'    => 'preview-site-' . $id,
-						'parent' => 'decoupled-preview',
-						'title' => $site['label'],
-						'href'  => '#',
-						'meta'  => [
-							'title' => __($site['label']),
-							'target' => '_blank',
-						],
-					]);
+	global $pagenow;
+	if ( 'post.php' === $pagenow ) {
+		$post_type           = get_post_type();
+		$preview_helper      = new Decoupled_Preview_Settings();
+		$sites               = $preview_helper->get_preview_site();
+		$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( $post_type );
+		if ( $sites && ! empty( $enable_by_post_type ) && ( ( 'post' === $post_type ) || ( 'page' === $post_type ) ) ) {
+			$admin_bar->add_menu(
+				[
+					'id'    => 'decoupled-preview',
+					'title' => 'Decoupled Preview',
+					'href'  => false,
+				]
+			);
+			foreach ( $sites as $id => $site ) {
+				if ( ( ! isset( $site['content_type'] ) ) || ( in_array( $post_type, $site['content_type'], true ) ) ) {
+					$admin_bar->add_menu(
+						[
+							'id'     => 'preview-site-' . $id,
+							'parent' => 'decoupled-preview',
+							'title'  => $site['label'],
+							'href'   => $site['url'],
+							'meta'   => [
+								'title'  => $site['label'],
+								'target' => '_blank',
+							],
+						]
+					);
 				}
 			}
 		}
@@ -98,6 +109,11 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
 
 }
 
+/**
+ * Apply style to Decoupled Preview menu.
+ *
+ * @return void
+ */
 function enqueue_style() {
-    wp_enqueue_style( 'add-icon', plugins_url( '/css/add-icon.css', __FILE__ ) );
+	wp_enqueue_style( 'add-icon', plugins_url( '/css/add-icon.css', __FILE__ ), [], 1.0 );
 }
