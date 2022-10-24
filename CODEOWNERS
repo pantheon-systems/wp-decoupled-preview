@@ -1,4 +1,5 @@
-# codeowners for commiter verify
-# see https://help.github.com/en/articles/about-code-owners
+# Code owners. See:
 
-@pantheon-systems/decoupled-kit-maintainers
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+- @backlineint @abhisekmazumdar @CdrMarks
