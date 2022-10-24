@@ -256,11 +256,12 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 				"<input id='plugin_text_lable' name='preview_sites[label]' size='60' type='text'  value='{$value}' required /><br>[Required] Label for the preview site.",
 				[
 					'input' => [
-						'id'    => [],
-						'name'  => [],
-						'size'  => [],
-						'type'  => [],
-						'value' => [],
+						'id'       => [],
+						'name'     => [],
+						'size'     => [],
+						'type'     => [],
+						'value'    => [],
+						'required' => [],
 					],
 					'br'    => [],
 				]
@@ -280,11 +281,12 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 				"<input id='plugin_text_url' name='preview_sites[url]' size='60' type='url' value='{$value}' required /><br>[Required] URL for the preview site.",
 				[
 					'input' => [
-						'id'    => [],
-						'name'  => [],
-						'size'  => [],
-						'type'  => [],
-						'value' => [],
+						'id'       => [],
+						'name'     => [],
+						'size'     => [],
+						'type'     => [],
+						'value'    => [],
+						'required' => [],
 					],
 					'br'    => [],
 				]
@@ -297,15 +299,18 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_secret_fn() {
+			$edit_id = $this->get_edit_id();
+			$html    = isset( $edit_id ) ? "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' /><br>Shared secret for the preview site. When editing, if kept empty the old value will be saved, otherwise it will be overwritten." : "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' required /><br>[Required] Shared secret for the preview site.";
 			echo wp_kses(
-				"<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' /><br>Shared secret for the preview site.",
+				$html,
 				[
 					'input' => [
-						'id'    => [],
-						'name'  => [],
-						'size'  => [],
-						'type'  => [],
-						'value' => [],
+						'id'       => [],
+						'name'     => [],
+						'size'     => [],
+						'type'     => [],
+						'value'    => [],
+						'required' => [],
 					],
 					'br'    => [],
 				]
@@ -322,11 +327,12 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			$site    = $this->get_preview_site( $edit_id );
 			$items   = [ 'Next.js' ];
 			echo wp_kses(
-				"<select id='preview_type' name='preview_sites[preview_type]'>",
+				"<select id='preview_type' name='preview_sites[preview_type]' required>",
 				[
 					'select' => [
-						'id'   => [],
-						'name' => [],
+						'id'       => [],
+						'name'     => [],
+						'required' => [],
 					],
 				]
 			);
