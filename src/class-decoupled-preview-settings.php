@@ -256,11 +256,12 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 				"<input id='plugin_text_lable' name='preview_sites[label]' size='60' type='text'  value='{$value}' required /><br>[Required] Label for the preview site.",
 				[
 					'input' => [
-						'id'    => [],
-						'name'  => [],
-						'size'  => [],
-						'type'  => [],
-						'value' => [],
+						'id'       => [],
+						'name'     => [],
+						'size'     => [],
+						'type'     => [],
+						'value'    => [],
+						'required' => [],
 					],
 					'br'    => [],
 				]
@@ -280,11 +281,12 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 				"<input id='plugin_text_url' name='preview_sites[url]' size='60' type='url' value='{$value}' required /><br>[Required] URL for the preview site.",
 				[
 					'input' => [
-						'id'    => [],
-						'name'  => [],
-						'size'  => [],
-						'type'  => [],
-						'value' => [],
+						'id'       => [],
+						'name'     => [],
+						'size'     => [],
+						'type'     => [],
+						'value'    => [],
+						'required' => [],
 					],
 					'br'    => [],
 				]
@@ -322,11 +324,12 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			$site    = $this->get_preview_site( $edit_id );
 			$items   = [ 'Next.js' ];
 			echo wp_kses(
-				"<select id='preview_type' name='preview_sites[preview_type]'>",
+				"<select id='preview_type' name='preview_sites[preview_type]' required>",
 				[
 					'select' => [
-						'id'   => [],
-						'name' => [],
+						'id'       => [],
+						'name'     => [],
+						'required' => [],
 					],
 				]
 			);
