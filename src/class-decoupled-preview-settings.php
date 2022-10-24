@@ -131,7 +131,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 						<thead>
 						<tr>
 							<td>Label</td>
-							<td>Status</td>
+							<td>URL</td>
 							<td>Preview Type</td>
 							<td>Content Type</td>
 							<td>Operations</td>
