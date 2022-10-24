@@ -299,15 +299,18 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_secret_fn() {
+			$edit_id = $this->get_edit_id();
+			$html    = isset( $edit_id ) ? "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' /><br>Shared secret for the preview site, when editing if kept empty old value will be saved else will be overwritten." : "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' required /><br>[Required] Shared secret for the preview site.";
 			echo wp_kses(
-				"<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' /><br>Shared secret for the preview site.",
+				$html,
 				[
 					'input' => [
-						'id'    => [],
-						'name'  => [],
-						'size'  => [],
-						'type'  => [],
-						'value' => [],
+						'id'       => [],
+						'name'     => [],
+						'size'     => [],
+						'type'     => [],
+						'value'    => [],
+						'required' => [],
 					],
 					'br'    => [],
 				]
