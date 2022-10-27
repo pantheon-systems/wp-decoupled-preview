@@ -15,6 +15,15 @@
 register_activation_hook( __FILE__, 'wp_decoupled_preview_default_options' );
 register_deactivation_hook( __FILE__, 'wp_decoupled_preview_delete_default_options' );
 
+global $pagenow;
+if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
+	add_action( 'admin_bar_menu', 'add_admin_decoupled_preview_link', 100 );
+	add_action( 'wp_enqueue_scripts', 'enqueue_style' );
+	add_action( 'admin_enqueue_scripts', 'enqueue_style' );
+	add_action( 'wp_enqueue_scripts', 'enqueue_script' );
+	add_action( 'admin_enqueue_scripts', 'enqueue_script' );
+}
+
 /**
  * Set default values for the preview sites options.
  *
@@ -60,11 +69,6 @@ add_action(
 	2
 );
 
-
-add_action( 'admin_bar_menu', 'add_admin_decoupled_preview_link', 100 );
-add_action( 'wp_enqueue_scripts', 'enqueue_style' );
-add_action( 'admin_enqueue_scripts', 'enqueue_style' );
-
 /**
  * Add Preview button in admin bar menu for post & pages.
  *
@@ -86,6 +90,9 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
 					'id'    => 'decoupled-preview',
 					'title' => 'Decoupled Preview',
 					'href'  => false,
+					'meta'  => [
+						'class' => 'components-button is-tertiary',
+					],
 				]
 			);
 			foreach ( $sites as $id => $site ) {
@@ -99,6 +106,7 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
 							'meta'   => [
 								'title'  => $site['label'],
 								'target' => '_blank',
+								'class'  => 'dashicons-before dashicons-external components-button components-menu-item__button',
 							],
 						]
 					);
@@ -116,4 +124,13 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
  */
 function enqueue_style() {
 	wp_enqueue_style( 'add-icon', plugins_url( '/css/add-icon.css', __FILE__ ), [], 1.0 );
+}
+
+/**
+ * Apply style to Decoupled Preview menu.
+ *
+ * @return void
+ */
+function enqueue_script() {
+	wp_enqueue_script( 'add-new-preview-btn', plugins_url( '/js/add-new-preview-btn.js', __FILE__ ), [], 1.0, true );
 }

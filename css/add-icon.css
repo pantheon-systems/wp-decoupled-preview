@@ -1,3 +1,24 @@
-li#wp-admin-bar-decoupled-preview > .ab-item::before {
-    content: "\f504";
+#wp-admin-bar-decoupled-preview {
+	list-style-type: none;
+}
+
+#wp-admin-bar-decoupled-preview > .ab-sub-wrapper {
+	position: absolute;
+	top: 100%;
+	height: auto;
+}
+#wp-admin-bar-decoupled-preview > .ab-sub-wrapper > ul {
+	display: flex;
+	flex-direction: column;
+}
+
+#wp-admin-bar-decoupled-preview > .ab-sub-wrapper > ul > li {
+	border-bottom: 1px groove;
+}
+
+#wp-admin-bar-decoupled-preview > .ab-sub-wrapper > ul > li:last-child {
+	border-bottom: none;
+}
+.interface-z-index-0 {
+	z-index: 0;
 }
