@@ -1,8 +1,10 @@
 <?php
-
 /**
- * @file
  * Create/Edit form.
+ *
+ * @file
+ *
+ * @package wp-decoupled-preview\Decoupled_Preview_Settings
  */
 
 if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
@@ -147,7 +149,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 							$listing_data['url']          = $option['url'];
 							$listing_data['preview_type'] = $option['preview_type'];
 							if ( isset( $option['content_type'] ) ) {
-								$listing_data['content_type'] = implode( ', ', $option['content_type'] );
+								$listing_data['content_type'] = ucwords( implode( ', ', $option['content_type'] ) );
 							} else {
 								$listing_data['content_type'] = 'Post, Page';
 							}
@@ -199,7 +201,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return array|array[]|false|mixed
 		 */
-		public function sanitize_callback_preview( $input ) {
+		public function sanitize_callback_preview( array $input ) {
 
 			$options = get_option( 'preview_sites' );
 			$edit_id = $this->get_edit_id();
@@ -207,6 +209,11 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			// Setting the old secret value if nothing is input when editing.
 			if ( empty( $input['secret_string'] ) ) {
 				$input['secret_string'] = $options['preview'][ $edit_id ]['secret_string'];
+			}
+			if ( isset( $input['content_type'] ) ) {
+				foreach ( $input['content_type'] as $key => $type ) {
+					$input['content_type'][ $key ] = strtolower( $type );
+				}
 			}
 
 			if ( $options && $input && ! isset( $options['preview'][1]['label'] ) ) {
@@ -372,7 +379,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			$site    = $this->get_preview_site( $edit_id );
 			foreach ( $items as $item ) {
 				if ( isset( $edit_id ) && isset( $site['content_type'] ) ) {
-					$checked = ( in_array( $item, $site['content_type'], true ) ) ? ' checked="checked" ' : '';
+					$checked = ( in_array( strtolower( $item ), $site['content_type'], true ) ) ? ' checked="checked" ' : '';
 					echo wp_kses(
 						'<label> <input ' . $checked . " value='$item' name='preview_sites[content_type][]' type='checkbox' /> $item </label><br />",
 						[
@@ -426,6 +433,27 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 				} else {
 					return $preview_sites;
 				}
+			}
+			return null;
+		}
+
+		/**
+		 * Get enabled preview site by post type.
+		 *
+		 * @param string $post_type Post type.
+		 *
+		 * @return array|null
+		 */
+		public function get_enabled_site_by_post_type( string $post_type ): ?array {
+			$sites        = $this->get_preview_site();
+			$enable_sites = [];
+			if ( ! empty( $sites ) ) {
+				foreach ( $sites as $site ) {
+					if ( empty( $site['content_type'] ) || in_array( $post_type, $site['content_type'], true ) ) {
+						$enable_sites[] = $site;
+					}
+				}
+				return $enable_sites;
 			}
 			return null;
 		}
