@@ -123,7 +123,12 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
  * @return void
  */
 function enqueue_style() {
-	wp_enqueue_style( 'add-icon', plugins_url( '/css/add-icon.css', __FILE__ ), [], 1.0 );
+	$preview_helper      = new Decoupled_Preview_Settings();
+	$sites               = $preview_helper->get_preview_site();
+	$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( get_post_type() );
+	if ( $sites && ! empty( $enable_by_post_type ) ) {
+		wp_enqueue_style( 'add-icon', plugins_url( '/css/add-icon.css', __FILE__ ), [], 1.0 );
+	}
 }
 
 /**
@@ -132,5 +137,10 @@ function enqueue_style() {
  * @return void
  */
 function enqueue_script() {
-	wp_enqueue_script( 'add-new-preview-btn', plugins_url( '/js/add-new-preview-btn.js', __FILE__ ), [], 1.0, true );
+	$preview_helper      = new Decoupled_Preview_Settings();
+	$sites               = $preview_helper->get_preview_site();
+	$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( get_post_type() );
+	if ( $sites && ! empty( $enable_by_post_type ) ) {
+		wp_enqueue_script( 'add-new-preview-btn', plugins_url( '/js/add-new-preview-btn.js', __FILE__ ), [], 1.0, true );
+	}
 }
