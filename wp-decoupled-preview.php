@@ -12,6 +12,8 @@
  * @package         Pantheon_Decoupled
  */
 
+require_once(ABSPATH . 'wp-admin/includes/post.php');
+
 register_activation_hook( __FILE__, 'wp_decoupled_preview_default_options' );
 register_deactivation_hook( __FILE__, 'wp_decoupled_preview_delete_default_options' );
 
@@ -22,6 +24,24 @@ if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
 	add_action( 'admin_enqueue_scripts', 'enqueue_style' );
 	add_action( 'wp_enqueue_scripts', 'enqueue_script' );
 	add_action( 'admin_enqueue_scripts', 'enqueue_script' );
+}
+if (isset($_GET['decoupled_preview_site'])) {
+	add_action( 'init', 'post_view' );
+}
+
+function post_view() {
+	if ( isset( $_GET['preview_id'] ) && isset( $_GET['preview_nonce'] ) ) {
+
+		$id = (int) $_GET['preview_id'];
+
+		if ( false === wp_verify_nonce( $_GET['preview_nonce'], 'post_preview_' . $id ) ) {
+			wp_die( __( 'Sorry, invalid nonce.' ), 403 );
+		}
+
+		// Trigger an autosave manually.
+		wp_create_post_autosave($id);
+
+	}
 }
 
 /**
@@ -95,14 +115,24 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
 					],
 				]
 			);
+
+			// Reinventing the wheel and creating the preview link as done in wp/wp-admin/includes/post.php.
+			$post_id                     = get_the_ID();
+			$post                        = get_post($post_id);
+			$nonce                       = wp_create_nonce( 'post_preview_' . $post->ID );
+			$query_args['preview_id']    = $post->ID;
+			$query_args['preview_nonce'] = $nonce;
+
 			foreach ( $sites as $id => $site ) {
 				if ( ( ! isset( $site['content_type'] ) ) || ( in_array( $post_type, $site['content_type'], true ) ) ) {
+					$query_args['decoupled_preview_site'] = $id;
+					$preview_link = get_preview_post_link( $post->ID, $query_args );
 					$admin_bar->add_menu(
 						[
 							'id'     => 'preview-site-' . $id,
 							'parent' => 'decoupled-preview',
 							'title'  => $site['label'],
-							'href'   => $site['url'],
+							'href'   => $preview_link,
 							'meta'   => [
 								'title'  => $site['label'],
 								'target' => '_blank',
