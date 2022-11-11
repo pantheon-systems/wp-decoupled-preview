@@ -18,6 +18,7 @@ register_activation_hook( __FILE__, 'wp_decoupled_preview_default_options' );
 register_deactivation_hook( __FILE__, 'wp_decoupled_preview_delete_default_options' );
 
 global $pagenow;
+
 if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
 	add_action( 'admin_bar_menu', 'add_admin_decoupled_preview_link', 100 );
 	add_action( 'wp_enqueue_scripts', 'enqueue_style' );
@@ -27,9 +28,12 @@ if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
 }
 if (isset($_GET['decoupled_preview_site'])) {
 	add_action( 'init', 'post_view' );
+  // Return custom preview template where we can handle redirect
+  add_filter( 'template_include', 'override_preview_template', 1);
 }
 
 function post_view() {
+  global $post;
 	if ( isset( $_GET['preview_id'] ) && isset( $_GET['preview_nonce'] ) ) {
 
 		$id = (int) $_GET['preview_id'];
@@ -38,8 +42,20 @@ function post_view() {
 			wp_die( __( 'Sorry, invalid nonce.' ), 403 );
 		}
 
+    // I think the problem for each of these approaches is that this code loads when the edit page loads.
+    // We somehow need to trigger this code when the preview button is clicked.
+    // It isn't completely clear how the gatsby plugin is doing this, but they do seem
+    // to have some kind of monitoring system.
+    // As I think you mentioned, WP also has a an autosave rest controller that
+    // we might be able to use if necessary.
+
 		// Trigger an autosave manually.
 		wp_create_post_autosave($id);
+
+    // This is how the gatsby plugin forces a save...
+    // WP doesn't call post_save for every second preview with no content changes.
+    // Since we're using post_save to trigger the webhook to Gatsby, we need to get WP to call post_save for this post.
+    do_action( 'save_post', $post->ID, $post, true );
 
 	}
 }
@@ -173,4 +189,8 @@ function enqueue_script() {
 	if ( $sites && ! empty( $enable_by_post_type ) ) {
 		wp_enqueue_script( 'add-new-preview-btn', plugins_url( '/js/add-new-preview-btn.js', __FILE__ ), [], 1.0, true );
 	}
+}
+
+function override_preview_template($template) {
+  return trailingslashit( dirname( __FILE__ ) ) . 'templates/preview-template.php';
 }
