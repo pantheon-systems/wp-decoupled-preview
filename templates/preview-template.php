@@ -1,10 +1,14 @@
 <?php
 
 // Assemble necessary params for preview API route
-// TODO - Check Nonce and Sanitize
 
-$preview_id = $_GET['preview_id'];
-$preview_site_id = $_GET['decoupled_preview_site'];
+$preview_id = sanitize_text_field( $_GET['preview_id'] );
+$preview_site_id = sanitize_text_field( $_GET['decoupled_preview_site'] );
+$nonce = sanitize_text_field( $_GET['preview_nonce'] );
+
+if ( ! wp_verify_nonce( $nonce, 'post_preview_' . $preview_id ) ) {
+    wp_die( 'Unable to preview: invalid nonce' );
+}
 
 $post = get_post( $preview_id );
 $revision = wp_get_post_autosave( $preview_id, get_current_user_id() );

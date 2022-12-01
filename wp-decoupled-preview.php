@@ -61,6 +61,8 @@ function wp_decoupled_preview_delete_default_options() {
 	delete_option( 'preview_sites' );
 }
 
+new Decoupled_Preview_Settings();
+
 add_action(
 	'updated_option',
 	function( $option_name, $option_value ) {
