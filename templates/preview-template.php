@@ -1,12 +1,19 @@
 <?php
 
-// TODO - Add code here to determine the appropriate preview URL to redirect to.
-// This should be similar to what we do to construct the URL for the menu.
-// $preview_api_url = ...
+// Assemble necessary params for preview API route
+// TODO - Check Nonce and Sanitize
 
 $preview_id = $_GET['preview_id'];
-$revisions = wp_get_post_revisions( $post_id );
-print_r($revisions);
+$preview_site_id = $_GET['decoupled_preview_site'];
+
+$post = get_post( $preview_id );
+$revision = wp_get_post_autosave( $preview_id, get_current_user_id() );
+$post_type = get_post_type($post);
+
+$preview_helper = new Decoupled_Preview_Settings();
+$preview_site = $preview_helper->get_preview_site($preview_site_id);
+
+$redirect = "{$preview_site['url']}?secret={$preview_site['secret_string']}&uri={$post->post_name}&id={$revision->ID}&content_type={$post_type}";
 ?>
 
 <html lang="en">
@@ -17,19 +24,19 @@ print_r($revisions);
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Decoupled Preview</title>
 
-	<!-- <script>
+	<script>
 		<?php
-			// if ( $preview_api_url ) {
-			// 	// Redirecting via JS because the page headers have already been set by the time we get into this template so PHP wont redirect.
-			// 	echo 'window.location.replace("'. $preview_api_url .'");';
-			// }
+			if ( $preview_site['url'] ) {
+				// Redirecting via JS because the page headers have already been set by
+        // the time we get into this template so PHP wont redirect.
+				echo 'window.location.replace("'. $redirect .'");';
+			}
 		?>
-	</script> -->
+	</script>
 </head>
 
 <body>
-        <h1>Custom Preview</h1>
-        Preview ID: <?php echo $preview_id ?>
+  <h1>Redirecting to <?php echo $preview_site['label'] ?>...</h1>
 </body>
 
 <?php wp_footer(); ?>

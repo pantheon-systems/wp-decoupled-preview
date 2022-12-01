@@ -23,9 +23,10 @@ window.addEventListener(
 		decoupledPreviewBtn.addEventListener(
 			"click",
 			(e) => {
-            previewSubmenu.classList.toggle( "hidden" );
-            previewSubmenu.classList.toggle( "components-popover__content" );
-            // Change the edit post side bar z-index.
+        wp.data.dispatch('core/editor').autosave();
+        previewSubmenu.classList.toggle( "hidden" );
+        previewSubmenu.classList.toggle( "components-popover__content" );
+        // Change the edit post side bar z-index.
 				document.querySelector( '.interface-interface-skeleton__sidebar' ).classList.toggle( 'interface-z-index-0' );
 			}
 		);

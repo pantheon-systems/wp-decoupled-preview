@@ -13,6 +13,7 @@
  */
 
 require_once(ABSPATH . 'wp-admin/includes/post.php');
+require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
 
 register_activation_hook( __FILE__, 'wp_decoupled_preview_default_options' );
 register_deactivation_hook( __FILE__, 'wp_decoupled_preview_delete_default_options' );
@@ -27,37 +28,8 @@ if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
 	add_action( 'admin_enqueue_scripts', 'enqueue_script' );
 }
 if (isset($_GET['decoupled_preview_site'])) {
-	add_action( 'init', 'post_view' );
   // Return custom preview template where we can handle redirect
   add_filter( 'template_include', 'override_preview_template', 1);
-}
-
-function post_view() {
-  global $post;
-	if ( isset( $_GET['preview_id'] ) && isset( $_GET['preview_nonce'] ) ) {
-
-		$id = (int) $_GET['preview_id'];
-
-		if ( false === wp_verify_nonce( $_GET['preview_nonce'], 'post_preview_' . $id ) ) {
-			wp_die( __( 'Sorry, invalid nonce.' ), 403 );
-		}
-
-    // I think the problem for each of these approaches is that this code loads when the edit page loads.
-    // We somehow need to trigger this code when the preview button is clicked.
-    // It isn't completely clear how the gatsby plugin is doing this, but they do seem
-    // to have some kind of monitoring system.
-    // As I think you mentioned, WP also has a an autosave rest controller that
-    // we might be able to use if necessary.
-
-		// Trigger an autosave manually.
-		wp_create_post_autosave($id);
-
-    // This is how the gatsby plugin forces a save...
-    // WP doesn't call post_save for every second preview with no content changes.
-    // Since we're using post_save to trigger the webhook to Gatsby, we need to get WP to call post_save for this post.
-    do_action( 'save_post', $post->ID, $post, true );
-
-	}
 }
 
 /**
@@ -88,10 +60,6 @@ function wp_decoupled_preview_default_options() {
 function wp_decoupled_preview_delete_default_options() {
 	delete_option( 'preview_sites' );
 }
-
-require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
-
-new Decoupled_Preview_Settings();
 
 add_action(
 	'updated_option',
