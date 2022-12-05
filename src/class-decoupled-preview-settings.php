@@ -20,7 +20,8 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		public function __construct() {
 			add_action( 'admin_init', array( &$this, 'admin_init' ) );
 			add_action( 'admin_menu', array( &$this, 'list_preview' ) );
-			add_action( 'admin_menu', array( &$this, 'add_preview' ) );
+			add_action( 'admin_menu', array( &$this, 'add_preview_subpage' ) );
+			add_action( 'admin_menu', array( &$this, 'delete_preview_subpage' ) );
 		}
 
 		/**
@@ -57,14 +58,30 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return void
 		 */
-		public function add_preview() {
+		public function add_preview_subpage() {
 			add_submenu_page(
 				'',
 				__( 'Preview Sites', 'wp-decoupled-preview' ),
-				__( 'Settings', 'wp-graphql' ),
+				__( 'Preview Sites', 'wp-decoupled-preview' ),
 				'manage_options',
 				'add_preview_site',
 				array( $this, 'wp_decoupled_preview_create_html' )
+			);
+		}
+
+		/**
+		 * A delete subpage.
+		 *
+		 * @return void
+		 */
+		public function delete_preview_subpage() {
+			add_submenu_page(
+				'',
+				__( 'Delete Preview Sites', 'wp-decoupled-preview' ),
+				__( 'Preview Sites', 'wp-decoupled-preview' ),
+				'manage_options',
+				'delete_preview_site',
+				[ $this, 'wp_decoupled_preview_delete_html' ]
 			);
 		}
 
@@ -94,7 +111,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			}
 			$edit_id = $this->get_edit_id();
 			if ( isset( $edit_id ) ) {
-				$action = 'options.php?edit=' . $this->get_edit_id();
+				$action = 'options.php?edit=' . $edit_id;
 			} else {
 				$action = 'options.php';
 			}
@@ -106,10 +123,35 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 					<?php do_settings_sections( 'preview_sites' ); ?>
 					<p>
 						<input name="Submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes' ); ?>" />
+						<?php
+						if ( isset( $edit_id ) ) {
+							$href = 'options-general.php?page=delete_preview_site&edit=' . $edit_id . '&delete=true';
+							?>
+							<a id="delete-preview" class="button-secondary button-large" href="<?php echo esc_html( $href ); ?>"><?php esc_attr_e( 'Delete' ); ?></a>
+							<?php
+						}
+						?>
 					</p>
 				</form>
 			</div>
 			<?php
+		}
+
+		/**
+		 * The delete subpage to handle the delete request.
+		 *
+		 * @return void
+		 */
+		public function wp_decoupled_preview_delete_html() {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_die( esc_html( 'You do not have sufficient permissions to access this page.' ) );
+			}
+			$edit_id = $this->get_edit_id();
+			if ( $edit_id ) {
+				$this->delete_preview_site( $edit_id );
+				echo '<script type="text/javascript">window.location = "options-general.php?page=preview_sites"</script>';
+				exit;
+			}
 		}
 
 		/**
@@ -121,8 +163,9 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html( 'You do not have sufficient permissions to access this page.' ) );
 			}
-			$options = get_option( 'preview_sites' );
-			if ( isset( $options['preview'][1]['label'] ) ) {
+			$options  = get_option( 'preview_sites' );
+			$last_key = array_key_last( $options['preview'] );
+			if ( isset( $options['preview'][ $last_key ]['label'] ) ) {
 				?>
 				<div style="display: flex; padding: 1rem 1rem 1rem 0">
 					<span style="font-weight: bold; font-size: 1.5rem">Preview Site Configuration</span>
@@ -202,29 +245,34 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 * @return array|array[]|false|mixed
 		 */
 		public function sanitize_callback_preview( array $input ) {
-
-			$options = get_option( 'preview_sites' );
-			$edit_id = $this->get_edit_id();
-
-			// Setting the old secret value if nothing is input when editing.
-			if ( empty( $input['secret_string'] ) ) {
-				$input['secret_string'] = $options['preview'][ $edit_id ]['secret_string'];
-			}
-			if ( isset( $input['content_type'] ) ) {
-				foreach ( $input['content_type'] as $key => $type ) {
-					$input['content_type'][ $key ] = strtolower( $type );
-				}
-			}
-
-			if ( $options && $input && ! isset( $options['preview'][1]['label'] ) ) {
-				return array( 'preview' => array( 1 => $input ) );
-			} elseif ( $options && isset( $edit_id ) ) {
-				$options['preview'][ $edit_id ] = $input;
-				return $options;
+			// TODO: Processing form data with nonce verification.
+			if ( $_GET['delete'] ) {
+				return [ 'preview' => $input ];
 			} else {
-				$last_key                          = array_key_last( $options['preview'] );
-				$options['preview'][ ++$last_key ] = $input;
-				return $options;
+				$options = get_option( 'preview_sites' );
+				// Set Content type in correct format.
+				if ( isset( $input['content_type'] ) ) {
+					foreach ( $input['content_type'] as $key => $type ) {
+						$input['content_type'][ $key ] = strtolower( $type );
+					}
+				}
+
+				$edit_id  = $this->get_edit_id();
+				$last_key = array_key_last( $options['preview'] );
+				if ( 1 === $last_key && null === $options['preview'][1]['label'] ) {
+					return [ 'preview' => [ 1 => $input ] ];
+				}
+				if ( $options && isset( $edit_id ) ) {
+					// Setting the old secret value if nothing is input when editing.
+					if ( empty( $input['secret_string'] ) ) {
+						$input['secret_string'] = $options['preview'][ $edit_id ]['secret_string'];
+					}
+					$options['preview'][ $edit_id ] = $input;
+					return $options;
+				} elseif ( $options && isset( $last_key ) ) {
+					$options['preview'][ ++$last_key ] = $input;
+					return $options;
+				}
 			}
 		}
 
@@ -426,7 +474,8 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 */
 		public function get_preview_site( int $id = null ): ?array {
 			$preview_sites = get_option( 'preview_sites' );
-			if ( $preview_sites && isset( $preview_sites['preview'][1]['label'] ) ) {
+			$last_key      = array_key_last( $preview_sites['preview'] );
+			if ( $preview_sites && isset( $preview_sites['preview'][ $last_key ]['label'] ) ) {
 				$preview_sites = array_shift( $preview_sites );
 				if ( isset( $id ) ) {
 					return $preview_sites[ $id ];
@@ -435,6 +484,29 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 				}
 			}
 			return null;
+		}
+
+		/**
+		 * Delete preview site.
+		 *
+		 * @param int|null $site_id (Optional) site id.
+		 *
+		 * @return void
+		 */
+		public function delete_preview_site( int $site_id = null ) {
+			$sites = $this->get_preview_site();
+			delete_option( 'preview_sites' );
+			if ( isset( $site_id ) ) {
+				unset( $sites[ $site_id ] );
+				if ( empty( $sites ) ) {
+					$sites[1] = [
+						'label'         => null,
+						'url'           => null,
+						'secret_string' => null,
+					];
+				}
+				add_option( 'preview_sites', $sites );
+			}
 		}
 
 		/**
