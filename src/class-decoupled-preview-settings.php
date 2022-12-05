@@ -30,26 +30,26 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function admin_init() {
-			register_setting( 'wp-decoupled-preview', 'preview_sites', [ $this, 'sanitize_callback_preview' ] );
+			register_setting( 'wp-decoupled-preview', 'preview_sites', array( $this, 'sanitize_callback_preview' ) );
 
 			add_settings_section(
 				'wp-decoupled-preview-section',
 				'Create/Edit Preview Sites',
-				[ &$this, 'settings_section_wp_decoupled_preview' ],
+				array( &$this, 'settings_section_wp_decoupled_preview' ),
 				'preview_sites'
 			);
 
 			add_settings_field(
 				'plugin_text_label',
 				'Label',
-				[ &$this, 'setting_label_fn' ],
+				array( &$this, 'setting_label_fn' ),
 				'preview_sites',
 				'wp-decoupled-preview-section'
 			);
-			add_settings_field( 'plugin_text_url', 'URL', [ &$this, 'setting_url_fn' ], 'preview_sites', 'wp-decoupled-preview-section' );
-			add_settings_field( 'plugin_text_secret', 'Secret', [ &$this, 'setting_secret_fn' ], 'preview_sites', 'wp-decoupled-preview-section' );
-			add_settings_field( 'plugin_drop_down', 'Preview Type', [ &$this, 'setting_preview_type_fn' ], 'preview_sites', 'wp-decoupled-preview-section' );
-			add_settings_field( 'plugin_checkbox', 'Content Type', [ &$this, 'setting_content_type_fn' ], 'preview_sites', 'wp-decoupled-preview-section' );
+			add_settings_field( 'plugin_text_url', 'URL', array( &$this, 'setting_url_fn' ), 'preview_sites', 'wp-decoupled-preview-section' );
+			add_settings_field( 'plugin_text_secret', 'Secret', array( &$this, 'setting_secret_fn' ), 'preview_sites', 'wp-decoupled-preview-section' );
+			add_settings_field( 'plugin_drop_down', 'Preview Type', array( &$this, 'setting_preview_type_fn' ), 'preview_sites', 'wp-decoupled-preview-section' );
+			add_settings_field( 'plugin_checkbox', 'Content Type', array( &$this, 'setting_content_type_fn' ), 'preview_sites', 'wp-decoupled-preview-section' );
 
 		}
 
@@ -65,7 +65,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 				__( 'Preview Sites', 'wp-decoupled-preview' ),
 				'manage_options',
 				'add_preview_site',
-				[ $this, 'wp_decoupled_preview_create_html' ]
+				array( $this, 'wp_decoupled_preview_create_html' )
 			);
 		}
 
@@ -96,7 +96,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 				'Preview Sites',
 				'manage_options',
 				'preview_sites',
-				[ &$this, 'wp_decoupled_preview_list_html' ]
+				array( &$this, 'wp_decoupled_preview_list_html' )
 			);
 		}
 
@@ -207,12 +207,12 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 									<?php
 									echo wp_kses(
 										$data,
-										[
-											'a' => [
-												'href'  => [],
-												'title' => [],
-											],
-										]
+										array(
+											'a' => array(
+												'href'  => array(),
+												'title' => array(),
+											),
+										)
 									);
 									?>
 										</td>
@@ -292,8 +292,8 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 */
 		public function get_edit_id() {
 			// TODO: Processing form data with nonce verification.
-			if ( $_GET['edit'] ) {
-				return $_GET['edit'];
+			if ( isset( $_GET['edit'] ) && sanitize_text_field( wp_unslash( $_GET['edit'] ) ) ) {
+				return sanitize_text_field( wp_unslash( $_GET['edit'] ) );
 			}
 			return null;
 		}
@@ -309,17 +309,17 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			$value   = isset( $edit_id ) ? $site['label'] : '';
 			echo wp_kses(
 				"<input id='plugin_text_lable' name='preview_sites[label]' size='60' type='text'  value='{$value}' required /><br>[Required] Label for the preview site.",
-				[
-					'input' => [
-						'id'       => [],
-						'name'     => [],
-						'size'     => [],
-						'type'     => [],
-						'value'    => [],
-						'required' => [],
-					],
-					'br'    => [],
-				]
+				array(
+					'input' => array(
+						'id'       => array(),
+						'name'     => array(),
+						'size'     => array(),
+						'type'     => array(),
+						'value'    => array(),
+						'required' => array(),
+					),
+					'br'    => array(),
+				)
 			);
 		}
 
@@ -334,17 +334,17 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			$value   = isset( $edit_id ) ? $site['url'] : '';
 			echo wp_kses(
 				"<input id='plugin_text_url' name='preview_sites[url]' size='60' type='url' value='{$value}' required /><br>[Required] URL for the preview site.",
-				[
-					'input' => [
-						'id'       => [],
-						'name'     => [],
-						'size'     => [],
-						'type'     => [],
-						'value'    => [],
-						'required' => [],
-					],
-					'br'    => [],
-				]
+				array(
+					'input' => array(
+						'id'       => array(),
+						'name'     => array(),
+						'size'     => array(),
+						'type'     => array(),
+						'value'    => array(),
+						'required' => array(),
+					),
+					'br'    => array(),
+				)
 			);
 		}
 
@@ -358,17 +358,17 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			$html    = isset( $edit_id ) ? "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' /><br>Shared secret for the preview site. When editing, if kept empty the old value will be saved, otherwise it will be overwritten." : "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' required /><br>[Required] Shared secret for the preview site.";
 			echo wp_kses(
 				$html,
-				[
-					'input' => [
-						'id'       => [],
-						'name'     => [],
-						'size'     => [],
-						'type'     => [],
-						'value'    => [],
-						'required' => [],
-					],
-					'br'    => [],
-				]
+				array(
+					'input' => array(
+						'id'       => array(),
+						'name'     => array(),
+						'size'     => array(),
+						'type'     => array(),
+						'value'    => array(),
+						'required' => array(),
+					),
+					'br'    => array(),
+				)
 			);
 		}
 
@@ -380,39 +380,39 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		public function setting_preview_type_fn() {
 			$edit_id = $this->get_edit_id();
 			$site    = $this->get_preview_site( $edit_id );
-			$items   = [ 'Next.js' ];
+			$items   = array( 'Next.js' );
 			echo wp_kses(
 				"<select id='preview_type' name='preview_sites[preview_type]' required>",
-				[
-					'select' => [
-						'id'       => [],
-						'name'     => [],
-						'required' => [],
-					],
-				]
+				array(
+					'select' => array(
+						'id'       => array(),
+						'name'     => array(),
+						'required' => array(),
+					),
+				)
 			);
 			foreach ( $items as $item ) {
 				$selected = ( $site['preview_type'] === $item ) ? 'selected="selected"' : '';
 				echo wp_kses(
 					"<option value='$item' $selected>$item</option>",
-					[
-						'option' => [
-							'value' => [],
-						],
-					]
+					array(
+						'option' => array(
+							'value' => array(),
+						),
+					)
 				);
 			}
 			echo wp_kses(
 				'</select>',
-				[
-					'select' => [],
-				]
+				array(
+					'select' => array(),
+				)
 			);
 			echo wp_kses(
 				'<br>[Required] Preview type for the front-end.',
-				[
-					'br' => [],
-				]
+				array(
+					'br' => array(),
+				)
 			);
 		}
 
@@ -423,41 +423,41 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 */
 		public function setting_content_type_fn() {
 			$edit_id = $this->get_edit_id();
-			$items   = [ 'Post', 'Page' ];
+			$items   = array( 'Post', 'Page' );
 			$site    = $this->get_preview_site( $edit_id );
 			foreach ( $items as $item ) {
 				if ( isset( $edit_id ) && isset( $site['content_type'] ) ) {
 					$checked = ( in_array( strtolower( $item ), $site['content_type'], true ) ) ? ' checked="checked" ' : '';
 					echo wp_kses(
 						'<label> <input ' . $checked . " value='$item' name='preview_sites[content_type][]' type='checkbox' /> $item </label><br />",
-						[
-							'input' => [
-								'id'      => [],
-								'checked' => [],
-								'name'    => [],
-								'size'    => [],
-								'type'    => [],
-								'value'   => [],
-							],
-							'br'    => [],
-							'label' => [],
-						]
+						array(
+							'input' => array(
+								'id'      => array(),
+								'checked' => array(),
+								'name'    => array(),
+								'size'    => array(),
+								'type'    => array(),
+								'value'   => array(),
+							),
+							'br'    => array(),
+							'label' => array(),
+						)
 					);
 				} else {
 					echo wp_kses(
 						"<label> <input value='$item' name='preview_sites[content_type][]' type='checkbox' /> $item </label><br />",
-						[
-							'input' => [
-								'id'      => [],
-								'checked' => [],
-								'name'    => [],
-								'size'    => [],
-								'type'    => [],
-								'value'   => [],
-							],
-							'br'    => [],
-							'label' => [],
-						]
+						array(
+							'input' => array(
+								'id'      => array(),
+								'checked' => array(),
+								'name'    => array(),
+								'size'    => array(),
+								'type'    => array(),
+								'value'   => array(),
+							),
+							'br'    => array(),
+							'label' => array(),
+						)
 					);
 				}
 			}
@@ -518,7 +518,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 */
 		public function get_enabled_site_by_post_type( string $post_type ): ?array {
 			$sites        = $this->get_preview_site();
-			$enable_sites = [];
+			$enable_sites = array();
 			if ( ! empty( $sites ) ) {
 				foreach ( $sites as $site ) {
 					if ( empty( $site['content_type'] ) || in_array( $post_type, $site['content_type'], true ) ) {

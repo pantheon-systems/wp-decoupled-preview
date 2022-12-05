@@ -12,16 +12,31 @@
  * @package         Pantheon_Decoupled
  */
 
+/**
+ * Adjusts preview button to work with external decoupled preview sites.
+ *
+ * @package wp-decoupled-preview
+ */
+
+require_once ABSPATH . 'wp-admin/includes/post.php';
+require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
+
 register_activation_hook( __FILE__, 'wp_decoupled_preview_default_options' );
 register_deactivation_hook( __FILE__, 'wp_decoupled_preview_delete_default_options' );
 
 global $pagenow;
+
 if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
 	add_action( 'admin_bar_menu', 'add_admin_decoupled_preview_link', 100 );
 	add_action( 'wp_enqueue_scripts', 'enqueue_style' );
 	add_action( 'admin_enqueue_scripts', 'enqueue_style' );
 	add_action( 'wp_enqueue_scripts', 'enqueue_script' );
 	add_action( 'admin_enqueue_scripts', 'enqueue_script' );
+}
+// Processing form data without nonce verification.
+if ( isset( $_GET['decoupled_preview_site'] ) ) {
+	// Return custom preview template where we can handle redirect.
+	add_filter( 'template_include', 'override_preview_template', 1 );
 }
 
 /**
@@ -32,15 +47,15 @@ if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
 function wp_decoupled_preview_default_options() {
 	add_option(
 		'preview_sites',
-		[
-			'preview' => [
-				1 => [
+		array(
+			'preview' => array(
+				1 => array(
 					'label'         => null,
 					'url'           => null,
 					'secret_string' => null,
-				],
-			],
-		]
+				),
+			),
+		)
 	);
 }
 
@@ -52,8 +67,6 @@ function wp_decoupled_preview_default_options() {
 function wp_decoupled_preview_delete_default_options() {
 	delete_option( 'preview_sites' );
 }
-
-require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
 
 new Decoupled_Preview_Settings();
 
@@ -86,29 +99,39 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
 		$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( $post_type );
 		if ( $sites && ! empty( $enable_by_post_type ) && ( ( 'post' === $post_type ) || ( 'page' === $post_type ) ) ) {
 			$admin_bar->add_menu(
-				[
+				array(
 					'id'    => 'decoupled-preview',
 					'title' => 'Decoupled Preview',
 					'href'  => false,
-					'meta'  => [
+					'meta'  => array(
 						'class' => 'components-button is-tertiary',
-					],
-				]
+					),
+				)
 			);
+
+			// Reinventing the wheel and creating the preview link as done in wp/wp-admin/includes/post.php.
+			$post_id                     = get_the_ID();
+			$post                        = get_post( $post_id );
+			$nonce                       = wp_create_nonce( 'post_preview_' . $post->ID );
+			$query_args['preview_id']    = $post->ID;
+			$query_args['preview_nonce'] = $nonce;
+
 			foreach ( $sites as $id => $site ) {
 				if ( ( ! isset( $site['content_type'] ) ) || ( in_array( $post_type, $site['content_type'], true ) ) ) {
+					$query_args['decoupled_preview_site'] = $id;
+					$preview_link                         = get_preview_post_link( $post->ID, $query_args );
 					$admin_bar->add_menu(
-						[
+						array(
 							'id'     => 'preview-site-' . $id,
 							'parent' => 'decoupled-preview',
 							'title'  => $site['label'],
-							'href'   => $site['url'],
-							'meta'   => [
+							'href'   => $preview_link,
+							'meta'   => array(
 								'title'  => $site['label'],
 								'target' => '_blank',
 								'class'  => 'dashicons-before dashicons-external components-button components-menu-item__button',
-							],
-						]
+							),
+						)
 					);
 				}
 			}
@@ -127,7 +150,7 @@ function enqueue_style() {
 	$sites               = $preview_helper->get_preview_site();
 	$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( get_post_type() );
 	if ( $sites && ! empty( $enable_by_post_type ) ) {
-		wp_enqueue_style( 'add-icon', plugins_url( '/css/add-icon.css', __FILE__ ), [], 1.0 );
+		wp_enqueue_style( 'add-icon', plugins_url( '/css/add-icon.css', __FILE__ ), array(), 1.0 );
 	}
 }
 
@@ -141,6 +164,16 @@ function enqueue_script() {
 	$sites               = $preview_helper->get_preview_site();
 	$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( get_post_type() );
 	if ( $sites && ! empty( $enable_by_post_type ) ) {
-		wp_enqueue_script( 'add-new-preview-btn', plugins_url( '/js/add-new-preview-btn.js', __FILE__ ), [], 1.0, true );
+		wp_enqueue_script( 'add-new-preview-btn', plugins_url( '/js/add-new-preview-btn.js', __FILE__ ), array(), 1.0, true );
 	}
+}
+
+/**
+ * Override preview template.
+ *
+ * @param string $template Template path.
+ * @return string
+ */
+function override_preview_template( $template ) {
+	return trailingslashit( dirname( __FILE__ ) ) . 'templates/preview-template.php';
 }
