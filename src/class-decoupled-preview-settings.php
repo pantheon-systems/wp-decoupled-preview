@@ -118,10 +118,8 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 					],
 					'options.php'
 				);
-			} elseif ( ! isset( $edit_id ) && ! isset( $_REQUEST['edit'] ) ) {
-				$action = 'options.php';
 			} else {
-				wp_die( 'Unable perform action: invalid nonce' );
+				$action = 'options.php';
 			}
 
 			?>
@@ -162,7 +160,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			}
 			$delete_id = $this->get_action_id( 'delete' );
 
-			if ( ! $delete_id && isset( $_REQUEST['delete'] ) ) {
+			if ( ! $delete_id && isset( $_REQUEST['nonce'] ) && isset( $_REQUEST['delete'] ) ) {
 				wp_die( 'Unable perform action: invalid nonce' );
 			}
 
@@ -210,11 +208,9 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 							$listing_data['label']        = $option['label'];
 							$listing_data['url']          = $option['url'];
 							$listing_data['preview_type'] = $option['preview_type'];
-							$nonce                        = wp_create_nonce( 'edit' . $id );
 							$url                          = add_query_arg(
 								[
 									'edit'  => $id,
-									'nonce' => $nonce,
 								],
 								'/wp/wp-admin/options-general.php?page=add_preview_site'
 							);
@@ -316,17 +312,23 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		}
 
 		/**
-		 * Get the nonce verify and return the action id.
+		 * Return the action ID.
 		 *
 		 * @param string $action Action name.
 		 *
 		 * @return mixed|null
 		 */
 		public function get_action_id( string $action ) {
-			if ( isset( $_REQUEST[ $action ] ) && isset( $_REQUEST['nonce'] ) && wp_verify_nonce( wp_unslash( $_REQUEST['nonce'] ), $action . $_REQUEST[ $action ] ) ) {
+			if ( isset($_REQUEST[ $action ]) && !isset( $_REQUEST['nonce'] ) ) {
 				return $_REQUEST[ $action ];
-			}
-			return null;
+			} else {
+				if ( isset( $_REQUEST[ $action ] ) && isset( $_REQUEST['nonce'] ) && wp_verify_nonce( wp_unslash( $_REQUEST['nonce'] ), $action . $_REQUEST[ $action ] ) ) {
+					return $_REQUEST[ $action ];
+				}
+				else {
+					return null;
+				}
+            }
 		}
 
 		/**
