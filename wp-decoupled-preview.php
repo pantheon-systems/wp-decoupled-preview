@@ -72,7 +72,7 @@ function show_example_preview_password_admin_notice() {
 			<strong>Pantheon Decoupled Preview Example</strong>
 			<p class="decoupled-preview-example">
 				<label for="new-decoupled-preview-example-value">
-					The password of the <strong>Example NextJS Preview</strong> is:
+					The shared secret of the <strong>Example NextJS Preview</strong> site is:
 				</label>
 				<input type="text" class="code" value="<?php printf(esc_attr( get_transient( 'example_preview_password' ) )); ?>" />
 			</p>
