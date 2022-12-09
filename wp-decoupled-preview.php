@@ -23,6 +23,7 @@ require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
 
 register_activation_hook( __FILE__, 'wp_decoupled_preview_default_options' );
 register_deactivation_hook( __FILE__, 'wp_decoupled_preview_delete_default_options' );
+add_action('admin_notices', 'show_example_preview_password_admin_notice');
 
 global $pagenow;
 
@@ -45,18 +46,41 @@ if ( isset( $_GET['decoupled_preview_site'] ) ) {
  * @return void
  */
 function wp_decoupled_preview_default_options() {
+
+	$secret = wp_generate_password(10, false);
+	set_transient( 'example_preview_password', $secret);
+
 	add_option(
 		'preview_sites',
 		array(
 			'preview' => array(
 				1 => array(
-					'label'         => null,
-					'url'           => null,
-					'secret_string' => null,
+					'label'         => 'Example NextJS Preview',
+					'url'           => 'https://example.com/api/preview',
+					'secret_string' => $secret,
+					'preview_type' => 'Next.js'
 				),
 			),
 		)
 	);
+}
+
+function show_example_preview_password_admin_notice() {
+	if( get_transient( 'example_preview_password' ) ) {
+		?>
+		<div class="notice notice-success notice-alt below-h2 is-dismissible">
+			<strong>Pantheon Decoupled Preview Example</strong>
+			<p class="decoupled-preview-example">
+				<label for="new-decoupled-preview-example-value">
+					The shared secret of the <strong>Example NextJS Preview</strong> site is:
+				</label>
+				<input type="text" class="code" value="<?php printf(esc_attr( get_transient( 'example_preview_password' ) )); ?>" />
+			</p>
+			<p><?php _e( 'Be sure to save this in a safe location. You will not be able to retrieve it.' ); ?></p>
+		</div>
+		<?php
+		delete_transient('example_preview_password');
+	}
 }
 
 /**
