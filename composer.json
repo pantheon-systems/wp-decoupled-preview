@@ -1,5 +1,5 @@
 {
-    "name": "pantheon-systems/wp-decoupled-preview",
+    "name": "pantheon-systems/decoupled-preview",
     "description": "Preview WordPress content on Front-end sites including Next.js",
     "type": "wordpress-plugin",
     "license": "GPLv2",
