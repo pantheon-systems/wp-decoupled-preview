@@ -15,13 +15,6 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 	class Decoupled_Preview_Settings {
 
 		/**
-		 * Stores everything from the $_REQUEST global
-		 *
-		 * @var mixed $request
-		 */
-		public $request;
-
-		/**
 		 * Decoupled_Preview_Settings constructor.
 		 */
 		public function __construct() {
@@ -29,7 +22,6 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			add_action( 'admin_menu', array( &$this, 'list_preview' ) );
 			add_action( 'admin_menu', array( &$this, 'add_preview_subpage' ) );
 			add_action( 'admin_menu', array( &$this, 'delete_preview_subpage' ) );
-			$this->request = $_REQUEST; // phpcs:ignore
 		}
 
 		/**
@@ -117,22 +109,11 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html( 'You do not have sufficient permissions to access this page.' ) );
 			}
-			$edit_id = $this->request['edit'];
-			if ( isset( $edit_id ) && isset( $this->request['edit'] ) ) {
-				$action = add_query_arg(
-					[
-						'edit'  => $edit_id,
-						'nonce' => wp_create_nonce( 'edit' . $edit_id ),
-					],
-					'options.php'
-				);
-			} else {
-				$action = 'options.php';
-			}
+			$edit_id = filter_input( INPUT_GET, 'edit' );
 
 			?>
 			<div class="wrap">
-				<form action="<?php echo esc_html( $action ); ?>" method="post">
+				<form action="options.php" method="post">
 					<?php settings_fields( 'wp-decoupled-preview' ); ?>
 					<?php do_settings_sections( 'preview_sites' ); ?>
 					<p>
@@ -166,9 +147,9 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html( 'You do not have sufficient permissions to access this page.' ) );
 			}
-			$delete_id = $this->get_action_id( 'delete' );
+			$delete_id = $this->verify_nonce_get_action_id( 'delete' );
 
-			if ( ! $delete_id && isset( $this->request['delete'] ) ) {
+			if ( ! $delete_id && filter_input( INPUT_GET, 'delete' ) ) {
 				wp_die( 'Unable perform action: invalid nonce' );
 			}
 
@@ -276,7 +257,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 * @return array|array[]|false|mixed
 		 */
 		public function sanitize_callback_preview( array $input ) {
-			if ( $this->get_action_id( 'delete' ) ) {
+			if ( $this->verify_nonce_get_action_id( 'delete' ) ) {
 				return [ 'preview' => $input ];
 			} else {
 				$options = get_option( 'preview_sites' );
@@ -287,8 +268,8 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 					}
 				}
 
-				$edit_id = $this->request['edit'];
-				if ( ! $edit_id && isset( $this->request['edit'] ) ) {
+				$edit_id = filter_input( INPUT_GET, 'edit' );
+				if ( ! $edit_id && filter_input( INPUT_GET, 'edit' ) ) {
 					wp_die( 'Unable perform action: invalid nonce' );
 				}
 
@@ -320,16 +301,16 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		}
 
 		/**
-		 * Return the action ID.
+		 * Verify Nonce & return the action ID.
 		 *
 		 * @param string $action Action name.
 		 *
 		 * @return string|null
 		 */
-		public function get_action_id( string $action ): ?string {
+		public function verify_nonce_get_action_id( string $action ): ?string {
 			// If action is set and nonce gets verified.
-			if ( isset( $this->request[ $action ] ) && isset( $this->request['nonce'] ) && wp_verify_nonce( wp_unslash( $this->request['nonce'] ), $action . $this->request[ $action ] ) ) {
-				return trim( stripslashes( $this->request[ $action ] ) );
+			if ( filter_input( INPUT_GET, $action ) && filter_input( INPUT_GET, 'nonce' ) && wp_verify_nonce( filter_input( INPUT_GET, 'nonce' ), $action . filter_input( INPUT_GET, $action ) ) ) {
+				return filter_input( INPUT_GET, $action );
 			} else {
 				return null;
 			}
@@ -341,7 +322,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_label_fn() {
-			$edit_id = $this->request['edit'];
+			$edit_id = filter_input( INPUT_GET, 'edit' );
 			$site    = $this->get_preview_site( $edit_id );
 			$value   = isset( $edit_id ) ? $site['label'] : '';
 			echo wp_kses(
@@ -366,7 +347,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_url_fn() {
-			$edit_id = $this->request['edit'];
+			$edit_id = filter_input( INPUT_GET, 'edit' );
 			$site    = $this->get_preview_site( $edit_id );
 			$value   = isset( $edit_id ) ? $site['url'] : '';
 			echo wp_kses(
@@ -391,7 +372,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_secret_fn() {
-			$edit_id = $this->request['edit'];
+			$edit_id = filter_input( INPUT_GET, 'edit' );
 			$html    = isset( $edit_id ) ? "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' /><br>Shared secret for the preview site. When editing, if kept empty the old value will be saved, otherwise it will be overwritten." : "<input id='plugin_text_secret' name='preview_sites[secret_string]' size='40' type='password' required /><br>[Required] Shared secret for the preview site.";
 			echo wp_kses(
 				$html,
@@ -415,7 +396,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_preview_type_fn() {
-			$edit_id = $this->request['edit'];
+			$edit_id = filter_input( INPUT_GET, 'edit' );
 			$site    = $this->get_preview_site( $edit_id );
 			$items   = array( 'Next.js' );
 			echo wp_kses(
@@ -459,7 +440,7 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_content_type_fn() {
-			$edit_id = $this->request['edit'];
+			$edit_id = filter_input( INPUT_GET, 'edit' );
 			$items   = array( 'Post', 'Page' );
 			$site    = $this->get_preview_site( $edit_id );
 			foreach ( $items as $item ) {
