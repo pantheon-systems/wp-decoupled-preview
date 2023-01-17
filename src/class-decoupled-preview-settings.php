@@ -110,10 +110,14 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 				wp_die( esc_html( 'You do not have sufficient permissions to access this page.' ) );
 			}
 			$edit_id = filter_input( INPUT_GET, 'edit' );
-
+            if ( isset( $edit_id ) ) {
+                $action = 'options.php?edit=' . $edit_id;
+            } else {
+                $action = 'options.php';
+            }
 			?>
 			<div class="wrap">
-				<form action="options.php" method="post">
+				<form action="<?php echo esc_html( $action ); ?>" method="post">
 					<?php settings_fields( 'wp-decoupled-preview' ); ?>
 					<?php do_settings_sections( 'preview_sites' ); ?>
 					<p>
@@ -269,9 +273,6 @@ if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
 				}
 
 				$edit_id = filter_input( INPUT_GET, 'edit' );
-				if ( ! $edit_id && filter_input( INPUT_GET, 'edit' ) ) {
-					wp_die( 'Unable perform action: invalid nonce' );
-				}
 
 				$last_key = array_key_last( $options['preview'] );
 				if ( 1 === $last_key && null === $options['preview'][1]['label'] ) {
