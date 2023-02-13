@@ -17,4 +17,5 @@
 	<rule ref="WordPressVIPMinimum" />
 
 	<!-- Rule exclusions -->
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax" />
 </ruleset>
