@@ -34,6 +34,7 @@ require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\conditionally_enqueue_scripts' );
 	add_action( 'admin_notices', __NAMESPACE__ . '\\show_example_preview_password_admin_notice' );
+	add_action( 'updated_option', __NAMESPACE__ . '\\redirect_to_preview_site' );
 
 	register_activation_hook( __FILE__, __NAMESPACE__ . '\\set_default_options' );
 	register_deactivation_hook( __FILE__, __NAMESPACE__ . '\\delete_default_options' );
@@ -77,19 +78,16 @@ function set_default_options() {
 	$secret = wp_generate_password( 10, false );
 	set_transient( 'example_preview_password', $secret );
 
-	add_option(
-		'preview_sites',
-		array(
-			'preview' => array(
-				1 => array(
-					'label'         => 'Example NextJS Preview',
-					'url'           => 'https://example.com/api/preview',
-					'secret_string' => $secret,
-					'preview_type'  => 'Next.js',
-				),
-			),
-		)
-	);
+	add_option( 'preview_sites', [
+		'preview' => [
+			1 => [
+				'label'         => esc_html__( 'Example NextJS Preview', 'wp-decoupled-preview' ),
+				'url'           => 'https://example.com/api/preview',
+				'secret_string' => $secret,
+				'preview_type'  => 'Next.js',
+			],
+		],
+	] );
 }
 
 /**
@@ -105,7 +103,7 @@ function show_example_preview_password_admin_notice() {
 			<strong><?php esc_html_e( 'Pantheon Decoupled Preview Example', 'wp-decoupled-preview' ); ?></strong>
 			<p class="decoupled-preview-example">
 				<label for="new-decoupled-preview-example-value">
-					<?php echo wp_kses( __( 'The shared secret of the <strong>Example NextJS Preview</strong> site is: %s', 'wp-decoupled-preview' ), [ 'strong' => [] ] ); ?>
+					<?php echo wp_kses( __( 'The shared secret of the <strong>Example NextJS Preview</strong> site is:', 'wp-decoupled-preview' ), [ 'strong' => [] ] ); ?>
 				</label>
 				<input type="text" class="code" value="<?php printf( esc_attr( get_transient( 'example_preview_password' ) ) ); ?>" />
 			</p>
@@ -125,19 +123,19 @@ function delete_default_options() {
 	delete_option( 'preview_sites' );
 }
 
-new Decoupled_Preview_Settings();
-
-add_action(
-	'updated_option',
-	function( $option_name, $option_value ) {
-		if ( 'preview_sites' === $option_name ) {
-			echo '<script type="text/javascript">window.location = "options-general.php?page=preview_sites"</script>';
-			exit;
-		}
-	},
-	10,
-	2
-);
+/**
+ * Redirect to preview site on updated option
+ *
+ * @param string $option_name Option name.
+ *
+ * @return void
+ */
+function redirect_to_preview_site( $option_name ) {
+	if ( 'preview_sites' === $option_name ) {
+		echo '<script type="text/javascript">window.location = "options-general.php?page=preview_sites"</script>';
+		exit;
+	}
+}
 
 /**
  * Add Preview button in admin bar menu for post & pages.
