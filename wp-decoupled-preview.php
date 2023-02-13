@@ -78,16 +78,19 @@ function set_default_options() {
 	$secret = wp_generate_password( 10, false );
 	set_transient( 'example_preview_password', $secret );
 
-	add_option( 'preview_sites', [
-		'preview' => [
-			1 => [
-				'label'         => esc_html__( 'Example NextJS Preview', 'wp-decoupled-preview' ),
-				'url'           => 'https://example.com/api/preview',
-				'secret_string' => $secret,
-				'preview_type'  => 'Next.js',
+	add_option(
+		'preview_sites',
+		[
+			'preview' => [
+				1 => [
+					'label'         => esc_html__( 'Example NextJS Preview', 'wp-decoupled-preview' ),
+					'url'           => 'https://example.com/api/preview',
+					'secret_string' => $secret,
+					'preview_type'  => 'Next.js',
+				],
 			],
-		],
-	] );
+		]
+	);
 }
 
 /**
