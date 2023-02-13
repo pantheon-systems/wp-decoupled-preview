@@ -7,8 +7,9 @@
 * ~~WPCS linting~~
 * domain path is defined but there is no /languages folder
 * nonce validation
-* global $pagenow used in open scope
+* ~~global $pagenow used in open scope~~
 * all strings should be run through i18n functions
+	* ~~wp-decoupled-preview.php~~
 * proof of life unit testing to ensure the plugin doesn't error/still functions after these changes are made
 * I've allowed short array syntax in the PHPCS ruleset but there's inconsistency between using short arrays and not. One thing _or_ the other should be used, not both~~, and that rule should be added & enforced~~.
 	* I am of the opinion that short array syntax is superior to long array syntax, although much of the WordPress ecosystem might be more familiar with long arrays. I'm open to discussion on this, but I think we can do something somewhat different than what's seen most frequently as a rising tide.

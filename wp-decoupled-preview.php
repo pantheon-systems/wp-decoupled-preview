@@ -98,17 +98,18 @@ function set_default_options() {
  * @return void
  */
 function show_example_preview_password_admin_notice() {
-	if ( get_transient( 'example_preview_password' ) ) {
+	$preview_password = get_transient( 'example_preview_password' );
+	if ( $preview_password ) {
 		?>
 		<div class="notice notice-success notice-alt below-h2 is-dismissible">
-			<strong>Pantheon Decoupled Preview Example</strong>
+			<strong><?php esc_html_e( 'Pantheon Decoupled Preview Example', 'wp-decoupled-preview' ); ?></strong>
 			<p class="decoupled-preview-example">
 				<label for="new-decoupled-preview-example-value">
-					The shared secret of the <strong>Example NextJS Preview</strong> site is:
+					<?php echo wp_kses( __( 'The shared secret of the <strong>Example NextJS Preview</strong> site is: %s', 'wp-decoupled-preview' ), [ 'strong' => [] ] ); ?>
 				</label>
 				<input type="text" class="code" value="<?php printf( esc_attr( get_transient( 'example_preview_password' ) ) ); ?>" />
 			</p>
-			<p><?php _e( 'Be sure to save this in a safe location. You will not be able to retrieve it.' ); ?></p>
+			<p><?php esc_html_e( 'Be sure to save this in a safe location. You will not be able to retrieve it.', 'wp-decoupled-preview' ); ?></p>
 		</div>
 		<?php
 		delete_transient( 'example_preview_password' );
