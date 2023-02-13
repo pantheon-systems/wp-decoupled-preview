@@ -20,7 +20,7 @@
         }
     },
     "scripts": {
-        "lint:php": "find ./wp-decopuled-preview.php ./src ./templates -name '*.php' -exec php -l {} \\;",
+        "lint:php": "find ./wp-decoupled-preview.php ./src ./templates -name '*.php' -exec php -l {} \\;",
         "lint:phpcs": "phpcs -s --standard=phpcs.ruleset.xml --extensions=php --ignore=vendor",
         "lint:phpcbf": "phpcbf -s --standard=phpcs.ruleset.xml --extensions=php --ignore=vendor",
         "lint": "composer lint:php && composer lint:phpcs"
