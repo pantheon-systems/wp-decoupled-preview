@@ -151,6 +151,7 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
 
 	global $pagenow;
 	if ( 'post.php' === $pagenow ) {
+		$query_args          = [];
 		$post_type           = get_post_type();
 		$preview_helper      = new Decoupled_Preview_Settings();
 		$sites               = $preview_helper->get_preview_site();
