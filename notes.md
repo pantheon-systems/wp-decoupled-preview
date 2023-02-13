@@ -7,3 +7,5 @@
 * nonce validation
 * global $pagenow used in open scope
 * all strings should be run through i18n functions
+* Brian and Abishek should make WordPress.org profiles to ensure they are properly credited in the plugin - https://profiles.wordpress.org/
+* Long description required from Decoupled team
