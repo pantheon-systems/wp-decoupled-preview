@@ -10,3 +10,4 @@
 * nonce validation
 * global $pagenow used in open scope
 * all strings should be run through i18n functions
+* proof of life unit testing to ensure the plugin doesn't error/still functions after these changes are made
