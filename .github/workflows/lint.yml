@@ -1,0 +1,12 @@
+name: WP Decoupled Preview Lint
+on: push
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Install Composer dependencies and run linter
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Composer dependencies
+        run: composer install
+      - name: Run linter
+        run: composer lint
