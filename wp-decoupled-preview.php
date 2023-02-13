@@ -230,10 +230,9 @@ function enqueue_script() {
 /**
  * Override preview template.
  *
- * @param string $template Template path.
  * @return string
  */
-function override_preview_template( $template ) {
+function override_preview_template() {
 	return trailingslashit( dirname( __FILE__ ) ) . 'templates/preview-template.php';
 }
 
