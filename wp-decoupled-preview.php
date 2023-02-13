@@ -154,14 +154,14 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
 		$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( $post_type );
 		if ( $sites && ! empty( $enable_by_post_type ) && ( ( 'post' === $post_type ) || ( 'page' === $post_type ) ) ) {
 			$admin_bar->add_menu(
-				array(
+				[
 					'id'    => 'decoupled-preview',
 					'title' => 'Decoupled Preview',
 					'href'  => false,
-					'meta'  => array(
+					'meta'  => [
 						'class' => 'components-button is-tertiary',
-					),
-				)
+					],
+				]
 			);
 
 			// Reinventing the wheel and creating the preview link as done in wp/wp-admin/includes/post.php.
@@ -176,17 +176,17 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
 					$query_args['decoupled_preview_site'] = $id;
 					$preview_link                         = get_preview_post_link( $post->ID, $query_args );
 					$admin_bar->add_menu(
-						array(
+						[
 							'id'     => 'preview-site-' . $id,
 							'parent' => 'decoupled-preview',
 							'title'  => $site['label'],
 							'href'   => $preview_link,
-							'meta'   => array(
+							'meta'   => [
 								'title'  => $site['label'],
 								'target' => '_blank',
 								'class'  => 'dashicons-before dashicons-external components-button components-menu-item__button',
-							),
-						)
+							],
+						]
 					);
 				}
 			}
@@ -205,7 +205,7 @@ function enqueue_style() {
 	$sites               = $preview_helper->get_preview_site();
 	$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( get_post_type() );
 	if ( $sites && ! empty( $enable_by_post_type ) ) {
-		wp_enqueue_style( 'add-icon', plugins_url( '/css/add-icon.css', __FILE__ ), array(), 1.0 );
+		wp_enqueue_style( 'add-icon', plugins_url( '/css/add-icon.css', __FILE__ ), [], 1.0 );
 	}
 }
 
@@ -219,7 +219,7 @@ function enqueue_script() {
 	$sites               = $preview_helper->get_preview_site();
 	$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( get_post_type() );
 	if ( $sites && ! empty( $enable_by_post_type ) ) {
-		wp_enqueue_script( 'add-new-preview-btn', plugins_url( '/js/add-new-preview-btn.js', __FILE__ ), array(), 1.0, true );
+		wp_enqueue_script( 'add-new-preview-btn', plugins_url( '/js/add-new-preview-btn.js', __FILE__ ), [], 1.0, true );
 	}
 }
 
