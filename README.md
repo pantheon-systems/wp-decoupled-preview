@@ -9,7 +9,7 @@ of decoupled front ends.
 
 - Preview while editing a Post/Page.
 - Configure multiple preview sites.
-- Specify the content types (Post and Pages) that each preview site applies to.
+- Specify the post types (Post and Pages) that each preview site applies to.
 
 ## Configuration
 
@@ -21,7 +21,7 @@ one or more preview sites, and configure the following:
 - Secret: A token that will be passed to your decoupled site used to
   limit access to the preview.
 - Preview Type: The type of preview site - currently only NextJS is supported.
-- Content Types: The content types like Post and Page that this preview site applies to.
+- Content Types: The post types (like Post and Page) that this preview site applies to.
 
 ## Preview Types
 
