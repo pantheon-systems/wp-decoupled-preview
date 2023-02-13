@@ -1,9 +1,9 @@
 # Decoupled Preview
 
-Preview WordPress content on your decoupled front end site.
+Preview headless WordPress content on your front-end site.
 
 This plugin intends to provide a single home for preview on a variety
-of decoupled front ends.
+of decoupled front-ends.
 
 ## Features
 
@@ -28,3 +28,7 @@ one or more preview sites, and configure the following:
 While we hope to expand in the future, the initial release of this plugin only
 supports NextJS. It was developed in support of [Pantheon's Next WordPress Starter](https://github.com/pantheon-systems/next-wordpress-starter), but can be applied to other
 NextJS sites using a similar approach.
+
+## Known Issues
+
+* Currently this plugin does not support custom post types.
