@@ -1,5 +1,8 @@
 ## TODO
-* full readme.txt
+* Brian and Abishek should make WordPress.org profiles to ensure they are properly credited in the plugin - https://profiles.wordpress.org/
+* ~~full~~ update readme.txt
+	* Long description required from Decoupled team
+	* Brian and Abishek added to readme.txt
 * deploy to WP.org workflows
 * ~~WPCS linting~~
 * domain path is defined but there is no /languages folder
@@ -7,5 +10,3 @@
 * nonce validation
 * global $pagenow used in open scope
 * all strings should be run through i18n functions
-* Brian and Abishek should make WordPress.org profiles to ensure they are properly credited in the plugin - https://profiles.wordpress.org/
-* Long description required from Decoupled team
