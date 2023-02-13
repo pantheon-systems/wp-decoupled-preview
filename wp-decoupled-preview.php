@@ -18,26 +18,53 @@
  * @package wp-decoupled-preview
  */
 
-require_once ABSPATH . 'wp-admin/includes/post.php';
+namespace Pantheon\DecoupledPreview;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
 
-register_activation_hook( __FILE__, 'wp_decoupled_preview_default_options' );
-register_deactivation_hook( __FILE__, 'wp_decoupled_preview_delete_default_options' );
-add_action( 'admin_notices', 'show_example_preview_password_admin_notice' );
+/**
+ * Kick off the plugin.
+ *
+ * @return void
+ */
+function bootstrap() {
+	add_action( 'init', __NAMESPACE__ . '\\conditionally_enqueue_scripts' );
+	add_action( 'admin_notices', __NAMESPACE__ . '\\show_example_preview_password_admin_notice' );
 
-global $pagenow;
-
-if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
-	add_action( 'admin_bar_menu', 'add_admin_decoupled_preview_link', 100 );
-	add_action( 'wp_enqueue_scripts', 'enqueue_style' );
-	add_action( 'admin_enqueue_scripts', 'enqueue_style' );
-	add_action( 'wp_enqueue_scripts', 'enqueue_script' );
-	add_action( 'admin_enqueue_scripts', 'enqueue_script' );
+	register_activation_hook( __FILE__, __NAMESPACE__ . '\\set_default_options' );
+	register_deactivation_hook( __FILE__, __NAMESPACE__ . '\\delete_default_options' );
 }
-// Processing form data without nonce verification.
-if ( isset( $_GET['decoupled_preview_site'] ) ) {
-	// Return custom preview template where we can handle redirect.
-	add_filter( 'template_include', 'override_preview_template', 1 );
+
+/**
+ * Maybe add some actions and filters.
+ *
+ * Moved out of the global scope by @jazzsequence <Chris Reynolds chris.reynolds@pantheon.io>
+ *
+ * @return void
+ */
+function conditionally_enqueue_scripts() {
+	global $pagenow;
+
+	if ( ! function_exists( 'post_preview' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/post.php';
+	}
+
+	if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
+		add_action( 'admin_bar_menu', __NAMESPACE__ . '\\add_admin_decoupled_preview_link', 100 );
+		add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_style' );
+		add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_style' );
+		add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_script' );
+		add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_script' );
+	}
+	// Processing form data without nonce verification.
+	if ( isset( $_GET['decoupled_preview_site'] ) ) {
+		// Return custom preview template where we can handle redirect.
+		add_filter( 'template_include', __NAMESPACE__ . '\\override_preview_template', 1 );
+	}
 }
 
 /**
@@ -45,7 +72,7 @@ if ( isset( $_GET['decoupled_preview_site'] ) ) {
  *
  * @return void
  */
-function wp_decoupled_preview_default_options() {
+function set_default_options() {
 
 	$secret = wp_generate_password( 10, false );
 	set_transient( 'example_preview_password', $secret );
@@ -65,6 +92,11 @@ function wp_decoupled_preview_default_options() {
 	);
 }
 
+/**
+ * Show example preview password admin notice.
+ *
+ * @return void
+ */
 function show_example_preview_password_admin_notice() {
 	if ( get_transient( 'example_preview_password' ) ) {
 		?>
@@ -88,7 +120,7 @@ function show_example_preview_password_admin_notice() {
  *
  * @return void
  */
-function wp_decoupled_preview_delete_default_options() {
+function delete_default_options() {
 	delete_option( 'preview_sites' );
 }
 
@@ -201,3 +233,6 @@ function enqueue_script() {
 function override_preview_template( $template ) {
 	return trailingslashit( dirname( __FILE__ ) ) . 'templates/preview-template.php';
 }
+
+// Let's rock.
+add_action( 'plugins_loaded', __NAMESPACE__ . '\\bootstrap' );
