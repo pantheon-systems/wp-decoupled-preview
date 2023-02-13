@@ -9,4 +9,4 @@ jobs:
       - name: Install Composer dependencies
         run: composer install
       - name: Run linter
-        run: composer phpcs
+        run: composer lint
