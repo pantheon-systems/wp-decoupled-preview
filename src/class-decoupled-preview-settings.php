@@ -199,8 +199,9 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-decoupled-preview' ) );
 			}
-			$options  = get_option( 'preview_sites' );
-			$last_key = array_key_last( $options['preview'] );
+			$options      = get_option( 'preview_sites' );
+			$last_key     = array_key_last( $options['preview'] );
+			$listing_data = [];
 			if ( isset( $options['preview'][ $last_key ]['label'] ) ) {
 				?>
 				<div style="display: flex; padding: 1rem 1rem 1rem 0">
