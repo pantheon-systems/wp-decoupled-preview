@@ -142,11 +142,11 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 			?>
 			<div class="wrap">
-				<form action="<?php echo esc_html( $action ); ?>" method="post">
+				<form action="<?php echo esc_url( $action ); ?>" method="post">
 					<?php settings_fields( 'wp-decoupled-preview' ); ?>
 					<?php do_settings_sections( 'preview_sites' ); ?>
 					<p>
-						<input name="<?php esc_html_e( 'Submit', 'wp-decoupled-preview' ); ?>" type="submit" class="button-primary" value="<?php esc_html_e( 'Save Changes', 'wp-decoupled-preview' ); ?>" />
+						<input name="<?php esc_attr_e( 'Submit', 'wp-decoupled-preview' ); ?>" type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'wp-decoupled-preview' ); ?>" />
 						<?php
 						if ( isset( $edit_id ) ) {
 							$url = add_query_arg(
@@ -157,7 +157,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 								'options-general.php?page=delete_preview_site'
 							);
 							?>
-							<a id="delete-preview" class="button-secondary button-large" href="<?php echo esc_html( $url ); ?>"><?php esc_html_e( 'Delete', 'wp-decoupled-preview' ); ?></a>
+							<a id="delete-preview" class="button-secondary button-large" href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'Delete', 'wp-decoupled-preview' ); ?></a>
 							<?php
 						}
 						?>
@@ -237,7 +237,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 							} else {
 								$listing_data['content_type'] = esc_html__( 'Post, Page', 'wp-decoupled-preview' );
 							}
-							$listing_data['edit'] = "<a href='{$url}'>" . esc_html__( 'Edit', 'wp-decoupled-preview' ) . "</a>";
+							$listing_data['edit'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html__( 'Edit', 'wp-decoupled-preview' ) );
 							?>
 
 							<tr>
@@ -424,7 +424,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				foreach ( $items as $item ) {
 					$selected = ( $site['preview_type'] === $item ) ? 'selected="selected"' : '';
 					?>
-					<option value="<?php echo esc_attr( $item ); ?>" <?php echo esc_attr( $selected ); ?>><?php esc_html_e( $item ); ?></option>
+					<option value="<?php echo esc_attr( $item ); ?>" <?php echo esc_attr( $selected ); ?>><?php echo esc_html( $item ); ?></option>
 					<?php
 				}
 				?>
