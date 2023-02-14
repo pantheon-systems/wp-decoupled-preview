@@ -12,17 +12,23 @@
     "require-dev": {
         "wp-coding-standards/wpcs": "^2.3",
         "phpcompatibility/phpcompatibility-wp": "^2.1",
-        "automattic/vipwpcs": "^2.3"
+        "automattic/vipwpcs": "^2.3",
+        "phpunit/phpunit": "^9",
+        "yoast/phpunit-polyfills": "^1.0.0"
     },
     "config": {
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "sort-packages": true
         }
     },
     "scripts": {
         "lint:php": "find ./wp-decoupled-preview.php ./src ./templates -name '*.php' -exec php -l {} \\;",
         "lint:phpcs": "phpcs -s --standard=phpcs.ruleset.xml --extensions=php --ignore=vendor",
         "lint:phpcbf": "phpcbf -s --standard=phpcs.ruleset.xml --extensions=php --ignore=vendor",
-        "lint": "composer lint:php && composer lint:phpcs"
+        "lint": "composer lint:php && composer lint:phpcs",
+        "phpunit": "vendor/bin/phpunit",
+        "test": "@phpunit",
+        "test:install": "bash .bin/install-wp-tests.sh wordpress_test root '' localhost latest"
     }
 }
