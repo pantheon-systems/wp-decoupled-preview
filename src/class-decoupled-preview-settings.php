@@ -336,9 +336,11 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return string|null
 		 */
 		public function verify_nonce_get_action_id( string $action ): ?string {
+			$filtered_action = filter_input( INPUT_GET, $action, FILTER_SANITIZE_SPECIAL_CHARS );
+			$filtered_nonce  = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_SPECIAL_CHARS );
 			// If action is set and nonce gets verified.
-			if ( filter_input( INPUT_GET, $action ) && filter_input( INPUT_GET, 'nonce' ) && wp_verify_nonce( filter_input( INPUT_GET, 'nonce' ), $action . filter_input( INPUT_GET, $action ) ) ) {
-				return filter_input( INPUT_GET, $action );
+			if ( $filtered_action && $filtered_nonce && wp_verify_nonce( $filtered_nonce, $action . $filtered_action ) ) {
+				return $filtered_action;
 			} else {
 				return null;
 			}
@@ -527,4 +529,3 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 
 	}
 }
-
