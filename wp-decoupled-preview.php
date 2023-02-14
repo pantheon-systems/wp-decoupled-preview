@@ -34,7 +34,7 @@ require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
 function bootstrap() {
 	define( 'WP_DECOUPLED_PREVIEW_ENABLED', true );
 
-    // Load the settings class and kick it off.
+	// Load the settings class and kick it off.
 	require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
 	new Decoupled_Preview_Settings();
 
