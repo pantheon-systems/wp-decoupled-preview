@@ -1,2 +1,5 @@
 # Ignore vendor dependencies
 vendor/
+
+# Ignore PHPUnit cache
+.phpunit.result.cache
