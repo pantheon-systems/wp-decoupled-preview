@@ -134,8 +134,9 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-decoupled-preview' ) );
 			}
-			$edit_id = filter_input( INPUT_GET, 'edit' );
-			if ( isset( $edit_id ) ) {
+
+			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
+			if ( $edit_id ) {
 				$action = 'options.php?edit=' . $edit_id;
 			} else {
 				$action = 'options.php';
@@ -178,7 +179,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 			$delete_id = $this->verify_nonce_get_action_id( 'delete' );
 
-			if ( ! $delete_id && filter_input( INPUT_GET, 'delete' ) ) {
+			if ( ! $delete_id && ! check_admin_referer( 'delete' ) ) {
 				wp_die( esc_html__( 'Unable perform action: invalid nonce', 'wp-decoupled-preview' ) );
 			}
 
@@ -297,7 +298,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 					}
 				}
 
-				$edit_id = filter_input( INPUT_GET, 'edit' );
+				$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
 
 				$last_key = array_key_last( $options['preview'] );
 				if ( 1 === $last_key && null === $options['preview'][1]['label'] ) {
@@ -348,9 +349,9 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_label_fn() {
-			$edit_id = filter_input( INPUT_GET, 'edit' );
+			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
 			$site    = $this->get_preview_site( $edit_id );
-			$value   = isset( $edit_id ) ? $site['label'] : '';
+			$value   = $edit_id ? $site['label'] : '';
 			?>
 			<input id="plugin_text_label" name="preview_sites[label]" size="60" type="text" value="<?php esc_attr( $value ); ?>" required /><br>
 			<span class="description"><?php esc_html_e( '[Required] Label for the preview site.', 'wp-decoupled-preview' ); ?></span>
@@ -363,9 +364,9 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_url_fn() {
-			$edit_id = filter_input( INPUT_GET, 'edit' );
+			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
 			$site    = $this->get_preview_site( $edit_id );
-			$value   = isset( $edit_id ) ? $site['url'] : '';
+			$value   = $edit_id ? $site['url'] : '';
 			?>
 			<input id="plugin_text_url" name="preview_sites[url]" size="60" type="url" value="<?php esc_attr( $value ); ?>" required /><br>
 			<span class="description"><?php esc_html_e( '[Required] URL for the preview site.', 'wp-decoupled-preview' ); ?></span>
@@ -378,9 +379,9 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_secret_fn() {
-			$edit_id = filter_input( INPUT_GET, 'edit' );
+			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
 			ob_start();
-			if ( isset( $edit_id ) ) {
+			if ( $edit_id ) {
 				?>
 				<input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" /><br>
 				<span class="description"><?php esc_html_e( 'Shared secret for the preview site. When editing, if kept empty the old value will be saved, otherwise it will be overwritten.', 'wp-decoupled-preview' ); ?></span>
@@ -415,7 +416,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_preview_type_fn() {
-			$edit_id = filter_input( INPUT_GET, 'edit' );
+			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
 			$site    = $this->get_preview_site( $edit_id );
 			$items   = [ __( 'Next.js', 'wp-decoupled-preview' ) ];
 			?>
@@ -439,7 +440,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_content_type_fn() {
-			$edit_id = filter_input( INPUT_GET, 'edit' );
+			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
 			$items   = [ __( 'Post', 'wp-decoupled-preview' ), __( 'Page', 'wp-decoupled-preview' ) ];
 			$site    = $this->get_preview_site( $edit_id );
 			foreach ( $items as $item ) {
