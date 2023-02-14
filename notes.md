@@ -5,6 +5,8 @@
 	* Brian and Abishek added to readme.txt
 * ~~deploy to WP.org workflows~~
 * ~~WPCS linting~~
+* cannot deactivate the plugin
+	* this is resolved in the modified version but i'm not sure what's causing it to be unable to deactivate
 * domain path is defined but there is no /languages folder
 * nonce validation
 * ~~global $pagenow used in open scope~~

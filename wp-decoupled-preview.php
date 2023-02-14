@@ -37,6 +37,7 @@ function bootstrap() {
 	add_action( 'admin_notices', __NAMESPACE__ . '\\show_example_preview_password_admin_notice' );
 	add_action( 'updated_option', __NAMESPACE__ . '\\redirect_to_preview_site' );
 
+	// Register activation and deactivation hooks.
 	register_activation_hook( __FILE__, __NAMESPACE__ . '\\set_default_options' );
 	register_deactivation_hook( __FILE__, __NAMESPACE__ . '\\delete_default_options' );
 }
@@ -238,4 +239,4 @@ function override_preview_template() {
 }
 
 // Let's rock.
-add_action( 'plugins_loaded', __NAMESPACE__ . '\\bootstrap' );
+bootstrap();
