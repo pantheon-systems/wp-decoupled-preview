@@ -32,6 +32,7 @@ require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
  * @return void
  */
 function bootstrap() {
+	define( 'WP_DECOUPLED_PREVIEW_ENABLED', true );
 	add_action( 'init', __NAMESPACE__ . '\\conditionally_enqueue_scripts' );
 	add_action( 'admin_notices', __NAMESPACE__ . '\\show_example_preview_password_admin_notice' );
 	add_action( 'updated_option', __NAMESPACE__ . '\\redirect_to_preview_site' );
