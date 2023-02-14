@@ -3,10 +3,12 @@ on: push
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: Install Composer dependencies and run linter
+    name: Lint & Test
     steps:
       - uses: actions/checkout@v2
       - name: Install Composer dependencies
         run: composer install
       - name: Run linter
         run: composer lint
+      - name: Run tests
+        run: composer test
