@@ -7,7 +7,9 @@
  * @package wp-decoupled-preview\Decoupled_Preview_Settings
  */
 
-if ( ! class_exists( 'Decoupled_Preview_Settings' ) ) {
+namespace Pantheon\DecoupledPreview;
+
+if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 
 	/**
 	 * Class Decoupled_Preview_Settings
