@@ -49,33 +49,33 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				'wp-decoupled-preview-section'
 			);
 			add_settings_field(
-                'plugin_text_url',
-                esc_html__( 'URL', 'wp-decoupled-preview' ),
-                [ &$this, 'setting_url_fn' ],
-                'preview_sites',
-                'wp-decoupled-preview-section'
-            );
+				'plugin_text_url',
+				esc_html__( 'URL', 'wp-decoupled-preview' ),
+				[ &$this, 'setting_url_fn' ],
+				'preview_sites',
+				'wp-decoupled-preview-section'
+			);
 			add_settings_field(
-                'plugin_text_secret',
-                esc_html__( 'Secret', 'wp-decoupled-preview' ),
-                [ &$this, 'setting_secret_fn' ],
-                'preview_sites',
-                'wp-decoupled-preview-section'
-            );
+				'plugin_text_secret',
+				esc_html__( 'Secret', 'wp-decoupled-preview' ),
+				[ &$this, 'setting_secret_fn' ],
+				'preview_sites',
+				'wp-decoupled-preview-section'
+			);
 			add_settings_field(
-                'plugin_drop_down',
-                esc_html__( 'Preview Type', 'wp-decoupled-preview' ),
-                [ &$this, 'setting_preview_type_fn' ],
-                'preview_sites',
-                'wp-decoupled-preview-section'
-            );
+				'plugin_drop_down',
+				esc_html__( 'Preview Type', 'wp-decoupled-preview' ),
+				[ &$this, 'setting_preview_type_fn' ],
+				'preview_sites',
+				'wp-decoupled-preview-section'
+			);
 			add_settings_field(
-                'plugin_checkbox',
-                esc_html__( 'Content Type', 'wp-decoupled-preview' ),
-                [ &$this, 'setting_content_type_fn' ],
-                'preview_sites',
-                'wp-decoupled-preview-section'
-            );
+				'plugin_checkbox',
+				esc_html__( 'Content Type', 'wp-decoupled-preview' ),
+				[ &$this, 'setting_content_type_fn' ],
+				'preview_sites',
+				'wp-decoupled-preview-section'
+			);
 		}
 
 		/**
@@ -351,10 +351,10 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			$edit_id = filter_input( INPUT_GET, 'edit' );
 			$site    = $this->get_preview_site( $edit_id );
 			$value   = isset( $edit_id ) ? $site['label'] : '';
-            ?>
+			?>
 			<input id="plugin_text_label" name="preview_sites[label]" size="60" type="text" value="<?php esc_attr( $value ); ?>" required /><br>
-            <span class="description"><?php esc_html_e( '[Required] Label for the preview site.', 'wp-decoupled-preview' ); ?></span>
-            <?php
+			<span class="description"><?php esc_html_e( '[Required] Label for the preview site.', 'wp-decoupled-preview' ); ?></span>
+			<?php
 		}
 
 		/**
@@ -366,10 +366,10 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			$edit_id = filter_input( INPUT_GET, 'edit' );
 			$site    = $this->get_preview_site( $edit_id );
 			$value   = isset( $edit_id ) ? $site['url'] : '';
-            ?>
+			?>
 			<input id="plugin_text_url" name="preview_sites[url]" size="60" type="url" value="<?php esc_attr( $value ); ?>" required /><br>
-            <span class="description"><?php esc_html_e( '[Required] URL for the preview site.', 'wp-decoupled-preview' ); ?></span>
-            <?php
+			<span class="description"><?php esc_html_e( '[Required] URL for the preview site.', 'wp-decoupled-preview' ); ?></span>
+			<?php
 		}
 
 		/**
@@ -379,20 +379,20 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 */
 		public function setting_secret_fn() {
 			$edit_id = filter_input( INPUT_GET, 'edit' );
-            ob_start();
-            if ( isset( $edit_id ) ) {
-                ?>
-                <input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" /><br>
-                <span class="description"><?php esc_html_e( 'Shared secret for the preview site. When editing, if kept empty the old value will be saved, otherwise it will be overwritten.', 'wp-decoupled-preview' ); ?></span>
-                <?php
-            } else {
-                ?>
-                <input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" required /><br>
-                <span class="description"><?php esc_html_e( '[Required] Shared secret for the preview site.', 'wp-decoupled-preview' ); ?></span>
-                <?php
-            }
-            $html = ob_get_clean();
-            // Even though we don't necessarily need to use wp_kses here, because there's no input that's coming from an untrusted source, we'll do it anyway and not have to turn off the sniffs.
+			ob_start();
+			if ( isset( $edit_id ) ) {
+				?>
+				<input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" /><br>
+				<span class="description"><?php esc_html_e( 'Shared secret for the preview site. When editing, if kept empty the old value will be saved, otherwise it will be overwritten.', 'wp-decoupled-preview' ); ?></span>
+				<?php
+			} else {
+				?>
+				<input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" required /><br>
+				<span class="description"><?php esc_html_e( '[Required] Shared secret for the preview site.', 'wp-decoupled-preview' ); ?></span>
+				<?php
+			}
+			$html = ob_get_clean();
+			// Even though we don't necessarily need to use wp_kses here, because there's no input that's coming from an untrusted source, we'll do it anyway and not have to turn off the sniffs.
 			echo wp_kses(
 				$html,
 				[
@@ -419,18 +419,18 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			$site    = $this->get_preview_site( $edit_id );
 			$items   = [ __( 'Next.js', 'wp-decoupled-preview' ) ];
 			?>
-            <select id="preview_type" name="preview_sites[preview_type]" required>
-                <?php
-                foreach ( $items as $item ) {
-                    $selected = ( $site['preview_type'] === $item ) ? 'selected="selected"' : '';
-                    ?>
-                    <option value="<?php echo esc_attr( $item ); ?>" <?php echo esc_attr( $selected ); ?>><?php esc_html_e( $item ); ?></option>
-                    <?php
-                }
-                ?>
+			<select id="preview_type" name="preview_sites[preview_type]" required>
+				<?php
+				foreach ( $items as $item ) {
+					$selected = ( $site['preview_type'] === $item ) ? 'selected="selected"' : '';
+					?>
+					<option value="<?php echo esc_attr( $item ); ?>" <?php echo esc_attr( $selected ); ?>><?php esc_html_e( $item ); ?></option>
+					<?php
+				}
+				?>
 			</select><br>
-            <?php
-            esc_html_e( '[Required] Preview type for the front-end.', 'wp-decoupled-preview' );
+			<?php
+			esc_html_e( '[Required] Preview type for the front-end.', 'wp-decoupled-preview' );
 		}
 
 		/**
@@ -445,13 +445,13 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			foreach ( $items as $item ) {
 				if ( isset( $edit_id ) && isset( $site['content_type'] ) ) {
 					$checked = ( in_array( strtolower( $item ), $site['content_type'], true ) ) ? ' checked="checked" ' : '';
-                    ?>
-                    <label><input <?php echo esc_attr( $checked ); ?> value="<?php echo esc_attr( $item ); ?>" name="preview_sites[content_type][]" type="checkbox" /><?php echo esc_html( $item ); ?></label><br />
-                    <?php
+					?>
+					<label><input <?php echo esc_attr( $checked ); ?> value="<?php echo esc_attr( $item ); ?>" name="preview_sites[content_type][]" type="checkbox" /><?php echo esc_html( $item ); ?></label><br />
+					<?php
 				} else {
-                    ?>
+					?>
 					<label><input value="<?php echo esc_attr( $item ); ?>" name="preview_sites[content_type][]" type="checkbox" /><?php echo esc_html( $item ); ?></label><br />
-                    <?php
+					<?php
 				}
 			}
 			esc_html_e( 'If no content types are specified, the preview site should display for all content types.', 'wp-decoupled-preview' );
