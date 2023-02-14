@@ -68,8 +68,9 @@ function conditionally_enqueue_scripts() {
 		add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_script' );
 		add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_script' );
 	}
-	// Processing form data without nonce verification.
-	if ( isset( $_GET['decoupled_preview_site'] ) ) {
+
+	// We're not processing this information at all so we can bypass the nonce here.
+	if ( isset( $_GET['decoupled_preview_site'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		// Return custom preview template where we can handle redirect.
 		add_filter( 'template_include', __NAMESPACE__ . '\\override_preview_template', 1 );
 	}
