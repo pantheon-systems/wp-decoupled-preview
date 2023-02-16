@@ -112,12 +112,19 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		}
 
 		/**
-		 * Style the columns.
+		 * Add some CSS overrides.
 		 *
 		 * @return void
 		 */
-		public function style_columns() {
+		public function override_styles() {
+			// Hide the empty submenu item.
+			echo '<style>
+				#adminmenu .wp-submenu li a[href="options-general.php?page=add_preview_sites"] {
+					display: none;
+				}';
+
 			$screen = get_current_screen();
+
 			if ( $screen->id !== 'settings_page_preview_sites' ) {
 				return;
 			}
