@@ -117,24 +117,22 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function override_styles() {
-			// Hide the empty submenu item.
-			echo '<style>
-				#adminmenu .wp-submenu li a[href="options-general.php?page=add_preview_sites"] {
-					display: none;
-				}';
-
 			$screen = get_current_screen();
+			$css = '<style>';
+			// Hide the empty submenu item.
+			$css .= '#adminmenu .wp-submenu li a[href="options-general.php?page=add_preview_sites"] {
+				display: none;
+			}';
 
-			if ( $screen->id !== 'settings_page_preview_sites' ) {
-				return;
+			if ( $screen->id === 'settings_page_preview_sites' ) {
+				// Give the URL column a little more room.
+				$css .= '.wp-list-table .column-url {
+					width: 25%;
+				}';
 			}
 
-			// Give the URL column a little more room.
-			echo '<style>
-				.wp-list-table .column-url {
-					width: 25%;
-				}
-			';
+			$css .= '</style>';
+			echo $css;
 		}
 
 		/**
