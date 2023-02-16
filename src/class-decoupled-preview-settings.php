@@ -164,6 +164,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 			?>
 			<div class="wrap">
+				<h1><?php esc_html_e( 'Create or Edit Preview Site', 'wp-decoupled-preview' ); ?></h1>
 				<form action="<?php echo esc_url( $action ); ?>" method="post">
 					<?php settings_fields( 'wp-decoupled-preview' ); ?>
 					<?php do_settings_sections( 'preview_sites' ); ?>
