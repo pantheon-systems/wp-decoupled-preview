@@ -408,7 +408,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				?>
 			</select><br />
 			<?php
-			esc_html_e( '[Required] Preview type for the front-end.', 'wp-decoupled-preview' );
+			esc_html_e( '(Required) Preview type for the front-end.', 'wp-decoupled-preview' );
 		}
 
 		/**
