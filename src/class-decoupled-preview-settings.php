@@ -250,6 +250,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 						<a href="options-general.php?page=add_preview_site" class="button-primary" style="margin-left: auto; height: 1.2em; margin-top: 9px">+ <?php esc_html_e( 'Add Preview Site', 'wp-decoupled-preview' ); ?></a>
 					</span>
 			<?php
+			wp_create_nonce( 'preview-site-list' );
 			$wp_list_table = new List_Table();
 			$wp_list_table->prepare_items();
 			$wp_list_table->display();
