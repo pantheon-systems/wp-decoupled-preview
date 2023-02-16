@@ -17,6 +17,7 @@
 		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
 		<exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned" />
 		<exclude name="WordPress.PHP.YodaConditions.NotYoda" />
+		<exclude name="WordPress.PHP.DisallowShortTernary.Found" />
 	</rule>
 	<rule ref="WordPress-Extra" />
 	<rule ref="WordPress-Docs" />
