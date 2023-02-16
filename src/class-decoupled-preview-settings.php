@@ -166,25 +166,34 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			<div class="wrap">
 				<h1><?php esc_html_e( 'Create or Edit Preview Site', 'wp-decoupled-preview' ); ?></h1>
 				<form action="<?php echo esc_url( $action ); ?>" method="post">
-					<?php settings_fields( 'wp-decoupled-preview' ); ?>
-					<?php do_settings_sections( 'preview_sites' ); ?>
-					<p>
-						<input name="<?php esc_attr_e( 'Submit', 'wp-decoupled-preview' ); ?>" type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'wp-decoupled-preview' ); ?>" />
-						<?php
-						if ( isset( $edit_id ) ) {
-							$url = add_query_arg(
-								[
-									'delete' => $edit_id,
-									'nonce'  => wp_create_nonce( 'delete' . $edit_id ),
-								],
-								'options-general.php?page=delete_preview_site'
+					<?php
+					settings_fields( 'wp-decoupled-preview' );
+					do_settings_sections( 'preview_sites' );
+					?>
+					<input type="hidden" name="id" value="<?php ( $edit_id ) ?: ''; ?>" />
+					<?php submit_button(); ?>
+					<?php
+					if ( $edit_id ) {
+						$site_label = $this->get_preview_site( $edit_id )['label'];
+						$url = add_query_arg(
+							[
+								'delete' => $edit_id,
+								'nonce' => wp_create_nonce( 'delete' . $edit_id ),
+							],
+							'options-general.php?page=delete_preview_site'
+						);
+						?>
+						<a id="delete-preview" class="button-secondary button-large" href="<?php echo esc_url( $url ); ?>">
+							<?php
+							echo esc_html(
+								// Translators: %s is the preview site label.
+								sprintf( __( 'Delete %s', 'wp-decoupled-preview' ), $site_label )
 							);
 							?>
-							<a id="delete-preview" class="button-secondary button-large" href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'Delete', 'wp-decoupled-preview' ); ?></a>
-							<?php
-						}
-						?>
-					</p>
+						</a>
+						<?php
+					}
+					?>
 				</form>
 			</div>
 			<?php
