@@ -109,7 +109,7 @@ class List_Table extends WP_List_table {
 			case 'preview_type':
 				return isset( $item[ $column_name ] ) ? esc_html( $item[ $column_name ] ) : '';
 			case 'content_type':
-				return isset( $item['content_type'] ) ? esc_html( $item['content_type'] ) : __( 'Post, Page', 'wp-decoupled-preview' );
+				return isset( $item['content_type'] ) ? ucwords( implode( ', ', $item['content_type'] ) ) : __( 'Post, Page', 'wp-decoupled-preview' );
 			case 'actions':
 				return sprintf(
 					'<a href="%s">%s</a>',
