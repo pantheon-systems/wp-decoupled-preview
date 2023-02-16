@@ -155,7 +155,8 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-decoupled-preview' ) );
 			}
 
-			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
+			check_admin_referer( 'edit-preview-site', 'nonce' );
+			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
 			if ( $edit_id ) {
 				$action = 'options.php?edit=' . $edit_id;
 			} else {
