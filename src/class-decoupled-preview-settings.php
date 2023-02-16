@@ -374,11 +374,11 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				$html,
 				[
 					'input' => [
-						'id'       => [],
-						'name'     => [],
-						'size'     => [],
-						'type'     => [],
-						'value'    => [],
+						'id' => [],
+						'name' => [],
+						'size' => [],
+						'type' => [],
+						'value' => [],
 						'required' => [],
 					],
 					'br'    => [],
@@ -470,8 +470,8 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				unset( $sites[ $site_id ] );
 				if ( empty( $sites ) ) {
 					$sites[1] = [
-						'label'         => null,
-						'url'           => null,
+						'label' => null,
+						'url' => null,
 						'secret_string' => null,
 					];
 				}
@@ -487,7 +487,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return array|null
 		 */
 		public function get_enabled_site_by_post_type( string $post_type ): ?array {
-			$sites        = $this->get_preview_site();
+			$sites = $this->get_preview_site();
 			$enable_sites = [];
 			if ( ! empty( $sites ) ) {
 				foreach ( $sites as $site ) {
