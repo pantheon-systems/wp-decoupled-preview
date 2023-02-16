@@ -24,7 +24,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			add_action( 'admin_menu', [ &$this, 'list_preview' ] );
 			add_action( 'admin_menu', [ &$this, 'add_preview_subpage' ] );
 			add_action( 'admin_menu', [ &$this, 'delete_preview_subpage' ] );
-			add_action( 'admin_head', [ &$this, 'style_columns' ] );
+			add_action( 'admin_head', [ &$this, 'override_styles' ] );
 		}
 
 		/**
