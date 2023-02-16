@@ -263,8 +263,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 					}
 				}
 
-				$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
-
+				$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( wp_unslash( $_GET['edit'] ) ) : null;
 				$last_key = array_key_last( $options['preview'] );
 				if ( 1 === $last_key && null === $options['preview'][1]['label'] ) {
 					return [ 'preview' => [ 1 => $input ] ];
@@ -316,7 +315,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_label_fn() {
-			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
+			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
 			$site    = $this->get_preview_site( $edit_id );
 			$value   = $edit_id ? $site['label'] : '';
 			?>
@@ -331,7 +330,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_url_fn() {
-			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
+			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
 			$site    = $this->get_preview_site( $edit_id );
 			$value   = $edit_id ? $site['url'] : '';
 			?>
@@ -346,7 +345,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_secret_fn() {
-			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
+			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
 			ob_start();
 			if ( $edit_id ) {
 				?>
@@ -383,7 +382,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_preview_type_fn() {
-			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
+			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
 			$site    = $this->get_preview_site( $edit_id );
 			$items   = [ __( 'Next.js', 'wp-decoupled-preview' ) ];
 			?>
@@ -407,7 +406,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_content_type_fn() {
-			$edit_id = isset( $_GET['edit'] ) ? esc_attr( $_GET['edit'] ) : false; // Add nonce.
+			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
 			$items   = [ __( 'Post', 'wp-decoupled-preview' ), __( 'Page', 'wp-decoupled-preview' ) ];
 			$site    = $this->get_preview_site( $edit_id );
 			foreach ( $items as $item ) {
