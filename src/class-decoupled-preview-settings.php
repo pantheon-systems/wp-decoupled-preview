@@ -278,8 +278,8 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 						$input['content_type'][ $key ] = strtolower( $type );
 					}
 				}
-
-				$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( wp_unslash( $_GET['edit'] ) ) : null;
+				check_admin_referer( 'edit-preview-site', 'nonce' );
+				$edit_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : null;
 				$last_key = array_key_last( $options['preview'] );
 				if ( 1 === $last_key && null === $options['preview'][1]['label'] ) {
 					return [ 'preview' => [ 1 => $input ] ];
@@ -322,9 +322,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_label_fn() {
-			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
-			$site    = $this->get_preview_site( $edit_id );
-			$value   = $edit_id ? $site['label'] : '';
+			check_admin_referer( 'edit-preview-site', 'nonce' );
 			?>
 			<input id="plugin_text_label" name="preview_sites[label]" size="60" type="text" value="<?php esc_attr( $value ); ?>" required /><br>
 			<span class="description"><?php esc_html_e( '[Required] Label for the preview site.', 'wp-decoupled-preview' ); ?></span>
@@ -337,9 +335,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_url_fn() {
-			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
-			$site    = $this->get_preview_site( $edit_id );
-			$value   = $edit_id ? $site['url'] : '';
+			check_admin_referer( 'edit-preview-site', 'nonce' );
 			?>
 			<input id="plugin_text_url" name="preview_sites[url]" size="60" type="url" value="<?php esc_attr( $value ); ?>" required /><br>
 			<span class="description"><?php esc_html_e( '[Required] URL for the preview site.', 'wp-decoupled-preview' ); ?></span>
@@ -352,7 +348,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_secret_fn() {
-			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
+			check_admin_referer( 'edit-preview-site', 'nonce' );
 			ob_start();
 			if ( $edit_id ) {
 				?>
@@ -389,9 +385,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_preview_type_fn() {
-			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
-			$site    = $this->get_preview_site( $edit_id );
-			$items   = [ __( 'Next.js', 'wp-decoupled-preview' ) ];
+			check_admin_referer( 'edit-preview-site', 'nonce' );
 			?>
 			<select id="preview_type" name="preview_sites[preview_type]" required>
 				<?php
@@ -413,9 +407,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function setting_content_type_fn() {
-			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
-			$items   = [ __( 'Post', 'wp-decoupled-preview' ), __( 'Page', 'wp-decoupled-preview' ) ];
-			$site    = $this->get_preview_site( $edit_id );
+			check_admin_referer( 'edit-preview-site', 'nonce' );
 			foreach ( $items as $item ) {
 				if ( isset( $edit_id ) && isset( $site['content_type'] ) ) {
 					$checked = ( in_array( strtolower( $item ), $site['content_type'], true ) ) ? ' checked="checked" ' : '';
@@ -439,18 +431,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return array
 		 *   Return a list of sites | Only a specific site.
 		 */
-		public function get_preview_site( int $id = null ): ?array {
-			$preview_sites = get_option( 'preview_sites' );
-			$last_key      = array_key_last( $preview_sites['preview'] );
-			if ( $preview_sites && isset( $preview_sites['preview'][ $last_key ]['label'] ) ) {
-				$preview_sites = array_shift( $preview_sites );
-				if ( isset( $id ) ) {
-					return $preview_sites[ $id ];
-				} else {
-					return $preview_sites;
-				}
-			}
-			return null;
+			check_admin_referer( 'edit-preview-site', 'nonce' );
 		}
 
 		/**
