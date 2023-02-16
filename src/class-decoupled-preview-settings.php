@@ -24,6 +24,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			add_action( 'admin_menu', [ &$this, 'list_preview' ] );
 			add_action( 'admin_menu', [ &$this, 'add_preview_subpage' ] );
 			add_action( 'admin_menu', [ &$this, 'delete_preview_subpage' ] );
+			add_action( 'admin_head', [ &$this, 'style_columns' ] );
 		}
 
 		/**
@@ -108,6 +109,25 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				'delete_preview_site',
 				[ $this, 'wp_decoupled_preview_delete_html' ]
 			);
+		}
+
+		/**
+		 * Style the columns.
+		 *
+		 * @return void
+		 */
+		public function style_columns() {
+			$screen = get_current_screen();
+			if ( $screen->id !== 'settings_page_preview_sites' ) {
+				return;
+			}
+
+			// Give the URL column a little more room.
+			echo '<style>
+				.wp-list-table .column-url {
+					width: 25%;
+				}
+			';
 		}
 
 		/**
