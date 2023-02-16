@@ -37,8 +37,8 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 
 			add_settings_section(
 				'wp-decoupled-preview-section',
-				esc_html__( 'Create/Edit Preview Sites', 'wp-decoupled-preview' ),
-				[ &$this, 'settings_section_wp_decoupled_preview' ],
+				'',
+				'', // No callback needed.
 				'preview_sites'
 			);
 
