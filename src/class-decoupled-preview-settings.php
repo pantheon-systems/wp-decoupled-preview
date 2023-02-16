@@ -283,15 +283,6 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		}
 
 		/**
-		 * Description for create form.
-		 *
-		 * @return void
-		 */
-		public function settings_section_wp_decoupled_preview() {
-			esc_html_e( 'Create or Edit Preview Site', 'wp-decoupled-preview' );
-		}
-
-		/**
 		 * Verify Nonce & return the action ID.
 		 *
 		 * @param string $action Action name.
