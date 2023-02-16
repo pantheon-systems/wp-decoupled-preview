@@ -165,6 +165,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			?>
 			<div class="wrap">
 				<h1><?php esc_html_e( 'Create or Edit Preview Site', 'wp-decoupled-preview' ); ?></h1>
+				<p><a href="<?php echo esc_url( add_query_arg( 'page', 'preview_sites', admin_url( 'options-general.php' ) ) ); ?>">&larr; <?php esc_html_e( 'Back to Preview Sites Configuration', 'wp-decoupled-preview' ); ?></a></p>
 				<form action="<?php echo esc_url( $action ); ?>" method="post">
 					<?php
 					settings_fields( 'wp-decoupled-preview' );
