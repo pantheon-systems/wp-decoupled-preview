@@ -38,7 +38,7 @@ class List_Table extends WP_List_table {
 
 		$this->set_pagination_args( [
 			'total_items' => 0,
-			'per_page'    => $per_page,
+			'per_page' => $per_page,
 		] );
 		$this->items = $items;
 	}
@@ -50,7 +50,7 @@ class List_Table extends WP_List_table {
 	 */
 	public function get_sortable_columns() : array {
 		return [
-			'label'        => [ 'label', true ],
+			'label' => [ 'label', true ],
 			'preview_type' => [ 'preview_type', true ],
 			'content_type' => [ 'content_type', true ],
 		];
@@ -87,11 +87,11 @@ class List_Table extends WP_List_table {
 	 */
 	public function get_columns() : array {
 		return [
-			'label'        => __( 'Label', 'wp-decoupled-preview' ),
-			'url'          => __( 'URL', 'wp-decoupled-preview' ),
+			'label' => __( 'Label', 'wp-decoupled-preview' ),
+			'url' => __( 'URL', 'wp-decoupled-preview' ),
 			'preview_type' => __( 'Preview Type', 'wp-decoupled-preview' ),
 			'content_type' => __( 'Content Type', 'wp-decoupled-preview' ),
-			'actions'      => __( 'Actions', 'wp-decoupled-preview' ),
+			'actions' => __( 'Actions', 'wp-decoupled-preview' ),
 		];
 	}
 
