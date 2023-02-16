@@ -65,9 +65,9 @@ class List_Table extends WP_List_table {
 	 * @return int
 	 */
 	private function usort_reorder( $a, $b ) : int {
-		$orderby = ( ! empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : 'label';
-		$order   = ( ! empty( $_GET['order'] ) ) ? $_GET['order'] : 'asc';
-		$result  = strcmp( $a[ $orderby ], $b[ $orderby ] );
+		$orderby = ( ! empty( $_GET['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'label';
+		$order = ( ! empty( $_GET['order'] ) ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'asc';
+		$result = strcmp( $a[ $orderby ], $b[ $orderby ] );
 		return ( 'asc' === $order ) ? $result : - $result;
 	}
 
