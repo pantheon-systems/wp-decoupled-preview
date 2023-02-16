@@ -86,12 +86,12 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 */
 		public function add_preview_subpage() {
 			add_submenu_page(
+				'options-general.php',
 				'',
-				esc_html__( 'Preview Sites', 'wp-decoupled-preview' ),
-				esc_html__( 'Preview Sites', 'wp-decoupled-preview' ),
+				'',
 				'manage_options',
-				'add_preview_site',
-				[ $this, 'wp_decoupled_preview_create_html' ]
+				'add_preview_sites',
+				[ $this, 'preview_create_html' ]
 			);
 		}
 
