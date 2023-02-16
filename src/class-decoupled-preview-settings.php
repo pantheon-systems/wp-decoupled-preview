@@ -142,7 +142,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 */
 		public function list_preview() {
 			add_options_page(
-				__( 'Preview Sites configuration', 'wp-decoupled-preview' ),
+				__( 'Preview Sites Configuration', 'wp-decoupled-preview' ),
 				__( 'Preview Sites', 'wp-decoupled-preview' ),
 				'manage_options',
 				'preview_sites',
