@@ -327,8 +327,8 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			$site = $this->get_preview_site( $edit_id );
 			$value = $edit_id ? $site['label'] : '';
 			?>
-			<input id="plugin_text_label" name="preview_sites[label]" size="60" type="text" value="<?php esc_attr( $value ); ?>" required /><br>
-			<span class="description"><?php esc_html_e( '[Required] Label for the preview site.', 'wp-decoupled-preview' ); ?></span>
+			<input id="plugin_text_label" name="preview_sites[label]" size="60" type="text" value="<?php echo esc_attr( $value ); ?>" required /><br />
+			<span class="description"><?php esc_html_e( '(Required) Label for the preview site.', 'wp-decoupled-preview' ); ?></span>
 			<?php
 		}
 
@@ -343,8 +343,8 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			$site = $this->get_preview_site( $edit_id );
 			$value = $edit_id ? $site['url'] : '';
 			?>
-			<input id="plugin_text_url" name="preview_sites[url]" size="60" type="url" value="<?php esc_attr( $value ); ?>" required /><br>
-			<span class="description"><?php esc_html_e( '[Required] URL for the preview site.', 'wp-decoupled-preview' ); ?></span>
+			<input id="plugin_text_url" name="preview_sites[url]" size="60" type="url" value="<?php echo esc_url_raw( $value ); ?>" required /><br />
+			<span class="description"><?php esc_html_e( '(Required) URL for the preview site.', 'wp-decoupled-preview' ); ?></span>
 			<?php
 		}
 
@@ -359,13 +359,13 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			ob_start();
 			if ( $edit_id ) {
 				?>
-				<input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" /><br>
+				<input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" /><br />
 				<span class="description"><?php esc_html_e( 'Shared secret for the preview site. When editing, if kept empty the old value will be saved, otherwise it will be overwritten.', 'wp-decoupled-preview' ); ?></span>
 				<?php
 			} else {
 				?>
-				<input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" required /><br>
-				<span class="description"><?php esc_html_e( '[Required] Shared secret for the preview site.', 'wp-decoupled-preview' ); ?></span>
+				<input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" required /><br />
+				<span class="description"><?php esc_html_e( '(Required) Shared secret for the preview site.', 'wp-decoupled-preview' ); ?></span>
 				<?php
 			}
 			$html = ob_get_clean();
@@ -406,7 +406,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 					<?php
 				}
 				?>
-			</select><br>
+			</select><br />
 			<?php
 			esc_html_e( '[Required] Preview type for the front-end.', 'wp-decoupled-preview' );
 		}
