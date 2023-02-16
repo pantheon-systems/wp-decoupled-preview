@@ -156,7 +156,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 
 			check_admin_referer( 'edit-preview-site', 'nonce' );
-			$edit_id = isset( $_GET['edit'] ) ? sanitize_text_field( $_GET['edit'] ) : false;
+			$edit_id = isset( $_GET['id'] ) ? sanitize_text_field( $_GET['id'] ) : false;
 			if ( $edit_id ) {
 				$action = 'options.php?edit=' . $edit_id;
 			} else {
