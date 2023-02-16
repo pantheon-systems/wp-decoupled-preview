@@ -219,85 +219,27 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-decoupled-preview' ) );
 			}
-			$options      = get_option( 'preview_sites' );
-			$last_key     = array_key_last( $options['preview'] );
-			$listing_data = [];
-			if ( isset( $options['preview'][ $last_key ]['label'] ) ) {
-				?>
-				<div style="display: flex; padding: 1rem 1rem 1rem 0">
-					<span style="font-weight: bold; font-size: 1.5rem"><?php esc_html_e( 'Preview Site Configuration', 'wp-decoupled-preview' ); ?></span>
-					<a href="options-general.php?page=add_preview_site" class="button-primary" style="margin-left: auto">+ <?php esc_html_e( 'ADD PREVIEW SITE', 'wp-decoupled-preview' ); ?></a>
-				</div>
-				<div style="padding-right: 1rem ">
-					<table class="wp-list-table widefat fixed striped table-view-list">
-						<thead>
-						<tr>
-							<td><?php esc_html_e( 'Label', 'wp-decoupled-preview' ); ?></td>
-							<td><?php esc_html_e( 'URL', 'wp-decoupled-preview' ); ?></td>
-							<td><?php esc_html_e( 'Preview Type', 'wp-decoupled-preview' ); ?></td>
-							<td><?php esc_html_e( 'Content Type', 'wp-decoupled-preview' ); ?></td>
-							<td><?php esc_html_e( 'Operations', 'wp-decoupled-preview' ); ?></td>
-						</tr>
-						</thead>
-						<?php
-						$options = array_shift( $options );
-						?>
-						<tbody>
-						<?php
-						foreach ( $options as $id => $option ) {
-							$listing_data['label']        = $option['label'];
-							$listing_data['url']          = $option['url'];
-							$listing_data['preview_type'] = $option['preview_type'];
-							$url                          = add_query_arg(
-								[
-									'edit' => $id,
-								],
-								'/wp/wp-admin/options-general.php?page=add_preview_site'
-							);
-							if ( isset( $option['content_type'] ) ) {
-								$listing_data['content_type'] = ucwords( implode( ', ', $option['content_type'] ) );
-							} else {
-								$listing_data['content_type'] = esc_html__( 'Post, Page', 'wp-decoupled-preview' );
-							}
-							$listing_data['edit'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html__( 'Edit', 'wp-decoupled-preview' ) );
-							?>
 
-							<tr>
-								<?php
-								foreach ( $listing_data as $data ) {
-									?>
-									<td>
-									<?php
-									echo wp_kses(
-										$data,
-										[
-											'a' => [
-												'href'  => [],
-												'title' => [],
-											],
-										]
-									);
-									?>
-										</td>
-									<?php
-								}
-								?>
-							</tr>
-							<?php
-						}
-						?>
-						</tbody>
-					</table>
-				</div>
-				<?php
-			} else {
-				?>
-				<div style="text-align: center">
-					<h3><?php esc_html_e( 'NO PREVIEW SITE CONFIGURATION FOUND', 'wp-decoupled-preview' ); ?></h3>
-					<a href="options-general.php?page=add_preview_site" class="button-primary">+ <?php esc_html_e( 'ADD PREVIEW SITE', 'wp-decoupled-preview' ); ?></a>
-				</div>
-				<?php
+			// Check if the List_Table class is available.
+			if ( ! class_exists( 'WP_List_Table' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 			}
+			require_once plugin_dir_path( __FILE__ ) . 'class-list-table.php';
+			?>
+			<div class="wrap">
+				<div>
+					<span style="display: flex;">
+						<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+						<a href="options-general.php?page=add_preview_site" class="button-primary" style="margin-left: auto; height: 1.2em; margin-top: 9px">+ <?php esc_html_e( 'Add Preview Site', 'wp-decoupled-preview' ); ?></a>
+					</span>
+			<?php
+			$wp_list_table = new List_Table();
+			$wp_list_table->prepare_items();
+			$wp_list_table->display();
+			?>
+				</div>
+			</div>
+			<?php
 		}
 
 		/**
