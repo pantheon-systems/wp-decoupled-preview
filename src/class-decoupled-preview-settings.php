@@ -107,7 +107,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				esc_html__( 'Preview Sites', 'wp-decoupled-preview' ),
 				'manage_options',
 				'delete_preview_site',
-				[ $this, 'wp_decoupled_preview_delete_html' ]
+				[ $this, 'preview_delete_html' ]
 			);
 		}
 
@@ -141,7 +141,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				__( 'Preview Sites', 'wp-decoupled-preview' ),
 				'manage_options',
 				'preview_sites',
-				[ &$this, 'wp_decoupled_preview_list_html' ]
+				[ &$this, 'preview_list_html' ]
 			);
 		}
 
@@ -150,7 +150,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return void
 		 */
-		public function wp_decoupled_preview_create_html() {
+		public function preview_create_html() {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-decoupled-preview' ) );
 			}
@@ -195,7 +195,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return void
 		 */
-		public function wp_decoupled_preview_delete_html() {
+		public function preview_delete_html() {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-decoupled-preview' ) );
 			}
@@ -213,11 +213,11 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		}
 
 		/**
-		 * HTML for list preview site.
+		 * HTML for list preview sites settings page.
 		 *
 		 * @return void
 		 */
-		public function wp_decoupled_preview_list_html() {
+		public function preview_list_html() {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-decoupled-preview' ) );
 			}
