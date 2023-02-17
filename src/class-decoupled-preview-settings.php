@@ -269,12 +269,12 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return array|array[]|false|mixed
 		 */
 		public function sanitize_callback_preview( array $input ) {
-			var_dump( $input );
+
 			$options = get_option( 'preview_sites' );
 			if ( ! $options ) {
 				return;
 			}
-			var_dump( $options );
+
 			// Set Content type in correct format.
 			if ( isset( $input['content_type'] ) ) {
 				foreach ( $input['content_type'] as $key => $type ) {
@@ -472,7 +472,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 */
 		public function delete_preview_site( int $site_id = null ) {
 			$sites = $this->get_preview_site( $site_id );
-			var_dump( $sites );
+
 			get_option( 'preview_sites' );
 			delete_option( 'preview_sites' );
 			if ( isset( $site_id ) ) {
