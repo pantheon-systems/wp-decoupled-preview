@@ -8,10 +8,12 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Composer dependencies
         run: composer install
+      - name: Install WP Unit tests
+        run: |
+          php -v
+          mysqladmin -V
+          composer test:install
       - name: Run linter
         run: composer lint
       - name: Run tests
-        run: |
-          php -v
-          composer test:install
-          composer test
+        run: composer test
