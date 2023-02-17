@@ -25,22 +25,22 @@ class List_Table extends WP_List_table {
 		$items = [];
 		$sortable = $this->get_sortable_columns();
 		$this->_column_headers = [ $columns, $hidden, $sortable ];
-		$per_page = 3; // TODO: Change this to 20 when done testing pagination.
-		$paged = ( isset( $_GET['paged'] ) ) ? absint( $_GET['paged'] ) : 1;
+		$per_page = 20; // TODO: For pagination. This should be configurable via screen options but 20 is probably more than anyone would realistically ever need.
+		// We can bypass nonce verification here because we're not processing any form data, we're just checking the pagination.
+		$paged = ( isset( $_GET['paged'] ) ) ? absint( $_GET['paged'] ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$offset = ( $paged - 1 ) * $per_page;
-
-		if ( isset( $preview_sites['preview'] ) ) {
+		$sites = isset( $preview_sites['preview'] ) ? $preview_sites['preview'] : [];
+		$total_items = count( $sites );
+		if ( ! empty( $sites ) ) {
 			// Add an id parameter for each item in $preview_sites.
-			foreach ( $preview_sites['preview'] as $key => $value ) {
-				$preview_sites['preview'][ $key ]['id'] = $key;
+			foreach ( $sites as $key => $value ) {
+				$sites[ $key ]['id'] = $key;
 			}
-
-			$items = array_slice( $preview_sites['preview'], $offset, $per_page );
-			usort( $items, [ $this, 'usort_reorder' ] );
 		}
-
+		$items = ! empty( $sites ) ? array_slice( $sites, $offset, $per_page ) : $sites;
+		usort( $items, [ $this, 'usort_reorder' ] );
 		$this->set_pagination_args( [
-			'total_items' => 0,
+			'total_items' => $total_items,
 			'per_page' => $per_page,
 		] );
 		$this->items = $items;
@@ -68,8 +68,9 @@ class List_Table extends WP_List_table {
 	 * @return int
 	 */
 	private function usort_reorder( $a, $b ) : int {
-		$orderby = ( ! empty( $_GET['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'label';
-		$order = ( ! empty( $_GET['order'] ) ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'asc';
+		// Similar to the above, I don't think we need to check the nonce here because we're not processing any information other than the sort order.
+		$orderby = ( ! empty( $_GET['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'label'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$order = ( ! empty( $_GET['order'] ) ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'asc'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$result = strcmp( $a[ $orderby ], $b[ $orderby ] );
 		return ( 'asc' === $order ) ? $result : - $result;
 	}
