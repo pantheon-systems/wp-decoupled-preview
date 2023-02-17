@@ -187,8 +187,8 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 								'page' => 'delete_preview_site',
 								'delete' => $edit_id,
 							], admin_url( 'options-general.php' ) ),
-						'edit-preview-site',
-						'nonce'
+							'edit-preview-site',
+							'nonce'
 						);
 						?>
 						<a id="delete-preview" class="button-secondary button-large" href="<?php echo esc_url( $url ); ?>">
@@ -243,10 +243,13 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 			}
 			require_once plugin_dir_path( __FILE__ ) . 'class-list-table.php';
-			$add_site_url = wp_nonce_url( add_query_arg( [
-				'page' => 'add_preview_sites',
-			], admin_url( 'options-general.php' ) ),
-			'edit-preview-site', 'nonce' );
+			$add_site_url = wp_nonce_url(
+				add_query_arg( [
+					'page' => 'add_preview_sites',
+				], admin_url( 'options-general.php' ) ),
+				'edit-preview-site',
+				'nonce'
+			);
 			?>
 			<div class="wrap">
 				<div>
