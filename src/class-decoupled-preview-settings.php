@@ -269,34 +269,34 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return array|array[]|false|mixed
 		 */
 		public function sanitize_callback_preview( array $input ) {
-			if ( $this->verify_nonce_get_action_id( 'delete' ) ) {
-				return [ 'preview' => $input ];
-			} else {
-				$options = get_option( 'preview_sites' );
+            $options = get_option( 'preview_sites' );
+            if ( ! $options ) {
+                return;
+            }
 				// Set Content type in correct format.
-				if ( isset( $input['content_type'] ) ) {
-					foreach ( $input['content_type'] as $key => $type ) {
-						$input['content_type'][ $key ] = strtolower( $type );
-					}
-				}
-				check_admin_referer( 'edit-preview-site', 'nonce' );
-				$edit_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : null;
-				$last_key = array_key_last( $options['preview'] );
-				if ( 1 === $last_key && null === $options['preview'][1]['label'] ) {
-					return [ 'preview' => [ 1 => $input ] ];
-				}
-				if ( $options && isset( $edit_id ) ) {
-					// Setting the old secret value if nothing is input when editing.
-					if ( empty( $input['secret_string'] ) ) {
-						$input['secret_string'] = $options['preview'][ $edit_id ]['secret_string'];
-					}
-					$options['preview'][ $edit_id ] = $input;
-					return $options;
-				} elseif ( $options && isset( $last_key ) ) {
-					$options['preview'][ ++$last_key ] = $input;
-					return $options;
-				}
-			}
+            // Set Content type in correct format.
+            if ( isset( $input['content_type'] ) ) {
+                foreach ( $input['content_type'] as $key => $type ) {
+                    $input['content_type'][ $key ] = strtolower( $type );
+                }
+            }
+            check_admin_referer( 'edit-preview-site', 'nonce' );
+            $edit_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : null;
+            $last_key = array_key_last( $options['preview'] );
+            if ( 1 === $last_key && null === $options['preview'][1]['label'] ) {
+                return [ 'preview' => [ 1 => $input ] ];
+            }
+            if ( $options && isset( $edit_id ) ) {
+                // Setting the old secret value if nothing is input when editing.
+                if ( empty( $input['secret_string'] ) ) {
+                    $input['secret_string'] = $options['preview'][ $edit_id ]['secret_string'];
+                }
+                $options['preview'][ $edit_id ] = $input;
+                return $options;
+            } elseif ( $options && isset( $last_key ) ) {
+                $options['preview'][ ++$last_key ] = $input;
+                return $options;
+            }
 		}
 
 		/**
