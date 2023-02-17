@@ -22,19 +22,22 @@ class List_Table extends WP_List_table {
 		$preview_sites = get_option( 'preview_sites' );
 		$columns = $this->get_columns();
 		$hidden  = [];
+        $items = [];
 		$sortable = $this->get_sortable_columns();
 		$this->_column_headers = [ $columns, $hidden, $sortable ];
 		$per_page = 3; // TODO: Change this to 20 when done testing pagination.
 		$paged = ( isset( $_GET['paged'] ) ) ? absint( $_GET['paged'] ) : 1;
 		$offset = ( $paged - 1 ) * $per_page;
 
-		// Add an id parameter for each item in $preview_sites.
-		foreach ( $preview_sites['preview'] as $key => $value ) {
-			$preview_sites['preview'][ $key ]['id'] = $key;
-		}
+        if ( isset( $preview_sites['preview'] ) ) {
+            // Add an id parameter for each item in $preview_sites.
+            foreach ( $preview_sites['preview'] as $key => $value ) {
+                $preview_sites['preview'][ $key ]['id'] = $key;
+            }
 
-		$items = array_slice( $preview_sites['preview'], $offset, $per_page );
-		usort( $items, [ $this, 'usort_reorder' ] );
+            $items = array_slice( $preview_sites['preview'], $offset, $per_page );
+            usort( $items, [ $this, 'usort_reorder' ] );
+        }
 
 		$this->set_pagination_args( [
 			'total_items' => 0,
