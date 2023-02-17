@@ -182,13 +182,14 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 					<?php
 					if ( $edit_id ) {
 						$site_label = $this->get_preview_site( $edit_id )['label'];
-						$url = add_query_arg(
-							[
-								'delete' => $edit_id,
-								'nonce' => wp_create_nonce( 'delete' . $edit_id ),
-							],
-							'options-general.php?page=delete_preview_site'
-						);
+						$url = wp_nonce_url(
+                            add_query_arg( [
+                                'page' => 'delete_preview_site',
+                                'delete' => $edit_id,
+                            ], admin_url( 'options-general.php' ) ),
+                        'edit-preview-site',
+                        'nonce'
+                        );
 						?>
 						<a id="delete-preview" class="button-secondary button-large" href="<?php echo esc_url( $url ); ?>">
 							<?php
@@ -215,17 +216,16 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-decoupled-preview' ) );
 			}
-			$delete_id = $this->verify_nonce_get_action_id( 'delete' );
 
-			if ( ! $delete_id && ! check_admin_referer( 'delete' ) ) {
-				wp_die( esc_html__( 'Unable perform action: invalid nonce', 'wp-decoupled-preview' ) );
+            check_admin_referer( 'edit-preview-site', 'nonce' );
+            $delete_id = isset( $_GET['delete'] ) ? sanitize_text_field( $_GET['delete'] ) : false;
+
+			if ( ! $delete_id ) {
+				wp_die( esc_html__( 'Unable perform action: Site not found.', 'wp-decoupled-preview' ) );
 			}
 
-			if ( $delete_id ) {
-				$this->delete_preview_site( $delete_id );
-				echo '<script type="text/javascript">window.location = "options-general.php?page=preview_sites"</script>';
-				exit;
-			}
+            $this->delete_preview_site( $delete_id );
+            echo '<script type="text/javascript">window.location = "options-general.php?page=preview_sites"</script>';
 		}
 
 		/**
