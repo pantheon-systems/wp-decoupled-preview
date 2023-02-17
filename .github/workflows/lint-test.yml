@@ -12,6 +12,6 @@ jobs:
         run: composer lint
       - name: Run tests
         run: |
-        php -v
-        composer test:install
-        composer test
+          php -v
+          composer test:install
+          composer test
