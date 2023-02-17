@@ -243,12 +243,16 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 			}
 			require_once plugin_dir_path( __FILE__ ) . 'class-list-table.php';
+			$add_site_url = wp_nonce_url( add_query_arg( [
+				'page' => 'add_preview_sites',
+			], admin_url( 'options-general.php' ) ),
+			'edit-preview-site', 'nonce' );
 			?>
 			<div class="wrap">
 				<div>
 					<span style="display: flex;">
 						<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-						<a href="options-general.php?page=add_preview_site" class="button-primary" style="margin-left: auto; height: 1.2em; margin-top: 9px">+ <?php esc_html_e( 'Add Preview Site', 'wp-decoupled-preview' ); ?></a>
+						<a href="<?php echo esc_url_raw( $add_site_url ); ?>" class="button-primary" style="margin-left: auto; height: 1.2em; margin-top: 9px">+ <?php esc_html_e( 'Add Preview Site', 'wp-decoupled-preview' ); ?></a>
 					</span>
 			<?php
 			wp_create_nonce( 'preview-site-list' );
