@@ -4,17 +4,21 @@
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "authors": [
-      {
+        {
+            "name": "Pantheon",
+            "email": "noreply@pantheon.io"
+        },
+        {
         "name": "abhisekmazumdar",
         "email": "abhisek.mazumdar@pantheon.io"
-      }
+        },
+        {
+            "name": "Chris Reynolds",
+            "email": "chris.reynolds@pantheon.io"
+        }
     ],
     "require-dev": {
-        "wp-coding-standards/wpcs": "^2.3",
-        "phpcompatibility/phpcompatibility-wp": "^2.1",
-        "automattic/vipwpcs": "^2.3",
-        "phpunit/phpunit": "^9",
-        "yoast/phpunit-polyfills": "^1.0.0"
+        "pantheon-systems/pantheon-wp-coding-standards": "^1.0"
     },
     "config": {
         "allow-plugins": {
@@ -24,8 +28,8 @@
     },
     "scripts": {
         "lint:php": "find ./wp-decoupled-preview.php ./src ./templates -name '*.php' -exec php -l {} \\;",
-        "lint:phpcs": "phpcs -s --standard=phpcs.ruleset.xml --extensions=php --ignore=vendor",
-        "lint:phpcbf": "phpcbf -s --standard=phpcs.ruleset.xml --extensions=php --ignore=vendor",
+        "lint:phpcs": "phpcs -s --ignore=tests/* --standard=Pantheon-WP .",
+        "lint:phpcbf": "phpcbf -s --ignore=tests/* --standard=Pantheon-WP .",
         "lint": "composer lint:php && composer lint:phpcs",
         "phpunit": "vendor/bin/phpunit",
         "test": "@phpunit",
