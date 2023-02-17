@@ -132,7 +132,8 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 
 			$css .= '</style>';
-			echo $css;
+			// We can ignore escaping this output because it only contains code that we've hard coded with no possibility of user input.
+			echo $css; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
