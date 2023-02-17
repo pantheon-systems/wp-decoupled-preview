@@ -183,13 +183,13 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 					if ( $edit_id ) {
 						$site_label = $this->get_preview_site( $edit_id )['label'];
 						$url = wp_nonce_url(
-                            add_query_arg( [
-                                'page' => 'delete_preview_site',
-                                'delete' => $edit_id,
-                            ], admin_url( 'options-general.php' ) ),
-                        'edit-preview-site',
-                        'nonce'
-                        );
+							add_query_arg( [
+								'page' => 'delete_preview_site',
+								'delete' => $edit_id,
+							], admin_url( 'options-general.php' ) ),
+						'edit-preview-site',
+						'nonce'
+						);
 						?>
 						<a id="delete-preview" class="button-secondary button-large" href="<?php echo esc_url( $url ); ?>">
 							<?php
@@ -217,15 +217,15 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-decoupled-preview' ) );
 			}
 
-            check_admin_referer( 'edit-preview-site', 'nonce' );
-            $delete_id = isset( $_GET['delete'] ) ? sanitize_text_field( $_GET['delete'] ) : false;
+			check_admin_referer( 'edit-preview-site', 'nonce' );
+			$delete_id = isset( $_GET['delete'] ) ? sanitize_text_field( $_GET['delete'] ) : false;
 
 			if ( ! $delete_id ) {
 				wp_die( esc_html__( 'Unable perform action: Site not found.', 'wp-decoupled-preview' ) );
 			}
 
-            $this->delete_preview_site( $delete_id );
-            echo '<script type="text/javascript">window.location = "options-general.php?page=preview_sites"</script>';
+			$this->delete_preview_site( $delete_id );
+			echo '<script type="text/javascript">window.location = "options-general.php?page=preview_sites"</script>';
 		}
 
 		/**
@@ -269,34 +269,35 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return array|array[]|false|mixed
 		 */
 		public function sanitize_callback_preview( array $input ) {
-            $options = get_option( 'preview_sites' );
-            if ( ! $options ) {
-                return;
-            }
-				// Set Content type in correct format.
-            // Set Content type in correct format.
-            if ( isset( $input['content_type'] ) ) {
-                foreach ( $input['content_type'] as $key => $type ) {
-                    $input['content_type'][ $key ] = strtolower( $type );
-                }
-            }
-            check_admin_referer( 'edit-preview-site', 'nonce' );
-            $edit_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : null;
-            $last_key = array_key_last( $options['preview'] );
-            if ( 1 === $last_key && null === $options['preview'][1]['label'] ) {
-                return [ 'preview' => [ 1 => $input ] ];
-            }
-            if ( $options && isset( $edit_id ) ) {
-                // Setting the old secret value if nothing is input when editing.
-                if ( empty( $input['secret_string'] ) ) {
-                    $input['secret_string'] = $options['preview'][ $edit_id ]['secret_string'];
-                }
-                $options['preview'][ $edit_id ] = $input;
-                return $options;
-            } elseif ( $options && isset( $last_key ) ) {
-                $options['preview'][ ++$last_key ] = $input;
-                return $options;
-            }
+			var_dump( $input );
+			$options = get_option( 'preview_sites' );
+			if ( ! $options ) {
+				return;
+			}
+			var_dump( $options );
+			// Set Content type in correct format.
+			if ( isset( $input['content_type'] ) ) {
+				foreach ( $input['content_type'] as $key => $type ) {
+					$input['content_type'][ $key ] = strtolower( $type );
+				}
+			}
+			check_admin_referer( 'edit-preview-site', 'nonce' );
+			$edit_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : null;
+			$last_key = array_key_last( $options['preview'] );
+			if ( 1 === $last_key && null === $options['preview'][1]['label'] ) {
+				return [ 'preview' => [ 1 => $input ] ];
+			}
+			if ( $options && isset( $edit_id ) ) {
+				// Setting the old secret value if nothing is input when editing.
+				if ( empty( $input['secret_string'] ) ) {
+					$input['secret_string'] = $options['preview'][ $edit_id ]['secret_string'];
+				}
+				$options['preview'][ $edit_id ] = $input;
+				return $options;
+			} elseif ( $options && isset( $last_key ) ) {
+				$options['preview'][ ++$last_key ] = $input;
+				return $options;
+			}
 		}
 
 		/**
@@ -447,11 +448,16 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 */
 		public function get_preview_site( int $id = null ): array {
 			check_admin_referer( 'edit-preview-site', 'nonce' );
-			$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : false;
-			$preview_sites = get_option( 'preview_sites' )['preview'];
+			// This is ugly, but check either the id param or the delete param.
+			$id = ( isset( $_GET['id'] ) ? absint( $_GET['id'] ) : isset( $_GET['delete'] ) ) ? absint( $_GET['delete'] ) : $id;
+			$preview_sites = get_option( 'preview_sites' );
+
+			if ( ! $preview_sites || ! isset( $preview_sites['preview'] ) ) {
+				return [];
+			}
 
 			if ( $id ) {
-				return $preview_sites[ $id ];
+				return $preview_sites['preview'][ $id ];
 			}
 
 			return $preview_sites;
@@ -465,7 +471,9 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function delete_preview_site( int $site_id = null ) {
-			$sites = $this->get_preview_site();
+			$sites = $this->get_preview_site( $site_id );
+			var_dump( $sites );
+			get_option( 'preview_sites' );
 			delete_option( 'preview_sites' );
 			if ( isset( $site_id ) ) {
 				unset( $sites[ $site_id ] );
