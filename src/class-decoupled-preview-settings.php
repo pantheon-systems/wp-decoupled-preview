@@ -187,8 +187,8 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 								'page' => 'delete_preview_site',
 								'delete' => $edit_id,
 							], admin_url( 'options-general.php' ) ),
-							'edit-preview-site',
-							'nonce'
+						'edit-preview-site',
+						'nonce'
 						);
 						?>
 						<a id="delete-preview" class="button-secondary button-large" href="<?php echo esc_url( $url ); ?>">
