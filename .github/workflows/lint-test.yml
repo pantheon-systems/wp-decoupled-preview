@@ -4,6 +4,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     name: Lint & Test
+    env:
+      DB_USER: root
+      DB_PASSWORD: ''
+      DB_HOST: localhost
     steps:
       - uses: actions/checkout@v2
       - name: Install Composer dependencies
@@ -12,6 +16,7 @@ jobs:
         run: |
           php -v
           mysqladmin -V
+          sudo /etc/init.d/mysql start
           composer test:install
       - name: Run linter
         run: composer lint
