@@ -12,11 +12,14 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Composer dependencies
         run: composer install
+      - name: Setup MySQL
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e "CREATE DATABASE IF NOT EXISTS wordpress_test;"
       - name: Install WP Unit tests
         run: |
           php -v
           mysqladmin -V
-          sudo /etc/init.d/mysql start
           composer test:install
       - name: Run linter
         run: composer lint
