@@ -184,7 +184,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 					settings_fields( 'wp-decoupled-preview' );
 					do_settings_sections( 'preview_sites' );
 					?>
-					<input type="hidden" name="id" value="<?php ( $edit_id ) ?: ''; ?>" />
+					<?php wp_nonce_field( 'edit-preview-site', 'nonce' ); ?>
 					<?php submit_button(); ?>
 					<?php
 					if ( $edit_id ) {
