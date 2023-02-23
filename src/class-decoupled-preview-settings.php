@@ -342,21 +342,6 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		}
 
 		/**
-		 * Sanitize & save the sites values in correct format.
-		 *
-		 * @param array $input Input values from form.
-		 *
-		 * @return array|array[]|false|mixed
-		 */
-		private function sanitize_callback_sites( array $sites ) : array {
-			foreach ( $sites['preview'] as $edit_id => $input ) {
-				$sites['preview'][ $edit_id ] = $this->sanitize_callback_preview( $input );
-			}
-
-			return $sites;
-		}
-
-		/**
 		 * Return an array of allowed post types.
 		 *
 		 * TODO: This function should be refactored to pull a list of public
@@ -633,6 +618,14 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			update_option( 'preview_sites', $sites );
 		}
 
+		/**
+		 * Check preview sites array for bad data.
+		 * Remove offending data from the array.
+		 *
+		 * @param array $preview_sites The array of preview sites.
+		 *
+		 * @return array The updated array of preview sites.
+		 */
 		private function filter_preview_sites( array $preview_sites ) : array {
 			if ( count( $preview_sites ) < 1 ) {
 				return $preview_sites;
