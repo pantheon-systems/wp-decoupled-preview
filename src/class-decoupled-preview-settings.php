@@ -192,7 +192,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 						$url = wp_nonce_url(
 							add_query_arg( [
 								'page' => 'delete_preview_site',
-								'delete' => $edit_id,
+								'id' => $edit_id,
 							], admin_url( 'options-general.php' ) ),
 							'edit-preview-site',
 							'nonce'
