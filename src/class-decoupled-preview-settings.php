@@ -595,21 +595,70 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return void
 		 */
 		public function delete_preview_site( int $site_id = null ) {
-			$sites = $this->get_preview_site( $site_id );
+			$site = $this->get_preview_site( $site_id );
+			$sites = get_option( 'preview_sites' );
+			$preview_sites = $sites['preview'];
 
-			get_option( 'preview_sites' );
-			delete_option( 'preview_sites' );
-			if ( isset( $site_id ) ) {
-				unset( $sites[ $site_id ] );
-				if ( empty( $sites ) ) {
-					$sites[1] = [
-						'label' => null,
-						'url' => null,
-						'secret_string' => null,
-					];
+			// Check if the site we're deleting exists in the list of sites.
+			$preview_sites = $this->filter_preview_sites( $preview_sites );
+
+			foreach ( $preview_sites as $site_key => $site_to_check ) {
+				// Check for an ID. This should be a more direct match but it was added later so it might not exist.
+				if (
+					( isset( $site['id'] ) && isset( $site_to_check['id'] ) ) &&
+					! in_array( '', [ $site_to_check['id'], $site['id'] ], true )
+				) {
+					if ( $site_to_check['id'] === $site['id'] ) {
+						unset( $preview_sites[ $site_key ] );
+					}
+				} elseif ( isset( $site_to_check['id'] ) && '' === $site_to_check['id'] ) {
+					// If there wasn't an ID, save one.
+					$preview_sites[ $site_key ]['id'] = $site_key;
 				}
-				add_option( 'preview_sites', $sites );
+
+				// If we didn't find a key, we'll go by label. It should just be the next best thing.
+				if (
+					( isset( $site_to_check['label'] ) && isset( $site['label'] ) ) &&
+					$site_to_check['label'] === $site['label']
+				) {
+					unset( $preview_sites[ $site_key ] );
+				}
 			}
+
+			// Unset the old list of sites and set the new one.
+			unset( $sites['preview'] );
+			sort( $preview_sites );
+			$sites['preview'] = $preview_sites;
+			update_option( 'preview_sites', $sites );
+		}
+
+		private function filter_preview_sites( array $preview_sites ) : array {
+			if ( count( $preview_sites ) < 1 ) {
+				return $preview_sites;
+			}
+
+			$updated_preview_sites = $preview_sites;
+			foreach ( $updated_preview_sites as $site_key => $site_to_check ) {
+				// Check for a label. If one does not exist, remove the site.
+				if ( ! isset( $site_to_check['label'] ) ) {
+					unset( $updated_preview_sites[ $site_key ] );
+				}
+
+				// Check for corrupted data. These are records that were stored mistakenly.
+				if ( isset( $site_to_check['preview'] ) ) {
+					unset( $updated_preview_sites[ $site_key ] );
+				}
+
+				// Check if the site we're on or the site we're checking is missing required data. If so, remove them.
+				if (
+					empty( $site_to_check ) ||
+					empty( $site_to_check['label'] )
+				) {
+					unset( $updated_preview_sites[ $site_key ] );
+				}
+			}
+
+			return $updated_preview_sites;
 		}
 
 		/**
