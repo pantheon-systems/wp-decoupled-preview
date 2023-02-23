@@ -401,21 +401,33 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		}
 
 		/**
-		 * Verify Nonce & return the action ID.
+		 * Validate the preview id.
 		 *
-		 * @param string $action Action name.
+		 * Ensures a valid ID is set for the preview site. If a non-zero value
+		 * is passed, it will be returned. Otherwise, we check for the
+		 * existence of other sites and attempt to assign a valid ID.
 		 *
-		 * @return string|null
+		 * @param int $edit_id The ID of the site to validate.
+		 * @param string|array $options The array of saved sites. Optional but recommended.
+		 *
+		 * @return int
 		 */
-		public function verify_nonce_get_action_id( string $action ): ?string {
-			$filtered_action = filter_input( INPUT_GET, $action, FILTER_SANITIZE_SPECIAL_CHARS );
-			$filtered_nonce  = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_SPECIAL_CHARS );
-			// If action is set and nonce gets verified.
-			if ( $filtered_action && $filtered_nonce && wp_verify_nonce( $filtered_nonce, $action . $filtered_action ) ) {
-				return $filtered_action;
-			} else {
-				return null;
+		private function validate_preview_id( int $edit_id, string|array $options = [] ) : int {
+			if ( empty( $options ) ) {
+				$options = get_option( 'preview_sites' );
 			}
+
+			// If we don't have saved sites, and we're adding a new site, set the ID.
+			if ( ! $options && $edit_id === 0 ) {
+				$edit_id = 1;
+			}
+
+			// If we're adding a new site and have options, set the ID to one higher than the highest existing ID.
+			if ( $options && $edit_id === 0 ) {
+				$edit_id = absint( max( wp_list_pluck( $options['preview'], 'id' ) ) ) + 1;
+			}
+
+			return $edit_id;
 		}
 
 		/**
