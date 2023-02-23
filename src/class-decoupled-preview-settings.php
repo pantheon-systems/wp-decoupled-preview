@@ -475,8 +475,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 */
 		public function get_preview_site( int $id = null ): array {
 			check_admin_referer( 'edit-preview-site', 'nonce' );
-			// This is ugly, but check either the id param or the delete param.
-			$id = ( isset( $_GET['id'] ) ? absint( $_GET['id'] ) : isset( $_GET['delete'] ) ) ? absint( $_GET['delete'] ) : $id;
+			$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : $id;
 			$preview_sites = get_option( 'preview_sites' );
 
 			if ( ! $preview_sites || ! isset( $preview_sites['preview'] ) ) {
