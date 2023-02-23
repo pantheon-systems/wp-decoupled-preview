@@ -31,12 +31,14 @@ class List_Table extends WP_List_table {
 		$offset = ( $paged - 1 ) * $per_page;
 		$sites = isset( $preview_sites['preview'] ) ? $preview_sites['preview'] : [];
 		$total_items = count( $sites );
+
 		if ( ! empty( $sites ) ) {
 			// Add an id parameter for each item in $preview_sites.
 			foreach ( $sites as $key => $value ) {
 				$sites[ $key ]['id'] = $key;
 			}
 		}
+
 		$items = ! empty( $sites ) ? array_slice( $sites, $offset, $per_page ) : $sites;
 		usort( $items, [ $this, 'usort_reorder' ] );
 		$this->set_pagination_args( [
