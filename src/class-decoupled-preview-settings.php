@@ -77,6 +77,13 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				'preview_sites',
 				'wp-decoupled-preview-section'
 			);
+			add_settings_field(
+				'plugin_hidden',
+				'',
+				[ &$this, 'setting_hidden_fn' ],
+				'preview_sites',
+				'wp-decoupled-preview-section'
+			);
 		}
 
 		/**
@@ -443,6 +450,19 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				}
 			}
 			esc_html_e( 'If no content types are specified, the preview site should display for all content types.', 'wp-decoupled-preview' );
+		}
+
+		/**
+		 * Hidden Field.
+		 *
+		 * @return void
+		 */
+		public function setting_hidden_fn() {
+			check_admin_referer( 'edit-preview-site', 'nonce' );
+			$edit_id = isset( $_GET['id'] ) ? sanitize_text_field( $_GET['id'] ) : false;
+			?>
+			<input id="plugin_hidden" name="preview_sites[id]" size="40" type="hidden" value="<?php echo $edit_id ? absint( $edit_id ) : ''; ?>" />
+			<?php
 		}
 
 		/**
