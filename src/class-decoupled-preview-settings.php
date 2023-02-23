@@ -283,35 +283,121 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return array|array[]|false|mixed
 		 */
 		public function sanitize_callback_preview( array $input ) {
-
-			$options = get_option( 'preview_sites' );
-			if ( ! $options ) {
-				return;
+			check_admin_referer( 'edit-preview-site', 'nonce' );
+			// Bail early if no input.
+			if ( empty( $input ) ) {
+				return [];
 			}
 
+			// Switch to preview sites sanitization if we're deleting a site.
+			if ( isset( $_GET['page'] ) && 'delete_preview_site' === $_GET['page'] && isset( $input['preview'] ) ) {
+				// Already santized.
+				return $input;
+			}
+
+			// Bail early if we are missing required data.
+			if ( in_array( '', [ $input['label'], $input['url'], $input['preview_type'] ], true ) ) {
+				return [];
+			}
+			$options = get_option( 'preview_sites' );
+			$sanitized_input = [];
+			$edit_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : null;
 			// Set Content type in correct format.
 			if ( isset( $input['content_type'] ) ) {
 				foreach ( $input['content_type'] as $key => $type ) {
-					$input['content_type'][ $key ] = strtolower( $type );
+					$type = strtolower( $type );
+					if ( in_array( $type, $this->get_allowed_post_types(), true ) ) {
+						$sanitized_input['content_type'][ $key ] = sanitize_text_field( $type );
+					}
 				}
 			}
-			check_admin_referer( 'edit-preview-site', 'nonce' );
-			$edit_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : null;
-			$last_key = array_key_last( $options['preview'] );
-			if ( 1 === $last_key && null === $options['preview'][1]['label'] ) {
-				return [ 'preview' => [ 1 => $input ] ];
-			}
+
 			if ( $options && isset( $edit_id ) ) {
-				// Setting the old secret value if nothing is input when editing.
+				// If we're editing an existing site, preserve the secret key if it's not being changed.
 				if ( empty( $input['secret_string'] ) ) {
-					$input['secret_string'] = $options['preview'][ $edit_id ]['secret_string'];
+					$sanitized_input['secret_string'] = sanitize_text_field( $options['preview'][ $edit_id ]['secret_string'] );
 				}
-				$options['preview'][ $edit_id ] = $input;
-				return $options;
-			} elseif ( $options && isset( $last_key ) ) {
-				$options['preview'][ ++$last_key ] = $input;
-				return $options;
+
+				// If we're editing an existing site, check to make sure there's an ID set.
+				if ( empty( $input['id'] ) ) {
+					$sanitized_input['id'] = $this->validate_preview_id( $edit_id, $options );
+				}
 			}
+
+			$input['id'] = isset( $input['id'] ) ? absint( $input['id'] ) : 0;
+			// If an input id was passed, just sanitize the ID.
+			$sanitized_input['id'] = isset( $sanitized_input['id'] ) ? absint( $sanitized_input['id'] ) : $this->validate_preview_id( $input['id'], $options );
+			$sanitized_input['label'] = sanitize_text_field( $input['label'] );
+			$sanitized_input['url'] = esc_url_raw( $input['url'] );
+			$sanitized_input['preview_type'] = $this->sanitize_preview_type( $input['preview_type'] );
+			// Sanitize the secret string if it was added.
+			if ( isset( $input['secret_string'] ) ) {
+				$sanitized_input['secret_string'] = sanitize_text_field( $input['secret_string'] );
+			}
+			$edit_id = ! isset( $edit_id ) || $edit_id !== $sanitized_input['id'] ? $sanitized_input['id'] : $edit_id;
+
+			$options['preview'][ $edit_id ] = $sanitized_input;
+			return $options;
+		}
+
+		/**
+		 * Sanitize & save the sites values in correct format.
+		 *
+		 * @param array $input Input values from form.
+		 *
+		 * @return array|array[]|false|mixed
+		 */
+		private function sanitize_callback_sites( array $sites ) : array {
+			foreach ( $sites['preview'] as $edit_id => $input ) {
+				$sites['preview'][ $edit_id ] = $this->sanitize_callback_preview( $input );
+			}
+
+			return $sites;
+		}
+
+		/**
+		 * Return an array of allowed post types.
+		 *
+		 * TODO: This function should be refactored to pull a list of public
+		 * post types to add support for custom post types.
+		 *
+		 * @return array
+		 */
+		private function get_allowed_post_types() : array {
+			return [ 'post', 'page' ];
+		}
+
+		/**
+		 * Sanitize the preview type.
+		 *
+		 * Currently only Next.js is supported but additional types can be
+		 * added via the pantheon.db.allowed_preview_types filter.
+		 *
+		 * @param string $type The preview type to sanitize.
+		 *
+		 * @return string
+		 */
+		private function sanitize_preview_type( string $type ) : string {
+			/**
+			 * Allow the allowable preview types to be filtered.
+			 *
+			 * Usage:
+			 * add_filter( 'pantheon.dp.allowed_preview_types', function( $allowed_types ) {
+			 *    $allowed_types[] = 'My Custom Type';
+			 *   return $allowed_types;
+			 * } );
+			 *
+			 * @param array $allowed_types Array of allowed preview types.
+			 *
+			 * @return array
+			 */
+			$allowed_types = apply_filters( 'pantheon.dp.allowed_preview_types', [ 'Next.js' ] );
+
+			if ( in_array( $type, $allowed_types, true ) ) {
+				return sanitize_text_field( $type );
+			}
+
+			return '';
 		}
 
 		/**
