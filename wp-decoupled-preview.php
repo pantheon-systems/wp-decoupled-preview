@@ -91,10 +91,11 @@ function set_default_options() {
 		[
 			'preview' => [
 				1 => [
-					'label'         => esc_html__( 'Example NextJS Preview', 'wp-decoupled-preview' ),
-					'url'           => 'https://example.com/api/preview',
+					'label' => esc_html__( 'Example NextJS Preview', 'wp-decoupled-preview' ),
+					'url' => 'https://example.com/api/preview',
 					'secret_string' => $secret,
-					'preview_type'  => 'Next.js',
+					'preview_type' => 'Next.js',
+					'id' => 1,
 				],
 			],
 		]
