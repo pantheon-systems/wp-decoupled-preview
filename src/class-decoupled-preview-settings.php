@@ -225,7 +225,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 
 			check_admin_referer( 'edit-preview-site', 'nonce' );
-			$delete_id = isset( $_GET['delete'] ) ? sanitize_text_field( $_GET['delete'] ) : false;
+			$delete_id = isset( $_GET['id'] ) ? sanitize_text_field( $_GET['id'] ) : false;
 
 			if ( ! $delete_id ) {
 				wp_die( esc_html__( 'Unable perform action: Site not found.', 'wp-decoupled-preview' ) );
