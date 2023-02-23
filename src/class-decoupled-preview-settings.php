@@ -175,6 +175,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			} else {
 				$action = 'options.php';
 			}
+
 			?>
 			<div class="wrap">
 				<h1><?php esc_html_e( 'Create or Edit Preview Site', 'wp-decoupled-preview' ); ?></h1>
@@ -681,6 +682,5 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 			return null;
 		}
-
 	}
 }
