@@ -26,4 +26,6 @@
 * Update readme.tx
 * More unit tests
 * Consider exposing the "secret" token (does this really need to be secure?)
+* Consider removing deactivation hook
+  * Leaving the deactivation hook will delete any saved sites which may not be a desired behavior
 * Add configuration/setup instructions to readme.txt (or link from readme.txt to external site)
