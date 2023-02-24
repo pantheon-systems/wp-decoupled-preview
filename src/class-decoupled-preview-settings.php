@@ -558,8 +558,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *   Return a list of sites | Only a specific site.
 		 */
 		public function get_preview_site( int $id = null ): array {
-			check_admin_referer( 'edit-preview-site', 'nonce' );
-			$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : $id;
+			$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : $id; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$preview_sites = get_option( 'preview_sites' );
 
 			if ( ! $preview_sites || ! isset( $preview_sites['preview'] ) ) {
