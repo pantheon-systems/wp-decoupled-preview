@@ -398,7 +398,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return int
 		 */
-		private function validate_preview_id( int $edit_id, string|array $options = [] ) : int {
+		private function validate_preview_id( int $edit_id, $options = [] ) : int {
 			if ( empty( $options ) ) {
 				$options = get_option( 'preview_sites' );
 			}
