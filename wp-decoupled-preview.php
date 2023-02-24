@@ -154,25 +154,28 @@ function redirect_to_preview_site( $option_name ) {
  * @return void
  */
 function add_admin_decoupled_preview_link( $admin_bar ) {
-
 	global $pagenow;
+
 	if ( 'post.php' === $pagenow ) {
-		$query_args          = [];
-		$post_type           = get_post_type();
-		$preview_helper      = new Decoupled_Preview_Settings();
-		$sites               = $preview_helper->get_preview_site();
+		$preview_helper = new Decoupled_Preview_Settings();
+		$sites = $preview_helper->get_preview_site();
+		$post_type = get_post_type();
 		$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( $post_type );
-		if ( $sites && ! empty( $enable_by_post_type ) && ( ( 'post' === $post_type ) || ( 'page' === $post_type ) ) ) {
-			$admin_bar->add_menu(
-				[
-					'id'    => 'decoupled-preview',
-					'title' => 'Decoupled Preview',
-					'href'  => false,
-					'meta'  => [
-						'class' => 'components-button is-tertiary',
-					],
-				]
-			);
+		$query_args = [];
+
+		if (
+			$sites &&
+			! empty( $enable_by_post_type ) &&
+			( ( 'post' === $post_type ) || ( 'page' === $post_type ) )
+		) {
+			$admin_bar->add_menu( [
+				'id' => 'decoupled-preview',
+				'title' => 'Decoupled Preview',
+				'href' => false,
+				'meta' => [
+					'class' => 'components-button is-tertiary',
+				],
+			] );
 
 			// Reinventing the wheel and creating the preview link as done in wp/wp-admin/includes/post.php.
 			$post_id                     = get_the_ID();
@@ -182,27 +185,27 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
 			$query_args['preview_nonce'] = $nonce;
 
 			foreach ( $sites as $id => $site ) {
-				if ( ( ! isset( $site['content_type'] ) ) || ( in_array( $post_type, $site['content_type'], true ) ) ) {
+				if (
+					( ! isset( $site['content_type'] ) ) ||
+					( in_array( $post_type, $site['content_type'], true ) )
+				) {
 					$query_args['decoupled_preview_site'] = $id;
-					$preview_link                         = get_preview_post_link( $post->ID, $query_args );
-					$admin_bar->add_menu(
-						[
-							'id'     => 'preview-site-' . $id,
-							'parent' => 'decoupled-preview',
-							'title'  => $site['label'],
-							'href'   => $preview_link,
-							'meta'   => [
-								'title'  => $site['label'],
-								'target' => '_blank',
-								'class'  => 'dashicons-before dashicons-external components-button components-menu-item__button',
-							],
-						]
-					);
+					$preview_link                         = get_preview_post_link( $post_id, $query_args );
+					$admin_bar->add_menu( [
+						'id' => 'preview-site-' . $id,
+						'parent' => 'decoupled-preview',
+						'title' => $site['label'],
+						'href' => $preview_link,
+						'meta' => [
+							'title' => $site['label'],
+							'target' => '_blank',
+							'class' => 'dashicons-before dashicons-external components-button components-menu-item__button',
+						],
+					] );
 				}
 			}
 		}
 	}
-
 }
 
 /**
