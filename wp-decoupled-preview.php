@@ -24,8 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
-
 /**
  * Kick off the plugin.
  *
