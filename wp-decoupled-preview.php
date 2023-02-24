@@ -178,10 +178,9 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
 			] );
 
 			// Reinventing the wheel and creating the preview link as done in wp/wp-admin/includes/post.php.
-			$post_id                     = get_the_ID();
-			$post                        = get_post( $post_id );
-			$nonce                       = wp_create_nonce( 'post_preview_' . $post->ID );
-			$query_args['preview_id']    = $post->ID;
+			$post_id = get_the_ID();
+			$nonce = wp_create_nonce( 'post_preview_' . $post_id );
+			$query_args['preview_id'] = $post_id;
 			$query_args['preview_nonce'] = $nonce;
 
 			foreach ( $sites as $id => $site ) {
