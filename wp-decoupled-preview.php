@@ -63,10 +63,7 @@ function conditionally_enqueue_scripts() {
 
 	if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
 		add_action( 'admin_bar_menu', __NAMESPACE__ . '\\add_admin_decoupled_preview_link', 100 );
-		add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_style' );
-		add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_style' );
-		add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_script' );
-		add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_script' );
+		add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_scripts' );
 	}
 
 	// We're not processing this information at all so we can bypass the nonce here.
@@ -213,25 +210,12 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
  *
  * @return void
  */
-function enqueue_style() {
-	$preview_helper      = new Decoupled_Preview_Settings();
-	$sites               = $preview_helper->get_preview_site();
+function enqueue_scripts() {
+	$preview_helper = new Decoupled_Preview_Settings();
+	$sites = $preview_helper->get_preview_site();
 	$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( get_post_type() );
 	if ( $sites && ! empty( $enable_by_post_type ) ) {
 		wp_enqueue_style( 'add-icon', plugins_url( '/css/add-icon.css', __FILE__ ), [], 1.0 );
-	}
-}
-
-/**
- * Apply style to Decoupled Preview menu.
- *
- * @return void
- */
-function enqueue_script() {
-	$preview_helper      = new Decoupled_Preview_Settings();
-	$sites               = $preview_helper->get_preview_site();
-	$enable_by_post_type = $preview_helper->get_enabled_site_by_post_type( get_post_type() );
-	if ( $sites && ! empty( $enable_by_post_type ) ) {
 		wp_enqueue_script( 'add-new-preview-btn', plugins_url( '/js/add-new-preview-btn.js', __FILE__ ), [], 1.0, true );
 	}
 }
