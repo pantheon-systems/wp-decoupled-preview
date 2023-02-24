@@ -25,3 +25,5 @@
 * Test on an actual site
 * Update readme.tx
 * More unit tests
+* Consider exposing the "secret" token (does this really need to be secure?)
+* Add configuration/setup instructions to readme.txt (or link from readme.txt to external site)
