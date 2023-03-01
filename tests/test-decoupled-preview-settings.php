@@ -87,6 +87,9 @@ class Test_Settings extends WP_UnitTestCase {
 	 *
 	 * @dataProvider provider_preview_id
 	 *
+	 * @param int $expected The expected result.
+	 * @param int $input    The input to test.
+	 *
 	 * @return void
 	 */
 	public function test_validate_preview_id( $input, $expected ) : void {

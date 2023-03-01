@@ -72,6 +72,9 @@ class Test_List_Table extends WP_UnitTestCase {
 	 *
 	 * @dataProvider provider_column_default
 	 *
+	 * @param array $expected_result The expected result.
+	 * @param array $input The input.
+	 *
 	 * @return void
 	 */
 	public function test_column_default( $expected_result, $input ) : void {
