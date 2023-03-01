@@ -418,7 +418,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 
 			// If we're adding a new site and have options, set the ID to one higher than the highest existing ID.
-			if ( $options && $edit_id === 0 ) {
+			if ( $options && $edit_id < 1 ) {
 				$edit_id = absint( max( wp_list_pluck( $options['preview'], 'id' ) ) ) + 1;
 			}
 
