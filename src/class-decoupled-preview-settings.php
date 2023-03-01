@@ -349,8 +349,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return array
 		 */
-		private function get_allowed_post_types() : array {
-			return [ 'post', 'page' ];
+		public function get_allowed_post_types() : array {
 		}
 
 		/**
@@ -363,7 +362,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return string
 		 */
-		private function sanitize_preview_type( string $type ) : string {
+		public function sanitize_preview_type( string $type ) : string {
 			/**
 			 * Allow the allowable preview types to be filtered.
 			 *
@@ -398,7 +397,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return int
 		 */
-		private function validate_preview_id( int $edit_id, $options = [] ) : int {
+		public function validate_preview_id( int $edit_id, $options = [] ) : int {
 			if ( empty( $options ) ) {
 				$options = get_option( 'preview_sites' );
 			}
