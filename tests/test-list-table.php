@@ -75,11 +75,10 @@ class Test_List_Table extends WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_column_default( $expected_result, $input ) : void {
-		$columns = [ 'label', 'url', 'preview_type', 'content_type' ];
+		$columns = [ 'label', 'url', 'preview_type', 'content_type', '' ];
 
 		foreach ( $columns as $column ) {
 			$this->assertEquals( $this->list_table->column_default( $input, $column ), $expected_result[ $column ] );
-			// var_dump( $this->list_table->column_default( $input, $column ), $expected_result );
 		}
 	}
 
@@ -97,6 +96,7 @@ class Test_List_Table extends WP_UnitTestCase {
 					'url' => 'https://example.com/api/preview',
 					'preview_type' => 'Next.js',
 					'content_type' => 'Post, Page',
+					'' => '',
 				],
 				'input' => $data[1],
 			],
@@ -106,6 +106,7 @@ class Test_List_Table extends WP_UnitTestCase {
 					'url' => 'https://test-site.pantheonsite.io',
 					'preview_type' => 'Next.js',
 					'content_type' => 'Post',
+					'' => '',
 				],
 				'input' => $data[2],
 			],
@@ -115,6 +116,7 @@ class Test_List_Table extends WP_UnitTestCase {
 					'url' => 'https://test-site-2.pantheonsite.io',
 					'preview_type' => 'Next.js',
 					'content_type' => 'Page',
+					'' => '',
 				],
 				'input' => $data[3],
 			],
