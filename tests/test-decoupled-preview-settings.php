@@ -65,6 +65,7 @@ class Test_Settings extends WP_UnitTestCase {
 	public function test_sanitize_preview_type() : void {
 		$this->assertEquals( 'Next.js', $this->settings->sanitize_preview_type( 'Next.js' ) );
 		$this->assertNotEquals( 'Next.js', $this->settings->sanitize_preview_type( 'next.js' ) );
+		$this->assertEquals( '', $this->settings->sanitize_preview_type( 'foo' ) );
 
 		// Add a custom preview type and test that it's in the list.
 		add_filter( 'pantheon.dp.allowed_preview_types', function( $preview_types ) {
