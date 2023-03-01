@@ -28,10 +28,32 @@ class Test_Settings extends WP_UnitTestCase {
 		$this->settings = false;
 	}
 
+	/**
+	 * Test that the allowed post types are the expected values.
+	 *
+	 * @return void
+	 */
 	public function test_get_allowed_post_types() : void {
 		$allowed_post_types = $this->settings->get_allowed_post_types();
 		$this->assertNotEmpty( $allowed_post_types );
 		$this->assertContains( 'post', $allowed_post_types );
 		$this->assertContains( 'page', $allowed_post_types );
+
+		// Add a custom post type and test that it's in the list.
+		add_filter( 'pantheon.dp.allowed_post_types', function( $allowed_types ) {
+			$allowed_types[] = 'foo';
+			return $allowed_types;
+		} );
+		$this->assertContains( 'foo', $this->settings->get_allowed_post_types() );
+
+		// Override the default post types and test that the allowed post types are what we expect.
+		add_filter( 'pantheon.dp.allowed_post_types', function( $allowed_types ) {
+			return [ 'bar', 'baz' ];
+		} );
+		$allowed_post_types = $this->settings->get_allowed_post_types();
+		$this->assertNotContains( 'post', $allowed_post_types );
+		$this->assertNotContains( 'page', $allowed_post_types );
+		$this->assertContains( 'bar', $allowed_post_types );
+		$this->assertContains( 'baz', $allowed_post_types );
 	}
 }
