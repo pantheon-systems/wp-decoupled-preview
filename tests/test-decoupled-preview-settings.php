@@ -81,4 +81,31 @@ class Test_Settings extends WP_UnitTestCase {
 		$this->assertEquals( 'Gatsby', $this->settings->sanitize_preview_type( 'Gatsby' ) );
 		$this->assertNotEquals( 'Next.js', $this->settings->sanitize_preview_type( 'Next.js' ) );
 	}
+
+	/**
+	 * Test the preview ID validation.
+	 *
+	 * @dataProvider provider_preview_id
+	 *
+	 * @return void
+	 */
+	public function test_validate_preview_id( $input, $expected ) : void {
+		$this->assertEquals( $expected, $this->settings->validate_preview_id( $input ) );
+	}
+
+	/**
+	 * Data provider for test_validate_preview_id.
+	 *
+	 * @return array
+	 */
+	public function provider_preview_id() : array {
+		return [
+			[ 1, 1 ],
+			[ '1', 1 ],
+			[ 0, 4 ],
+			[ -1, 4 ],
+			[ 4, 4 ],
+			[ 35, 35 ],
+		];
+	}
 }
