@@ -67,4 +67,57 @@ class Test_List_Table extends WP_UnitTestCase {
 		$this->assertEquals( 'No preview sites configured.', $no_items );
 	}
 
+	/**
+	 * Test list table columns output.
+	 *
+	 * @dataProvider provider_column_default
+	 *
+	 * @return void
+	 */
+	public function test_column_default( $expected_result, $input ) : void {
+		$columns = [ 'label', 'url', 'preview_type', 'content_type' ];
+
+		foreach ( $columns as $column ) {
+			$this->assertEquals( $this->list_table->column_default( $input, $column ), $expected_result[ $column ] );
+			// var_dump( $this->list_table->column_default( $input, $column ), $expected_result );
+		}
+	}
+
+	/**
+	 * Data provider for test_column_default().
+	 *
+	 * @return array
+	 */
+	public function provider_column_default() : array {
+		$data = _get_test_sites();
+		return [
+			[
+				'expected_result' => [
+					'label' => 'Example NextJS Preview',
+					'url' => 'https://example.com/api/preview',
+					'preview_type' => 'Next.js',
+					'content_type' => 'Post, Page',
+				],
+				'input' => $data[1],
+			],
+			[
+				'expected_result' => [
+					'label' => 'Test Site',
+					'url' => 'https://test-site.pantheonsite.io',
+					'preview_type' => 'Next.js',
+					'content_type' => 'Post',
+				],
+				'input' => $data[2],
+			],
+			[
+				'expected_result' => [
+					'label' => 'Test Site 2',
+					'url' => 'https://test-site-2.pantheonsite.io',
+					'preview_type' => 'Next.js',
+					'content_type' => 'Page',
+				],
+				'input' => $data[3],
+			],
+		];
+	}
 }
