@@ -56,4 +56,28 @@ class Test_Settings extends WP_UnitTestCase {
 		$this->assertContains( 'bar', $allowed_post_types );
 		$this->assertContains( 'baz', $allowed_post_types );
 	}
+
+	/**
+	 * Test that the allowed preview types are the expected values.
+	 *
+	 * @return void
+	 */
+	public function test_sanitize_preview_type() : void {
+		$this->assertEquals( 'Next.js', $this->settings->sanitize_preview_type( 'Next.js' ) );
+		$this->assertNotEquals( 'Next.js', $this->settings->sanitize_preview_type( 'next.js' ) );
+
+		// Add a custom preview type and test that it's in the list.
+		add_filter( 'pantheon.dp.allowed_preview_types', function( $preview_types ) {
+			$preview_types[] = 'foo';
+			return $preview_types;
+		} );
+		$this->assertEquals( 'foo', $this->settings->sanitize_preview_type( 'foo' ) );
+
+		// Override the default preview types and test that the allowed preview types are what we expect.
+		add_filter( 'pantheon.dp.allowed_preview_types', function() {
+			return [ 'Gatsby' ];
+		} );
+		$this->assertEquals( 'Gatsby', $this->settings->sanitize_preview_type( 'Gatsby' ) );
+		$this->assertNotEquals( 'Next.js', $this->settings->sanitize_preview_type( 'Next.js' ) );
+	}
 }
