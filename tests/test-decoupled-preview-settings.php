@@ -47,7 +47,7 @@ class Test_Settings extends WP_UnitTestCase {
 		$this->assertContains( 'foo', $this->settings->get_allowed_post_types() );
 
 		// Override the default post types and test that the allowed post types are what we expect.
-		add_filter( 'pantheon.dp.allowed_post_types', function( $allowed_types ) {
+		add_filter( 'pantheon.dp.allowed_post_types', function() {
 			return [ 'bar', 'baz' ];
 		} );
 		$allowed_post_types = $this->settings->get_allowed_post_types();
