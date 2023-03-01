@@ -350,6 +350,16 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 * @return array
 		 */
 		public function get_allowed_post_types() : array {
+			/**
+			 * Allow the allowable post types to be filtered.
+			 *
+			 * Usage:
+			 * add_filter( 'pantheon.dp.allowed_post_types', function( $allowed_types ) {
+			 *   $allowed_types[] = 'my_custom_post_type';
+			 *  return $allowed_types;
+			 * } );
+			 */
+			return apply_filters( 'pantheon.dp.allowed_post_types', [ 'post', 'page' ] );
 		}
 
 		/**
