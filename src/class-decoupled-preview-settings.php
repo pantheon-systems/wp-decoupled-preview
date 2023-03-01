@@ -578,6 +578,10 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				return $preview_sites['preview'][ $id ];
 			}
 
+			if ( ! isset( $preview_sites['preview'][ $id ] ) ) {
+				return [];
+			}
+
 			return $preview_sites;
 		}
 
