@@ -97,6 +97,20 @@ class Test_Settings extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test the get_preview_site function.
+	 *
+	 * @dataProvider provider_preview_site
+	 *
+	 * @param array $expected The expected result.
+	 * @param int   $input    The input to test.
+	 *
+	 * @return void
+	 */
+	public function test_get_preview_site( $expected, $input ) : void {
+		$this->assertEquals( $expected, $this->settings->get_preview_site( $input ) );
+	}
+
+	/**
 	 * Data provider for test_validate_preview_id.
 	 *
 	 * @return array
@@ -109,6 +123,28 @@ class Test_Settings extends WP_UnitTestCase {
 			[ -1, 4 ],
 			[ 4, 4 ],
 			[ 35, 35 ],
+		];
+	}
+
+	public function provider_preview_site() : array {
+		$sites = _get_test_sites();
+		return [
+			[
+				'expected' => $sites[1],
+				'input' => 1,
+			],
+			[
+				'expected' => $sites[2],
+				'input' => 2,
+			],
+			[
+				'expected' => $sites[3],
+				'input' => 3,
+			],
+			[
+				'expected' => [],
+				'input' => 4,
+			],
 		];
 	}
 }
