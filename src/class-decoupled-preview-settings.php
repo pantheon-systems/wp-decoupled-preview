@@ -693,7 +693,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			$enable_sites = [];
 			if ( ! empty( $sites ) ) {
 				foreach ( $sites['preview'] as $site ) {
-					if ( empty( $site['content_type'] ) || in_array( $post_type, $site['content_type'], true ) ) {
+					if ( ! isset( $site['content_type'] ) || isset( $site['content_type'] ) && in_array( $post_type, $site['content_type'], true ) ) {
 						$enable_sites[] = $site;
 					}
 				}
