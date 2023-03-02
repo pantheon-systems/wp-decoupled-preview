@@ -180,7 +180,7 @@ function add_admin_decoupled_preview_link( $admin_bar ) {
 			$query_args['preview_id'] = $post_id;
 			$query_args['preview_nonce'] = $nonce;
 
-			foreach ( $sites as $id => $site ) {
+			foreach ( $sites['preview'] as $id => $site ) {
 				if (
 					( ! isset( $site['content_type'] ) ) ||
 					( in_array( $post_type, $site['content_type'], true ) )
