@@ -111,6 +111,26 @@ class Test_Settings extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test the remove_site_from_list function.
+	 *
+	 * @covers Pantheon\DecoupledPreview\Decoupled_Preview_Settings::filter_preview_sites
+	 *
+	 * @return void
+	 */
+	public function test_remove_site_from_list() : void {
+		// Get the sites before so we can count them.
+		$sites_before = get_option( 'preview_sites' );
+		$sites_before_count = count( $sites_before['preview'] );
+
+		// Remove a site.
+		$sites_after = $this->settings->remove_site_from_list( 1 );
+		$sites_after_count = count( $sites_after['preview'] ) ;
+
+		// Make sure the count is one less.
+		$this->assertEquals( $sites_before_count - 1, $sites_after_count );
+	}
+
+	/**
 	 * Data provider for test_validate_preview_id.
 	 *
 	 * @return array
