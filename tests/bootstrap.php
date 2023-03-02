@@ -22,3 +22,40 @@ function _manually_load_plugin() {
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 require $_tests_dir . '/includes/bootstrap.php';
+
+function _install_sites() {
+	$new_sites = [ 'preview' => _get_test_sites() ];
+	add_option( 'preview_sites', $new_sites );
+}
+
+function _remove_sites() {
+	delete_option( 'preview_sites' );
+}
+
+function _get_test_sites() : array {
+	return [
+		1 => [
+			'label' => 'Example NextJS Preview',
+			'url' => 'https://example.com/api/preview',
+			'secret_string' => 'secret',
+			'preview_type' => 'Next.js',
+			'id' => 1,
+		],
+		2 => [
+			'label' => 'Test Site',
+			'url' => 'https://test-site.pantheonsite.io',
+			'secret_string' => 'test',
+			'preview_type' => 'Next.js',
+			'content_type' => [ 'post' ],
+			'id' => 2,
+		],
+		3 => [
+			'label' => 'Test Site 2',
+			'url' => 'https://test-site-2.pantheonsite.io',
+			'secret_string' => 'test',
+			'preview_type' => 'Next.js',
+			'content_type' => [ 'page' ],
+			'id' => 3,
+		],
+	];
+}

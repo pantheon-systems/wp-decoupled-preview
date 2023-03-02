@@ -349,8 +349,17 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return array
 		 */
-		private function get_allowed_post_types() : array {
-			return [ 'post', 'page' ];
+		public function get_allowed_post_types() : array {
+			/**
+			 * Allow the allowable post types to be filtered.
+			 *
+			 * Usage:
+			 * add_filter( 'pantheon.dp.allowed_post_types', function( $allowed_types ) {
+			 *   $allowed_types[] = 'my_custom_post_type';
+			 *  return $allowed_types;
+			 * } );
+			 */
+			return apply_filters( 'pantheon.dp.allowed_post_types', [ 'post', 'page' ] );
 		}
 
 		/**
@@ -363,7 +372,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return string
 		 */
-		private function sanitize_preview_type( string $type ) : string {
+		public function sanitize_preview_type( string $type ) : string {
 			/**
 			 * Allow the allowable preview types to be filtered.
 			 *
@@ -398,7 +407,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return int
 		 */
-		private function validate_preview_id( int $edit_id, $options = [] ) : int {
+		public function validate_preview_id( int $edit_id, $options = [] ) : int {
 			if ( empty( $options ) ) {
 				$options = get_option( 'preview_sites' );
 			}
@@ -409,7 +418,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 
 			// If we're adding a new site and have options, set the ID to one higher than the highest existing ID.
-			if ( $options && $edit_id === 0 ) {
+			if ( $options && $edit_id < 1 ) {
 				$edit_id = absint( max( wp_list_pluck( $options['preview'], 'id' ) ) ) + 1;
 			}
 
@@ -566,8 +575,13 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 
 			if ( $id ) {
+				if ( ! isset( $preview_sites['preview'][ $id ] ) ) {
+					return [];
+				}
+
 				return $preview_sites['preview'][ $id ];
 			}
+
 
 			return $preview_sites;
 		}
@@ -575,11 +589,24 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		/**
 		 * Delete preview site.
 		 *
+		 * Wraps around remove_site_from_list and actually updates the option.
+		 *
 		 * @param int|null $site_id (Optional) site id.
 		 *
 		 * @return void
 		 */
 		public function delete_preview_site( int $site_id = null ) {
+			update_option( 'preview_sites', $this->remove_site_from_list( $site_id ) );
+		}
+
+		/**
+		 * Handles the logic for removing a site from a saved list of preview sites.
+		 *
+		 * @param int|null $site_id (Optional) site id.
+		 *
+		 * @return array
+		 */
+		public function remove_site_from_list( int $site_id = null ) : array {
 			$site = $this->get_preview_site( $site_id );
 			$sites = get_option( 'preview_sites' );
 			$preview_sites = $sites['preview'];
@@ -614,7 +641,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			unset( $sites['preview'] );
 			sort( $preview_sites );
 			$sites['preview'] = $preview_sites;
-			update_option( 'preview_sites', $sites );
+			return $sites;
 		}
 
 		/**
@@ -625,7 +652,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return array The updated array of preview sites.
 		 */
-		private function filter_preview_sites( array $preview_sites ) : array {
+		public function filter_preview_sites( array $preview_sites ) : array {
 			if ( count( $preview_sites ) < 1 ) {
 				return $preview_sites;
 			}
@@ -666,7 +693,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			$enable_sites = [];
 			if ( ! empty( $sites ) ) {
 				foreach ( $sites['preview'] as $site ) {
-					if ( empty( $site['content_type'] ) || in_array( $post_type, $site['content_type'], true ) ) {
+					if ( ! isset( $site['content_type'] ) || isset( $site['content_type'] ) && in_array( $post_type, $site['content_type'], true ) ) {
 						$enable_sites[] = $site;
 					}
 				}

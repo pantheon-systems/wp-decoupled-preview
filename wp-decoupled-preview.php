@@ -77,7 +77,6 @@ function conditionally_enqueue_scripts() {
  * @return void
  */
 function set_default_options() {
-
 	$secret = wp_generate_password( 10, false );
 	set_transient( 'example_preview_password', $secret );
 
@@ -138,7 +137,7 @@ function delete_default_options() {
  * @return void
  */
 function redirect_to_preview_site( $option_name ) {
-	if ( 'preview_sites' === $option_name ) {
+	if ( 'preview_sites' === $option_name && is_admin() ) {
 		echo '<script type="text/javascript">window.location = "options-general.php?page=preview_sites"</script>';
 		exit;
 	}
