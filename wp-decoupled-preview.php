@@ -137,7 +137,7 @@ function delete_default_options() {
  * @return void
  */
 function redirect_to_preview_site( $option_name ) {
-	if ( 'preview_sites' === $option_name ) {
+	if ( 'preview_sites' === $option_name && is_admin() ) {
 		echo '<script type="text/javascript">window.location = "options-general.php?page=preview_sites"</script>';
 		exit;
 	}
