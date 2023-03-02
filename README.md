@@ -1,4 +1,8 @@
-# Decoupled Preview
+# WP Decoupled Preview
+
+
+[![Actively Maintained](https://img.shields.io/badge/Pantheon-Actively_Maintained-yellow?logo=pantheon&color=FFDC28)](https://docs.pantheon.io/oss-support-levels#actively-maintained-support) [![Packagist Version](https://img.shields.io/packagist/v/pantheon-systems/wp-decoupled-preview)](https://packagist.org/packages/pantheon-systems/decoupled-preview) [![GPL 2.0 License](https://img.shields.io/github/license/pantheon-systems/wp-decoupled-preview)](https://github.com/pantheon-systems/wp-decoupled-preview/blob/main/LICENSE) [![Build Status](https://img.shields.io/github/actions/workflow/status/pantheon-systems/wp-decoupled-preview/lint-test.yml)](https://github.com/pantheon-systems/wp-decoupled-preview/actions)
+
 
 Preview headless WordPress content on your front-end site.
 
