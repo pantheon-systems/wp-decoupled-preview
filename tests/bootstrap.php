@@ -35,7 +35,7 @@ function _remove_sites() {
 function _get_test_sites() : array {
 	return [
 		1 => [
-			'label' => 'Example NextJS Preview', 'wp-decoupled-preview',
+			'label' => 'Example NextJS Preview',
 			'url' => 'https://example.com/api/preview',
 			'secret_string' => 'secret',
 			'preview_type' => 'Next.js',
