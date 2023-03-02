@@ -1,5 +1,5 @@
 === Decoupled Preview ===
-Contributors: getpantheon,jspellman,jazzs3quence
+Contributors: getpantheon, backlineint, abhisekmazumdar, jspellman,jazzs3quence
 Tags: headless,next.js,decoupled,preview
 Tested up to: 6.1.1
 Stable tag: 0.1.0
