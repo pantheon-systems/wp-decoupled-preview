@@ -589,11 +589,24 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		/**
 		 * Delete preview site.
 		 *
+		 * Wraps around remove_site_from_list and actually updates the option.
+		 *
 		 * @param int|null $site_id (Optional) site id.
 		 *
 		 * @return void
 		 */
 		public function delete_preview_site( int $site_id = null ) {
+			update_option( 'preview_sites', $this->remove_site_from_list( $site_id ) );
+		}
+
+		/**
+		 * Handles the logic for removing a site from a saved list of preview sites.
+		 *
+		 * @param int|null $site_id (Optional) site id.
+		 *
+		 * @return array
+		 */
+		public function remove_site_from_list( int $site_id = null ) : array {
 			$site = $this->get_preview_site( $site_id );
 			$sites = get_option( 'preview_sites' );
 			$preview_sites = $sites['preview'];
@@ -628,7 +641,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			unset( $sites['preview'] );
 			sort( $preview_sites );
 			$sites['preview'] = $preview_sites;
-			update_option( 'preview_sites', $sites );
+			return $sites;
 		}
 
 		/**
@@ -639,7 +652,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return array The updated array of preview sites.
 		 */
-		private function filter_preview_sites( array $preview_sites ) : array {
+		public function filter_preview_sites( array $preview_sites ) : array {
 			if ( count( $preview_sites ) < 1 ) {
 				return $preview_sites;
 			}
