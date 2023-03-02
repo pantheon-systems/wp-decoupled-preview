@@ -131,6 +131,33 @@ class Test_Settings extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test the get_enabled_site_by_post_type function.
+	 *
+	 * @dataProvider provider_sites_by_post_type
+	 *
+	 * @param string $post_type The post type to test.
+	 * @param array  $expected  The expected result.
+	 *
+	 * @return void
+	 */
+	public function test_get_enabled_site_by_post_type( $post_type, $expected ) : void {
+		$sites = $this->settings->get_enabled_site_by_post_type( $post_type );
+
+		// Make sure the count is the same.
+		$this->assertEquals( count( $expected ), count( $sites ) );
+		foreach ( $sites as $site ) {
+			if ( isset( $site['content_type'] ) ) {
+				// If the site has a content type, make sure it's the one we expect. No value here means all post types are allowed.
+				$this->assertContains( $post_type, $site['content_type'] );
+			}
+
+			// Pluck the IDs from the expected array and make sure the current site is in the list.
+			$ids = wp_list_pluck( $expected, 'id' );
+			$this->assertContains( $site['id'], $ids );
+		}
+	}
+
+	/**
 	 * Data provider for test_validate_preview_id.
 	 *
 	 * @return array
@@ -146,6 +173,11 @@ class Test_Settings extends WP_UnitTestCase {
 		];
 	}
 
+	/**
+	 * Data provider for test_get_preview_site.
+	 *
+	 * @return array
+	 */
 	public function provider_preview_site() : array {
 		$sites = _get_test_sites();
 		return [
@@ -164,6 +196,56 @@ class Test_Settings extends WP_UnitTestCase {
 			[
 				'expected' => [],
 				'input' => 4,
+			],
+		];
+	}
+
+	/**
+	 * Data provider for test_get_enabled_site_by_post_type.
+	 *
+	 * @return array
+	 */
+	public function provider_sites_by_post_type() : array {
+		return [
+			[
+				'post_type' => 'post',
+				'expected' => [
+					[
+						'label' => 'Example NextJS Preview',
+						'url' => 'https://example.com/api/preview',
+						'secret_string' => 'secret',
+						'preview_type' => 'Next.js',
+						'id' => 1,
+					],
+					[
+						'label' => 'Test Site',
+						'url' => 'https://test-site.pantheonsite.io',
+						'secret_string' => 'test',
+						'preview_type' => 'Next.js',
+						'content_type' => [ 'post' ],
+						'id' => 2,
+					],
+				],
+			],
+			[
+				'post_type' => 'page',
+				'expected' => [
+					[
+						'label' => 'Example NextJS Preview',
+						'url' => 'https://example.com/api/preview',
+						'secret_string' => 'secret',
+						'preview_type' => 'Next.js',
+						'id' => 1,
+					],
+					[
+						'label' => 'Test Site 2',
+						'url' => 'https://test-site-2.pantheonsite.io',
+						'secret_string' => 'test',
+						'preview_type' => 'Next.js',
+						'content_type' => [ 'page' ],
+						'id' => 3,
+					],
+				],
 			],
 		];
 	}
