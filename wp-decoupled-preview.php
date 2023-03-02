@@ -77,7 +77,6 @@ function conditionally_enqueue_scripts() {
  * @return void
  */
 function set_default_options() {
-
 	$secret = wp_generate_password( 10, false );
 	set_transient( 'example_preview_password', $secret );
 
