@@ -1,0 +1,9 @@
+# Ignore vendor dependencies
+vendor/
+
+# Ignore PHPUnit cache
+.phpunit.result.cache
+
+# Ignore Subversion files
+.svn/
+branches/

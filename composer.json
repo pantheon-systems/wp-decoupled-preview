@@ -4,10 +4,37 @@
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "authors": [
-      {
+        {
+            "name": "Pantheon",
+            "email": "noreply@pantheon.io"
+        },
+        {
         "name": "abhisekmazumdar",
         "email": "abhisek.mazumdar@pantheon.io"
-      }
+        },
+        {
+            "name": "Chris Reynolds",
+            "email": "chris.reynolds@pantheon.io"
+        }
     ],
-    "require": {}
-  }
+    "require-dev": {
+        "pantheon-systems/pantheon-wp-coding-standards": "^1.0",
+        "phpunit/phpunit": "^9.6",
+        "yoast/phpunit-polyfills": "^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "sort-packages": true
+        }
+    },
+    "scripts": {
+        "lint:php": "find ./wp-decoupled-preview.php ./src ./templates -name '*.php' -exec php -l {} \\;",
+        "lint:phpcs": "phpcs -s --ignore=tests/* --standard=Pantheon-WP .",
+        "lint:phpcbf": "phpcbf -s --ignore=tests/* --standard=Pantheon-WP .",
+        "lint": "composer lint:php && composer lint:phpcs",
+        "phpunit": "vendor/bin/phpunit",
+        "test": "@phpunit",
+        "test:install": "bash .bin/install-wp-tests.sh wordpress_test root '' localhost latest"
+    }
+}
