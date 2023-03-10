@@ -36,8 +36,10 @@ $redirect = "{$preview_site['url']}?secret={$preview_site['secret_string']}&uri=
 	<script>
 		<?php
 		if ( $preview_site['url'] ) {
-			// Redirecting via JS because the page headers have already been set by
-			// the time we get into this template so PHP wont redirect.
+			/*
+			 * Redirecting via JS because the page headers have already been
+			 * set by the time we get into this template so PHP won't redirect.
+			 */
 			echo 'window.location.replace("' . esc_url_raw( $redirect ) . '");';
 		}
 		?>
