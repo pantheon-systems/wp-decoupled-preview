@@ -5,6 +5,8 @@
  * @package wp-decoupled-preview
  */
 
+namespace Pantheon\DecoupledPreview;
+
 $preview_id      = isset( $_GET['preview_id'] ) ? sanitize_text_field( wp_unslash( $_GET['preview_id'] ) ) : false;
 $preview_site_id = isset( $_GET['decoupled_preview_site'] ) ? sanitize_text_field( wp_unslash( $_GET['decoupled_preview_site'] ) ) : false;
 $nonce           = isset( $_GET['preview_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['preview_nonce'] ) ) : false;
