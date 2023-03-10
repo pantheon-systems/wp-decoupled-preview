@@ -31,7 +31,7 @@ $redirect = "{$preview_site['url']}?secret={$preview_site['secret_string']}&uri=
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Decoupled Preview</title>
+	<title><?php esc_html_e( 'Decoupled Preview', 'wp-decoupled-preview' ); ?></title>
 
 	<script>
 		<?php
@@ -45,7 +45,7 @@ $redirect = "{$preview_site['url']}?secret={$preview_site['secret_string']}&uri=
 </head>
 
 <body>
-	<h1>Redirecting to preview site...</h1>
+	<h1><?php esc_html_e( 'Redirecting to preview site...', 'wp-decoupled-preview' ); ?></h1>
 </body>
 
 <?php wp_footer(); ?>
