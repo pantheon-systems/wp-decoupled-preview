@@ -1,6 +1,5 @@
 # WP Decoupled Preview
 
-
 [![Actively Maintained](https://img.shields.io/badge/Pantheon-Actively_Maintained-yellow?logo=pantheon&color=FFDC28)](https://docs.pantheon.io/oss-support-levels#actively-maintained-support) [![Packagist Version](https://img.shields.io/packagist/v/pantheon-systems/decoupled-preview)](https://packagist.org/packages/pantheon-systems/decoupled-preview) [![GPL 2.0 License](https://img.shields.io/github/license/pantheon-systems/wp-decoupled-preview)](https://github.com/pantheon-systems/wp-decoupled-preview/blob/main/LICENSE) [![Build Status](https://img.shields.io/github/actions/workflow/status/pantheon-systems/wp-decoupled-preview/lint-test.yml)](https://github.com/pantheon-systems/wp-decoupled-preview/actions)
 
 
@@ -39,7 +38,7 @@ NextJS sites using a similar approach.
 
 ## Linting and Testing
 
-This plugin uses [Composer](https://getcomposer.org/) to manage dependencies. To install dependencies, run `composer install` from the plugin directory. 
+This plugin uses [Composer](https://getcomposer.org/) to manage dependencies. To install dependencies, run `composer install` from the plugin directory.
 
 Linting is done with [PHP_CodeSniffer](https://packagist.org/packages/squizlabs/php_codesniffer) using the [Pantheon WP Coding Standards](https://packagist.org/packages/pantheon-systems/pantheon-wp-coding-standards) ruleset. To run the linting checks, use the following command:
 
