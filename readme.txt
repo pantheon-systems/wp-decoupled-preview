@@ -2,7 +2,7 @@
 Contributors: getpantheon, backlineint, abhisekmazumdar, jspellman,jazzs3quence
 Tags: headless,next.js,decoupled,preview
 Tested up to: 6.1.1
-Stable tag: 0.2.1
+Stable tag: 1.0.0
 License: GPL2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
 
@@ -10,26 +10,25 @@ Preview headless WordPress content on Front-end sites including Next.js.
 
 == Description ==
 
-This plugin intends to provide a single home for preview on a variety
-of decoupled front-ends.
+This plugin intends to provide a single home for preview on a variety of decoupled front-ends. Can be used with the [Decoupled Kit Next.js WordPress Starter](https://decoupledkit.pantheon.io/docs/frontend-starters/nextjs/nextjs-wordpress/introduction) for pre-configured examples for post and page content.
 
-## Features
+=== Features ===
 
 - Preview while editing a Post/Page.
 - Configure multiple preview sites.
 - Specify the post types (Post and Pages) that each preview site applies to.
 
-## Configuration
+== Configuration ==
 
-In the WordPress Admin Dashboard, navigate to **Settings** -> **Preview Sites**, add
-one or more preview sites, and configure the following:
+In the WordPress Admin Dashboard, navigate to **Settings** -> **Preview Sites**, add one or more preview sites, and configure the following:
 
 - Label: The name of the site.
 - URL: The URL of the decoupled site you are providing preview data to.
-- Secret: A token that will be passed to your decoupled site used to
-  limit access to the preview.
+- Secret: A token that will be passed to your decoupled site used to limit access to the preview.
 - Preview Type: The type of preview site - currently only NextJS is supported.
 - Content Types: The post types (like Post and Page) that this preview site applies to.
+
+For more information on how preview data can be consumed on your front-end site, see [implementing decoupled preview](https://decoupledkit.pantheon.io/docs/frontend-starters/nextjs/nextjs-wordpress/implementing-preview).
 
 == Installation ==
 
@@ -42,17 +41,17 @@ To install Decoupled Preview in one line with WP-CLI:
 
 `wp plugin install decoupled-preview --activate`
 
+Additional information on configuring the plugin can be found in the configuration section of the project details.
+
 == Frequently Asked Questions ==
 
 = What type of content can be previewed? =
 
-While we hope to expand in the future, the initial release of this plugin only
-supports NextJS. It was developed in support of [Pantheon's Next WordPress Starter](https://github.com/pantheon-systems/next-wordpress-starter), but can be applied to other
-NextJS sites using a similar approach.
+While we hope to expand in the future, the initial release of this plugin only supports NextJS. It was developed in support of [Pantheon's Next WordPress Starter](https://github.com/pantheon-systems/next-wordpress-starter), but can be applied to other NextJS sites using a similar approach.
 
 == Changelog ==
 
-= 0.2.1 =
+= 1.0.0 =
 * Bugfixes and refactoring.
 
 = 0.1.0 =
