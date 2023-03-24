@@ -3,7 +3,7 @@
  * Plugin Name:     Pantheon Decoupled Preview
  * Plugin URI:      https://pantheon.io/
  * Description:     Preview WordPress content on Front-end sites including Next.js
- * Version:         0.1.0
+ * Version:         1.0.0
  * Author:          Pantheon
  * Author URI:      https://pantheon.io/
  * Text Domain:     wp-decoupled-preview
