@@ -12,4 +12,4 @@ jobs:
       env:
         SVN_USERNAME: ${{ secrets.WPORG_USERNAME }}
         SVN_PASSWORD: ${{ secrets.WPORG_PASSWORD }}
-        SLUG: ${{ env.SLUG }}
+        SLUG: decoupled-preview
