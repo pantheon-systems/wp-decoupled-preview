@@ -2,7 +2,7 @@
 Contributors: getpantheon, backlineint, abhisekmazumdar, jspellman,jazzs3quence
 Tags: headless,next.js,decoupled,preview
 Tested up to: 6.1.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPL2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
 
@@ -50,6 +50,9 @@ Additional information on configuring the plugin can be found in the configurati
 While we hope to expand in the future, the initial release of this plugin only supports NextJS. It was developed in support of [Pantheon's Next WordPress Starter](https://github.com/pantheon-systems/next-wordpress-starter), but can be applied to other NextJS sites using a similar approach.
 
 == Changelog ==
+
+= 1.0.1 =
+* Update plugin slug for automated releases to wp.org [[#26](https://github.com/pantheon-systems/wp-decoupled-preview/pull/26)].
 
 = 1.0.0 =
 * Bugfixes and refactoring.
