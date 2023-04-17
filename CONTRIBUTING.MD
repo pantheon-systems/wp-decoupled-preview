@@ -35,5 +35,6 @@ The `main` branch matches the latest stable release deployed to [wp.org](wp.org)
     * `git rebase main`
     * Update the version number in all locations, incrementing the version by one patch version, and add the `-dev` flag (e.g. after releasing `1.2.3`, the new verison will be `1.2.4-dev`)
     * Add a new `** Latest **` heading to the changelog
+    * `git add -A .`
     * `git commit -m "Prepare X.Y.X-dev"`
     * `git push origin develop`
