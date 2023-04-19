@@ -6,5 +6,5 @@ updates:
       interval: weekly
       timezone: America/Los_Angeles
       day: tuesday
-    target-branch: "main"
+    target-branch: "develop"
     open-pull-requests-limit: 99
