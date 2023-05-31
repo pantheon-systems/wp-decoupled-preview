@@ -18,7 +18,7 @@ if ( ! wp_verify_nonce( $nonce, 'post_preview_' . $preview_id ) ) {
 $preview_post = get_post( $preview_id );
 $revision = wp_get_post_autosave( $preview_id, get_current_user_id() );
 $preview_post_type = get_post_type( $preview_post );
-// If the a revision exists, use that ID instead of the post ID.
+// If a revision exists, use that ID instead of the post ID.
 $id = $revision->ID ? $revision->ID : $preview_id;
 
 $preview_helper = new Decoupled_Preview_Settings();
