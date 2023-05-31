@@ -18,11 +18,13 @@ if ( ! wp_verify_nonce( $nonce, 'post_preview_' . $preview_id ) ) {
 $preview_post = get_post( $preview_id );
 $revision = wp_get_post_autosave( $preview_id, get_current_user_id() );
 $preview_post_type = get_post_type( $preview_post );
+// If the a revision exists, use that ID instead of the post ID.
+$id = $revision->ID ? $revision->ID : $preview_id;
 
 $preview_helper = new Decoupled_Preview_Settings();
 $preview_site = $preview_helper->get_preview_site( $preview_site_id );
 
-$redirect = "{$preview_site['url']}?secret={$preview_site['secret_string']}&uri={$preview_post->post_name}&id={$revision->ID}&content_type={$preview_post_type}";
+$redirect = "{$preview_site['url']}?secret={$preview_site['secret_string']}&uri={$preview_post->post_name}&id={$id}&content_type={$preview_post_type}";
 ?>
 
 <html lang="en">
