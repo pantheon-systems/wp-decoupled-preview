@@ -31,6 +31,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function bootstrap() {
 	define( 'WP_DECOUPLED_PREVIEW_ENABLED', true );
+	
+	add_filter( 'graphql_jwt_auth_secret_key', function() {
+		return defined( 'SECURE_AUTH_KEY' ) ? SECURE_AUTH_KEY : '';
+	});
 
 	// Load the settings class and kick it off.
 	require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
