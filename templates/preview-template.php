@@ -7,6 +7,13 @@
 
 namespace Pantheon\DecoupledPreview;
 
+class PreviewAuth extends \WPGraphQL\JWT_Authentication\Auth {
+	public static function getSignedToken() {
+		return self::get_signed_token(wp_get_current_user());
+	}
+}
+$token = PreviewAuth::getSignedToken();
+
 $preview_id = isset( $_GET['preview_id'] ) ? sanitize_text_field( wp_unslash( $_GET['preview_id'] ) ) : false;
 $preview_site_id = isset( $_GET['decoupled_preview_site'] ) ? sanitize_text_field( wp_unslash( $_GET['decoupled_preview_site'] ) ) : false;
 $nonce = isset( $_GET['preview_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['preview_nonce'] ) ) : false;
@@ -24,7 +31,7 @@ $id = $revision->ID ? $revision->ID : $preview_id;
 $preview_helper = new Decoupled_Preview_Settings();
 $preview_site = $preview_helper->get_preview_site( $preview_site_id );
 
-$redirect = "{$preview_site['url']}?secret={$preview_site['secret_string']}&uri={$preview_post->post_name}&id={$id}&content_type={$preview_post_type}";
+$redirect = "{$preview_site['url']}?secret={$preview_site['secret_string']}&uri={$preview_post->post_name}&id={$id}&content_type={$preview_post_type}&token={$token}";
 ?>
 
 <html lang="en">
