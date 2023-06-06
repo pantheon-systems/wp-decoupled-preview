@@ -52,6 +52,7 @@ While we hope to expand in the future, the initial release of this plugin only s
 == Changelog ==
 
 ** Latest **
+* Bugfix for cases where Decoupled Preview link did not load due to a js error. [[#43](https://github.com/pantheon-systems/wp-decoupled-preview/pull/43)]
 
 = 1.0.2 =
 * Bugfix that prevented posts that didn't have a revision from being previewed.[[#39](https://github.com/pantheon-systems/wp-decoupled-preview/pull/39)].
