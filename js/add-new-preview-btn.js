@@ -6,9 +6,8 @@
  * @package wp-decoupled-preview\Decoupled_Preview_Settings
  */
 
-window.addEventListener(
-	"load",
-	() => {
+const addNewPreviewButton = () => {
+	try {
 		const previewBlock    	  = document.querySelector( ".block-editor-post-preview__dropdown" );
 		const decoupledPreviewBtn = document.getElementById( 'wp-admin-bar-decoupled-preview' );
 		// Remove the old Preview button.
@@ -29,5 +28,13 @@ window.addEventListener(
 				document.querySelector( '.interface-interface-skeleton__sidebar' ).classList.toggle( 'interface-z-index-0' );
 			}
 		);
+	} catch(err) {
+		console.log("Error adding new preview button, retrying in 100ms")
+		setTimeout(addNewPreviewButton, 100)
 	}
+}
+
+window.addEventListener(
+	"load",
+	addNewPreviewButton
 );
