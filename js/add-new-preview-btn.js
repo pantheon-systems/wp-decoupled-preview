@@ -31,7 +31,7 @@ window.addEventListener(
             previewSubmenu.classList.toggle( "hidden" );
             previewSubmenu.classList.toggle( "components-popover__content" );
             // Change the edit post side bar z-index.
-            document.querySelector( '.interface-interface-skeleton__sidebar' ).classList.toggle( 'interface-z-index-0' );
+            document.querySelector( '.interface-interface-skeleton__sidebar' ).style.zIndex = 0;
           }
         );
         clearInterval(checkPreviewInterval);
