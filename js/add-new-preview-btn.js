@@ -13,7 +13,7 @@ window.addEventListener(
 
     // Ensure that block editor preview button exists, and if so, modify it.
     const checkPreview = () => {
-      const previewBlock    	  = document.querySelector( ".block-editor-post-preview__dropdown" );
+      const previewBlock = document.querySelector( ".block-editor-post-preview__dropdown" );
       const decoupledPreviewBtn = document.getElementById( 'wp-admin-bar-decoupled-preview' );
       // Remove the old Preview button.
       if (previewBlock) {
