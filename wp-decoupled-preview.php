@@ -61,7 +61,7 @@ function conditionally_enqueue_scripts() {
 
 	if ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) {
 		add_action( 'admin_bar_menu', __NAMESPACE__ . '\\add_admin_decoupled_preview_link', 100 );
-		add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\\enqueue_scripts', 100 );
+		add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_scripts' );
 	}
 
 	// We're not processing this information at all so we can bypass the nonce here.

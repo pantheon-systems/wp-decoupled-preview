@@ -49,6 +49,10 @@ Additional information on configuring the plugin can be found in the configurati
 
 While we hope to expand in the future, the initial release of this plugin only supports NextJS. It was developed in support of [Pantheon's Next WordPress Starter](https://github.com/pantheon-systems/next-wordpress-starter), but can be applied to other NextJS sites using a similar approach.
 
+= Does this plugin support the classic editor? =
+
+This plugin currently only supports the block editor.
+
 == Changelog ==
 
 ** Latest **

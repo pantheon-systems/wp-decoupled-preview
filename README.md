@@ -35,6 +35,7 @@ NextJS sites using a similar approach.
 ## Known Issues
 
 - Currently this plugin does not support custom post types.
+- Currently this plugin does not support the classic editor.
 
 ## Linting and Testing
 
