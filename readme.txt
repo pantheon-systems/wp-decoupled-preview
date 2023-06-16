@@ -2,7 +2,11 @@
 Contributors: getpantheon, backlineint, abhisekmazumdar, jspellman,jazzs3quence
 Tags: headless,next.js,decoupled,preview
 Tested up to: 6.2.2
+<<<<<<< HEAD
 Stable tag: 1.0.4-dev
+=======
+Stable tag: 1.0.3-dev
+>>>>>>> 30bb42b7e7dd43a47abab8de7c314976e32f3702
 License: GPL2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
 
