@@ -78,6 +78,13 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				'wp-decoupled-preview-section'
 			);
 			add_settings_field(
+				'plugin_text_user',
+				esc_html__( 'Associated User', 'wp-decoupled-preview' ),
+				[ &$this, 'setting_associated_user_fn' ],
+				'preview_sites',
+				'wp-decoupled-preview-section'
+			);
+			add_settings_field(
 				'plugin_hidden',
 				'',
 				[ &$this, 'setting_hidden_fn' ],
@@ -335,6 +342,11 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			if ( isset( $input['secret_string'] ) ) {
 				$sanitized_input['secret_string'] = sanitize_text_field( $input['secret_string'] );
 			}
+			if ( empty( $input['associated_user'] ) ) {
+				$sanitized_input['associated_user'] = '--None--';
+			} else {
+				$sanitized_input['associated_user'] = sanitize_text_field( $input['associated_user'] );
+			}
 			$edit_id = ! isset( $edit_id ) || $edit_id !== $sanitized_input['id'] ? $sanitized_input['id'] : $edit_id;
 
 			$options['preview'][ $edit_id ] = $sanitized_input;
@@ -556,6 +568,34 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			?>
 			<input id="plugin_hidden" name="preview_sites[id]" size="40" type="hidden" value="<?php echo $edit_id ? absint( $edit_id ) : ''; ?>" />
 			<?php
+		}
+
+		/**
+		 * Associated User
+		 * 
+		 * @return void
+		 */
+		public function setting_associated_user_fn() {
+			check_admin_referer( 'edit-preview-site', 'nonce' );
+			$edit_id = isset( $_GET['id'] ) ? sanitize_text_field( $_GET['id'] ) : false;
+			$site = $this->get_preview_site( $edit_id );
+			$users = get_users( [ 'fields' => [ 'display_name' ] ] );
+			if ( isset( $edit_id ) ) {
+				?>
+				<label for="associated_user">Choose an associated user:</label>
+				<select id="associated_user" name="preview_sites[associated_user]" autocomplete="username">
+					<option value="" selected="<?php $site['associated_user'] === '--None--'; ?>">--None--</option>
+					<?php
+					foreach ( $users as $user ) {
+						$selected = ( $site['associated_user'] === $user->display_name ) ? 'selected="selected"' : '';
+						?>
+						<option value="<?php echo esc_attr( $user->display_name ); ?>" <?php echo esc_attr( $selected ); ?>><?php echo esc_html( $user->display_name ); ?></option>
+						<?php
+					}
+					?>
+				</select>
+				<?php
+			}
 		}
 
 		/**
