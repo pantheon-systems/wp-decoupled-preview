@@ -78,7 +78,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				'wp-decoupled-preview-section'
 			);
 			add_settings_field(
-				'plugin_text_user',
+				'plugin_dropdown_user',
 				esc_html__( 'Associated User', 'wp-decoupled-preview' ),
 				[ &$this, 'setting_associated_user_fn' ],
 				'preview_sites',
@@ -343,7 +343,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				$sanitized_input['secret_string'] = sanitize_text_field( $input['secret_string'] );
 			}
 			if ( empty( $input['associated_user'] ) ) {
-				$sanitized_input['associated_user'] = '--None--';
+				$sanitized_input['associated_user'] = '';
 			} else {
 				$sanitized_input['associated_user'] = sanitize_text_field( $input['associated_user'] );
 			}
@@ -584,7 +584,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				?>
 				<label for="associated_user">Choose an associated user:</label>
 				<select id="associated_user" name="preview_sites[associated_user]" autocomplete="username">
-					<option value="" selected="<?php $site['associated_user'] === '--None--'; ?>">--None--</option>
+					<option value="" selected="<?php $site['associated_user'] === ''; ?>">--None--</option>
 					<?php
 					foreach ( $users as $user ) {
 						$selected = ( $site['associated_user'] === $user->display_name ) ? 'selected="selected"' : '';

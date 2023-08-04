@@ -63,6 +63,8 @@ class Test_Main extends WP_UnitTestCase {
 		$this->assertEquals( 'Next.js', $options['preview'][1]['preview_type'] );
 		$this->assertArrayHasKey( 'id', $options['preview'][1] );
 		$this->assertEquals( 1, $options['preview'][1]['id'] );
+		$this->assertArrayHasKey( 'associated_user', $options['preview'][1] );
+		$this->assertEquals( '', $options['preview'][1]['associated_user'] );
 
 		// Delete the options.
 		delete_default_options();
