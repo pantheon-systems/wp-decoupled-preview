@@ -39,6 +39,7 @@ function _get_test_sites() : array {
 			'url' => 'https://example.com/api/preview',
 			'secret_string' => 'secret',
 			'preview_type' => 'Next.js',
+			'associated_user' => '',
 			'id' => 1,
 		],
 		2 => [
@@ -47,6 +48,7 @@ function _get_test_sites() : array {
 			'secret_string' => 'test',
 			'preview_type' => 'Next.js',
 			'content_type' => [ 'post' ],
+			'associated_user' => 'admin',
 			'id' => 2,
 		],
 		3 => [
@@ -55,6 +57,7 @@ function _get_test_sites() : array {
 			'secret_string' => 'test',
 			'preview_type' => 'Next.js',
 			'content_type' => [ 'page' ],
+			'associated_user' => 'admin',
 			'id' => 3,
 		],
 	];
