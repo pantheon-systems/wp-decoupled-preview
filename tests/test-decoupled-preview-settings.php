@@ -215,6 +215,7 @@ class Test_Settings extends WP_UnitTestCase {
 						'url' => 'https://example.com/api/preview',
 						'secret_string' => 'secret',
 						'preview_type' => 'Next.js',
+						'associated_user' => '',
 						'id' => 1,
 					],
 					[
@@ -223,6 +224,7 @@ class Test_Settings extends WP_UnitTestCase {
 						'secret_string' => 'test',
 						'preview_type' => 'Next.js',
 						'content_type' => [ 'post' ],
+						'associated_user' => 'admin',
 						'id' => 2,
 					],
 				],
@@ -235,6 +237,7 @@ class Test_Settings extends WP_UnitTestCase {
 						'url' => 'https://example.com/api/preview',
 						'secret_string' => 'secret',
 						'preview_type' => 'Next.js',
+						'associated_user' => '',
 						'id' => 1,
 					],
 					[
@@ -243,6 +246,7 @@ class Test_Settings extends WP_UnitTestCase {
 						'secret_string' => 'test',
 						'preview_type' => 'Next.js',
 						'content_type' => [ 'page' ],
+						'associated_user' => 'admin',
 						'id' => 3,
 					],
 				],

@@ -89,6 +89,7 @@ function set_default_options() {
 					'url' => 'https://example.com/api/preview',
 					'secret_string' => $secret,
 					'preview_type' => 'Next.js',
+					'associated_user' => '',
 					'id' => 1,
 				],
 			],
