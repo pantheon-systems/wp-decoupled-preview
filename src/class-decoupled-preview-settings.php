@@ -297,7 +297,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 
 			// Bail early if we are missing required data.
-			if ( in_array( '', [ $input['label'], $input['url'], $input['preview_type'] ], true ) ) {
+			if ( in_array( '', [ $input['label'], $input['url'], $input['preview_type'], $input['secret_string'] ], true ) ) {
 				return [];
 			}
 			$options = get_option( 'preview_sites' );
@@ -314,11 +314,6 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 
 			if ( $options && isset( $edit_id ) ) {
-				// If we're editing an existing site, preserve the secret key if it's not being changed.
-				if ( empty( $input['secret_string'] ) ) {
-					$sanitized_input['secret_string'] = sanitize_text_field( $options['preview'][ $edit_id ]['secret_string'] );
-				}
-
 				// If we're editing an existing site, check to make sure there's an ID set.
 				if ( empty( $input['id'] ) ) {
 					$sanitized_input['id'] = $this->validate_preview_id( $edit_id, $options );
@@ -465,11 +460,13 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		public function setting_secret_fn() {
 			check_admin_referer( 'edit-preview-site', 'nonce' );
 			$edit_id = isset( $_GET['id'] ) ? sanitize_text_field( $_GET['id'] ) : false;
+			$site = $this->get_preview_site( $edit_id );
+			$value = $edit_id ? $site['secret_string'] : '';
 			ob_start();
 			if ( $edit_id ) {
 				?>
-				<input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" /><br />
-				<span class="description"><?php esc_html_e( 'Shared secret for the preview site. When editing, if kept empty the old value will be saved, otherwise it will be overwritten.', 'wp-decoupled-preview' ); ?></span>
+				<input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" value="<?php echo esc_attr( $value ); ?>" required /><br />
+				<span class="description"><?php esc_html_e( '(Required) Shared secret for the preview site.', 'wp-decoupled-preview' ); ?></span>
 				<?php
 			} else {
 				?>
