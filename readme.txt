@@ -55,8 +55,7 @@ This plugin currently only supports the block editor.
 
 == Changelog ==
 
-= 1.0.4-dev =
-* Tested up to WordPress 6.3 [[56](https://github.com/pantheon-systems/wp-decoupled-preview/pull/56)]
+** Latest **
 
 = 1.0.3 =
 * Bugfix for cases where Decoupled Preview link did not load due to a js error. [[#43](https://github.com/pantheon-systems/wp-decoupled-preview/pull/43)]
