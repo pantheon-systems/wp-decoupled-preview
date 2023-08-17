@@ -3,7 +3,7 @@
  * Plugin Name:     Pantheon Decoupled Preview
  * Plugin URI:      https://github.com/pantheon-systems/wp-decoupled-preview
  * Description:     Preview WordPress content on Front-end sites including Next.js
- * Version:         1.0.3
+ * Version:         1.0.4
  * Author:          Pantheon
  * Author URI:      https://pantheon.io/
  * Text Domain:     wp-decoupled-preview
@@ -37,7 +37,6 @@ function bootstrap() {
 	new Decoupled_Preview_Settings();
 
 	add_action( 'init', __NAMESPACE__ . '\\conditionally_enqueue_scripts' );
-	add_action( 'admin_notices', __NAMESPACE__ . '\\show_example_preview_password_admin_notice' );
 	add_action( 'updated_option', __NAMESPACE__ . '\\redirect_to_preview_site' );
 
 	// Register activation and deactivation hooks.
@@ -69,64 +68,6 @@ function conditionally_enqueue_scripts() {
 		// Return custom preview template where we can handle redirect.
 		add_filter( 'template_include', __NAMESPACE__ . '\\override_preview_template', 1 );
 	}
-}
-
-/**
- * Set default values for the preview sites options.
- *
- * @return void
- */
-function set_default_options() {
-	$secret = wp_generate_password( 10, false );
-	set_transient( 'example_preview_password', $secret );
-
-	add_option(
-		'preview_sites',
-		[
-			'preview' => [
-				1 => [
-					'label' => esc_html__( 'Example NextJS Preview', 'wp-decoupled-preview' ),
-					'url' => 'https://example.com/api/preview',
-					'secret_string' => $secret,
-					'preview_type' => 'Next.js',
-					'id' => 1,
-				],
-			],
-		]
-	);
-}
-
-/**
- * Show example preview password admin notice.
- *
- * @return void
- */
-function show_example_preview_password_admin_notice() {
-	$preview_password = get_transient( 'example_preview_password' );
-	if ( $preview_password ) {
-		?>
-		<div class="notice notice-success notice-alt below-h2 is-dismissible">
-			<strong><?php esc_html_e( 'Pantheon Decoupled Preview Example', 'wp-decoupled-preview' ); ?></strong>
-			<p class="decoupled-preview-example">
-				<label for="new-decoupled-preview-example-value">
-					<?php echo wp_kses( __( 'The shared secret of the <strong>Example NextJS Preview</strong> site is:', 'wp-decoupled-preview' ), [ 'strong' => [] ] ); ?>
-				</label>
-				<input type="text" class="code" value="<?php printf( esc_attr( get_transient( 'example_preview_password' ) ) ); ?>" />
-			</p>
-			<p><?php esc_html_e( 'Be sure to save this in a safe location. You will not be able to retrieve it.', 'wp-decoupled-preview' ); ?></p>
-		</div>
-		<?php
-		delete_transient( 'example_preview_password' );
-	}
-}
-
-/**
- * Delete preview sites options when deactivation plugin.
- *
- * @return void
- */
-function delete_default_options() {
-	delete_option( 'preview_sites' );
 }
 
 /**

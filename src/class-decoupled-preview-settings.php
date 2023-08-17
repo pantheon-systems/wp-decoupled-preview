@@ -78,6 +78,13 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 				'wp-decoupled-preview-section'
 			);
 			add_settings_field(
+				'plugin_dropdown_user',
+				esc_html__( 'Associated User', 'wp-decoupled-preview' ),
+				[ &$this, 'setting_associated_user_fn' ],
+				'preview_sites',
+				'wp-decoupled-preview-section'
+			);
+			add_settings_field(
 				'plugin_hidden',
 				'',
 				[ &$this, 'setting_hidden_fn' ],
@@ -297,7 +304,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 
 			// Bail early if we are missing required data.
-			if ( in_array( '', [ $input['label'], $input['url'], $input['preview_type'] ], true ) ) {
+			if ( in_array( '', [ $input['label'], $input['url'], $input['preview_type'], $input['secret_string'] ], true ) ) {
 				return [];
 			}
 			$options = get_option( 'preview_sites' );
@@ -314,11 +321,6 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 
 			if ( $options && isset( $edit_id ) ) {
-				// If we're editing an existing site, preserve the secret key if it's not being changed.
-				if ( empty( $input['secret_string'] ) ) {
-					$sanitized_input['secret_string'] = sanitize_text_field( $options['preview'][ $edit_id ]['secret_string'] );
-				}
-
 				// If we're editing an existing site, check to make sure there's an ID set.
 				if ( empty( $input['id'] ) ) {
 					$sanitized_input['id'] = $this->validate_preview_id( $edit_id, $options );
@@ -334,6 +336,11 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			// Sanitize the secret string if it was added.
 			if ( isset( $input['secret_string'] ) ) {
 				$sanitized_input['secret_string'] = sanitize_text_field( $input['secret_string'] );
+			}
+			if ( empty( $input['associated_user'] ) ) {
+				$sanitized_input['associated_user'] = '';
+			} else {
+				$sanitized_input['associated_user'] = sanitize_text_field( $input['associated_user'] );
 			}
 			$edit_id = ! isset( $edit_id ) || $edit_id !== $sanitized_input['id'] ? $sanitized_input['id'] : $edit_id;
 
@@ -465,11 +472,13 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		public function setting_secret_fn() {
 			check_admin_referer( 'edit-preview-site', 'nonce' );
 			$edit_id = isset( $_GET['id'] ) ? sanitize_text_field( $_GET['id'] ) : false;
+			$site = $this->get_preview_site( $edit_id );
+			$value = $edit_id ? $site['secret_string'] : '';
 			ob_start();
 			if ( $edit_id ) {
 				?>
-				<input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" /><br />
-				<span class="description"><?php esc_html_e( 'Shared secret for the preview site. When editing, if kept empty the old value will be saved, otherwise it will be overwritten.', 'wp-decoupled-preview' ); ?></span>
+				<input id="plugin_text_secret" name="preview_sites[secret_string]" size="40" type="password" value="<?php echo esc_attr( $value ); ?>" required /><br />
+				<span class="description"><?php esc_html_e( '(Required) Shared secret for the preview site.', 'wp-decoupled-preview' ); ?></span>
 				<?php
 			} else {
 				?>
@@ -556,6 +565,34 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			?>
 			<input id="plugin_hidden" name="preview_sites[id]" size="40" type="hidden" value="<?php echo $edit_id ? absint( $edit_id ) : ''; ?>" />
 			<?php
+		}
+
+		/**
+		 * Associated User
+		 * 
+		 * @return void
+		 */
+		public function setting_associated_user_fn() {
+			check_admin_referer( 'edit-preview-site', 'nonce' );
+			$edit_id = isset( $_GET['id'] ) ? sanitize_text_field( $_GET['id'] ) : false;
+			$site = $this->get_preview_site( $edit_id );
+			$users = get_users( [ 'fields' => [ 'display_name' ] ] );
+			if ( isset( $edit_id ) ) {
+				?>
+				<label for="associated_user">Choose an associated user:</label>
+				<select id="associated_user" name="preview_sites[associated_user]" autocomplete="username">
+					<option value="" selected="<?php $site['associated_user'] === ''; ?>">--None--</option>
+					<?php
+					foreach ( $users as $user ) {
+						$selected = ( $site['associated_user'] === $user->display_name ) ? 'selected="selected"' : '';
+						?>
+						<option value="<?php echo esc_attr( $user->display_name ); ?>" <?php echo esc_attr( $selected ); ?>><?php echo esc_html( $user->display_name ); ?></option>
+						<?php
+					}
+					?>
+				</select>
+				<?php
+			}
 		}
 
 		/**

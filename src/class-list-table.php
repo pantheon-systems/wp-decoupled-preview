@@ -97,6 +97,7 @@ class List_Table extends WP_List_table {
 			'url' => __( 'URL', 'wp-decoupled-preview' ),
 			'preview_type' => __( 'Preview Type', 'wp-decoupled-preview' ),
 			'content_type' => __( 'Content Type', 'wp-decoupled-preview' ),
+			'associated_user' => __( 'Associated User', 'wp-decoupled-preview' ),
 			'actions' => __( 'Actions', 'wp-decoupled-preview' ),
 		];
 	}
@@ -112,6 +113,7 @@ class List_Table extends WP_List_table {
 		switch ( $column_name ) {
 			case 'label':
 			case 'url':
+			case 'associated_user':
 			case 'preview_type':
 				return isset( $item[ $column_name ] ) ? esc_html( $item[ $column_name ] ) : '';
 			case 'content_type':
