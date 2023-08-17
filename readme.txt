@@ -2,7 +2,7 @@
 Contributors: getpantheon, backlineint, abhisekmazumdar, jspellman,jazzs3quence
 Tags: headless,next.js,decoupled,preview
 Tested up to: 6.2.2
-Stable tag: 1.0.4
+Stable tag: 1.0.5-dev
 License: GPL2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
 
@@ -54,6 +54,8 @@ While we hope to expand in the future, the initial release of this plugin only s
 This plugin currently only supports the block editor.
 
 == Changelog ==
+
+** Latest **
 
 = 1.0.4 =
 * Improve Handling of secrets field. [[#53](https://github.com/pantheon-systems/wp-decoupled-preview/pull/53)]
