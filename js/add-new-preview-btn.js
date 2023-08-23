@@ -14,10 +14,12 @@ window.addEventListener(
     // Ensure that block editor preview button exists, and if so, modify it.
     const checkPreview = () => {
       const previewBlock = document.querySelector( ".block-editor-post-preview__dropdown" );
+      // Add a class to allow us to scope styles that apply to the default
+      // preview button, only when the Decoupled Preview button is present.
+      previewBlock.classList.add( "decoupled-preview" );
       const decoupledPreviewBtn = document.getElementById( 'wp-admin-bar-decoupled-preview' );
       // Remove the old Preview button.
       if (previewBlock) {
-        previewBlock.removeChild( previewBlock.querySelector( 'button' ) );
         // Add Decoupled Preview Button into the same Preview container.
         previewBlock.appendChild( decoupledPreviewBtn );
         // Hide submenu items by default.
