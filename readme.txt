@@ -1,7 +1,7 @@
 === Decoupled Preview ===
 Contributors: getpantheon, backlineint, abhisekmazumdar, jspellman,jazzs3quence
 Tags: headless,next.js,decoupled,preview
-Tested up to: 6.2.2
+Tested up to: 6.3
 Stable tag: 1.0.5-dev
 License: GPL2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
