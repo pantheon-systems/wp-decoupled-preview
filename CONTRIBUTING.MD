@@ -10,7 +10,7 @@ Pull requests and issues are welcome!
 
 Development and releases are structured around two branches, `develop` and `main`. The `develop` branch is the default branch for the repository, and is the source and destination for feature branches.
 
-We prefer to squash commits (i.e. avoid merge PRs) from a feature branch into `develop` when merging, and to include the PR # in the commit message. PRs to `develop` should also include any relevent updates to the changelog in readme.txt. For example, if a feature constitutes a minor or major version bump, that version update should be discussed and made as part of approving and merging the feature into `develop`.
+We prefer to squash commits (i.e. avoid merge PRs) from a feature branch into `develop` when merging, and to include the PR # in the commit message. PRs to `develop` should also include any relevant updates to the changelog in readme.txt. For example, if a feature constitutes a minor or major version bump, that version update should be discussed and made as part of approving and merging the feature into `develop`.
 
 `develop` should be stable and usable, though possibly a few commits ahead of the public release on wp.org.
 

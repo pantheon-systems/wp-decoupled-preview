@@ -1,5 +1,5 @@
 name: WP Decoupled Preview Lint
-on: push
+on: pull_request
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -21,6 +21,8 @@ jobs:
           php -v
           mysqladmin -V
           bash .bin/install-wp-tests.sh wordpress_test root root localhost latest
+          rm -rf $WP_TESTS_DIR $WP_CORE_DIR
+          bash .bin/install-wp-tests.sh wordpress_test root root localhost nightly true
       - name: Run linter
         run: composer lint
       - name: Run tests
