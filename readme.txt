@@ -2,7 +2,7 @@
 Contributors: getpantheon, backlineint, abhisekmazumdar, jspellman,jazzs3quence
 Tags: headless,next.js,decoupled,preview
 Tested up to: 6.3
-Stable tag: 1.0.5-dev
+Stable tag: 1.0.5
 License: GPL2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
 
@@ -55,7 +55,8 @@ This plugin currently only supports the block editor.
 
 == Changelog ==
 
-** Latest **
+= 1.0.5 =
+* Preview Button Regression in WordPress 6.3. [[#58](https://github.com/pantheon-systems/wp-decoupled-preview/pull/58)]
 
 = 1.0.4 =
 * Improve Handling of secrets field. [[#53](https://github.com/pantheon-systems/wp-decoupled-preview/pull/53)]
