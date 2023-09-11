@@ -53,7 +53,7 @@ class List_Table extends WP_List_table {
 	 *
 	 * @return array
 	 */
-	public function get_sortable_columns() : array {
+	public function get_sortable_columns(): array {
 		return [
 			'label' => [ 'label', true ],
 			'preview_type' => [ 'preview_type', true ],
@@ -69,7 +69,7 @@ class List_Table extends WP_List_table {
 	 *
 	 * @return int
 	 */
-	private function usort_reorder( $a, $b ) : int {
+	private function usort_reorder( $a, $b ): int {
 		// Similar to the above, I don't think we need to check the nonce here because we're not processing any information other than the sort order.
 		$orderby = ( ! empty( $_GET['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'label'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$order = ( ! empty( $_GET['order'] ) ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'asc'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -91,7 +91,7 @@ class List_Table extends WP_List_table {
 	 *
 	 * @return array
 	 */
-	public function get_columns() : array {
+	public function get_columns(): array {
 		return [
 			'label' => __( 'Label', 'wp-decoupled-preview' ),
 			'url' => __( 'URL', 'wp-decoupled-preview' ),
@@ -109,7 +109,7 @@ class List_Table extends WP_List_table {
 	 * @param string $column_name The column name.
 	 * @return string
 	 */
-	public function column_default( $item, $column_name ) : string {
+	public function column_default( $item, $column_name ): string {
 		switch ( $column_name ) {
 			case 'label':
 			case 'url':

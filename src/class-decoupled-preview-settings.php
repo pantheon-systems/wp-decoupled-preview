@@ -356,7 +356,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return array
 		 */
-		public function get_allowed_post_types() : array {
+		public function get_allowed_post_types(): array {
 			/**
 			 * Allow the allowable post types to be filtered.
 			 *
@@ -379,7 +379,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return string
 		 */
-		public function sanitize_preview_type( string $type ) : string {
+		public function sanitize_preview_type( string $type ): string {
 			/**
 			 * Allow the allowable preview types to be filtered.
 			 *
@@ -414,7 +414,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return int
 		 */
-		public function validate_preview_id( int $edit_id, $options = [] ) : int {
+		public function validate_preview_id( int $edit_id, $options = [] ): int {
 			if ( empty( $options ) ) {
 				$options = get_option( 'preview_sites' );
 			}
@@ -643,7 +643,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return array
 		 */
-		public function remove_site_from_list( int $site_id = null ) : array {
+		public function remove_site_from_list( int $site_id = null ): array {
 			$site = $this->get_preview_site( $site_id );
 			$sites = get_option( 'preview_sites' );
 			$preview_sites = $sites['preview'];
@@ -689,7 +689,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 		 *
 		 * @return array The updated array of preview sites.
 		 */
-		public function filter_preview_sites( array $preview_sites ) : array {
+		public function filter_preview_sites( array $preview_sites ): array {
 			if ( count( $preview_sites ) < 1 ) {
 				return $preview_sites;
 			}

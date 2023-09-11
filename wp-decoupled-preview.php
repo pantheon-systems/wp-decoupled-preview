@@ -33,7 +33,7 @@ function bootstrap() {
 	define( 'WP_DECOUPLED_PREVIEW_ENABLED', true );
 
 	// Load the settings class and kick it off.
-	require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
+	require_once __DIR__ . '/src/class-decoupled-preview-settings.php';
 	new Decoupled_Preview_Settings();
 
 	add_action( 'init', __NAMESPACE__ . '\\conditionally_enqueue_scripts' );
@@ -166,7 +166,7 @@ function enqueue_scripts() {
  * @return string
  */
 function override_preview_template() {
-	return trailingslashit( dirname( __FILE__ ) ) . 'templates/preview-template.php';
+	return trailingslashit( __DIR__ ) . 'templates/preview-template.php';
 }
 
 // Let's rock.
