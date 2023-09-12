@@ -55,6 +55,9 @@ This plugin currently only supports the block editor.
 
 == Changelog ==
 
+= 1.0.6-dev =
+* Updates Pantheon WP Coding Standards to 2.0 [[#63](https://github.com/pantheon-systems/wp-decoupled-preview/pull/63)]
+
 = 1.0.5 =
 * Preview Button Regression in WordPress 6.3. [[#58](https://github.com/pantheon-systems/wp-decoupled-preview/pull/58)]
 
