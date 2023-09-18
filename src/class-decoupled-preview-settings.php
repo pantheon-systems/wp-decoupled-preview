@@ -298,7 +298,7 @@ if ( ! class_exists( __NAMESPACE__ . '\\Decoupled_Preview_Settings' ) ) {
 			}
 
 			// Switch to preview sites sanitization if we're deleting a site.
-			if ( isset( $_GET['page'] ) && 'delete_preview_site' === $_GET['page'] && isset( $input['preview'] ) ) {
+			if ( isset( $_GET['page'] ) && ('delete_preview_site' === $_GET['page'] || 'preview_delete_success' === $_GET['page']) && isset( $input['preview'] ) ) {
 				// Already santized.
 				return $input;
 			}
