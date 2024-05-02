@@ -57,6 +57,7 @@ This plugin currently only supports the block editor.
 
 ** Latest **
 * Updates Pantheon WP Coding Standards to 2.0 [[#63](https://github.com/pantheon-systems/wp-decoupled-preview/pull/63)]
+* Fixes an issue with broken activation and deactivation hooks
 
 = 1.0.5 =
 * Preview Button Regression in WordPress 6.3. [[#58](https://github.com/pantheon-systems/wp-decoupled-preview/pull/58)]

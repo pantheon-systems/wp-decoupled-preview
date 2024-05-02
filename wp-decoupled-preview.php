@@ -38,10 +38,6 @@ function bootstrap() {
 
 	add_action( 'init', __NAMESPACE__ . '\\conditionally_enqueue_scripts' );
 	add_action( 'updated_option', __NAMESPACE__ . '\\redirect_to_preview_site' );
-
-	// Register activation and deactivation hooks.
-	register_activation_hook( __FILE__, __NAMESPACE__ . '\\set_default_options' );
-	register_deactivation_hook( __FILE__, __NAMESPACE__ . '\\delete_default_options' );
 }
 
 /**
