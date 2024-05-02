@@ -18,7 +18,7 @@
         }
     ],
     "require-dev": {
-        "pantheon-systems/pantheon-wp-coding-standards": "^1.0",
+        "pantheon-systems/pantheon-wp-coding-standards": "^2.0",
         "phpunit/phpunit": "^9.6",
         "yoast/phpunit-polyfills": "^2.0"
     },
@@ -30,8 +30,8 @@
     },
     "scripts": {
         "lint:php": "find ./wp-decoupled-preview.php ./src ./templates -name '*.php' -exec php -l {} \\;",
-        "lint:phpcs": "phpcs -s --ignore=tests/* --standard=Pantheon-WP .",
-        "lint:phpcbf": "phpcbf -s --ignore=tests/* --standard=Pantheon-WP .",
+        "lint:phpcs": "vendor/bin/phpcs -s --ignore=tests/* --standard=Pantheon-WP .",
+        "lint:phpcbf": "vendor/bin/phpcbf -s --ignore=tests/* --standard=Pantheon-WP .",
         "lint": "composer lint:php && composer lint:phpcs",
         "phpunit": "vendor/bin/phpunit",
         "test": "@phpunit",

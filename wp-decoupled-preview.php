@@ -3,7 +3,7 @@
  * Plugin Name:     Pantheon Decoupled Preview
  * Plugin URI:      https://github.com/pantheon-systems/wp-decoupled-preview
  * Description:     Preview WordPress content on Front-end sites including Next.js
- * Version:         1.0.5
+ * Version:         1.0.6
  * Author:          Pantheon
  * Author URI:      https://pantheon.io/
  * Text Domain:     wp-decoupled-preview
@@ -33,15 +33,11 @@ function bootstrap() {
 	define( 'WP_DECOUPLED_PREVIEW_ENABLED', true );
 
 	// Load the settings class and kick it off.
-	require_once dirname( __FILE__ ) . '/src/class-decoupled-preview-settings.php';
+	require_once __DIR__ . '/src/class-decoupled-preview-settings.php';
 	new Decoupled_Preview_Settings();
 
 	add_action( 'init', __NAMESPACE__ . '\\conditionally_enqueue_scripts' );
 	add_action( 'updated_option', __NAMESPACE__ . '\\redirect_to_preview_site' );
-
-	// Register activation and deactivation hooks.
-	register_activation_hook( __FILE__, __NAMESPACE__ . '\\set_default_options' );
-	register_deactivation_hook( __FILE__, __NAMESPACE__ . '\\delete_default_options' );
 }
 
 /**
@@ -166,7 +162,7 @@ function enqueue_scripts() {
  * @return string
  */
 function override_preview_template() {
-	return trailingslashit( dirname( __FILE__ ) ) . 'templates/preview-template.php';
+	return trailingslashit( __DIR__ ) . 'templates/preview-template.php';
 }
 
 // Let's rock.
