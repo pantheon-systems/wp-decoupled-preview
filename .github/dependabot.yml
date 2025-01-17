@@ -8,3 +8,6 @@ updates:
       day: tuesday
     target-branch: "develop"
     open-pull-requests-limit: 99
+    ignore:
+      - dependency-name: "phpunit/phpunit"
+        versions: [">=11.0"]    
