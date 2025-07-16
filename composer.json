@@ -19,7 +19,7 @@
     ],
     "require-dev": {
         "pantheon-systems/pantheon-wp-coding-standards": "^2.0",
-        "phpunit/phpunit": "^9.6",
+        "phpunit/phpunit": "^12.2",
         "yoast/phpunit-polyfills": "^4.0"
     },
     "config": {
